@@ -9,4 +9,4 @@ Tasks that are currently being worked on will appear here.
 Tasks will appear here if they are needed but cannot be worked on immediately.
 
 ## Completed
-Full history of tasks there were noted down and have been completed.
+Full history of tasks that were noted down and have been completed.
