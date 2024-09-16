@@ -1,0 +1,5 @@
+Draft #2
+- Moved the parallelisation into section about future research in the area
+- Potentially keep thinking about parallelisation and see if it could be done within the year
+- Added Gnatt Chart
+- Elaborated a bit more and gave more reasonable time guidelines
