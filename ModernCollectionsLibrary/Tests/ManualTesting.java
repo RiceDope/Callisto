@@ -6,8 +6,9 @@ public class ManualTesting {
     
     public static void main(String[] args) {
         
-        Sequence<> test = new Sequence<>();
-
+        Sequence<Integer> test = new Sequence<Integer>();
+        
+        System.out.println(test.length());
     }
 
 }
