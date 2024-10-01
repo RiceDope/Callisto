@@ -10,6 +10,7 @@ package ModernCollectionsLibrary.Src;
 
 import java.lang.StringBuilder;
 
+@SuppressWarnings("unchecked")
 public class Sequence<E> {
 
     private E[] array = (E[]) new Object[100];
@@ -27,7 +28,6 @@ public class Sequence<E> {
     /**
      * Default constructor using default growth rate and size values
      */
-    @SuppressWarnings("unchecked")
     public Sequence(){
         
         // Default values are used
@@ -38,7 +38,6 @@ public class Sequence<E> {
      * Allows for specification of just the initial size of the array
      * @param size Int initial size of the array
      */
-    @SuppressWarnings("unchecked")
     public Sequence(int size){
 
         array = (E[]) new Object[size];
@@ -49,7 +48,6 @@ public class Sequence<E> {
      * Allows for specification of just the growth rate
      * @param growthRate Double initial growth rate of the array
      */
-    @SuppressWarnings("unchecked")
     public Sequence(double growthRate){
 
         this.growthRate = growthRate;
@@ -61,7 +59,6 @@ public class Sequence<E> {
      * @param size Int starting size of the array
      * @param growthRate Double initial growth rate of the array
      */
-    @SuppressWarnings("unchecked")
     public Sequence(int size, double growthRate){
 
         array = (E[]) new Object[size];
@@ -135,7 +132,6 @@ public class Sequence<E> {
     /**
      * Expand the array by the given growth factor
      */
-    @SuppressWarnings("unchecked")
     private void arrayExpansion(){
         // New array is created by expanding by growthFactor
         int newLen = (int) Math.round(array.length*growthRate);
