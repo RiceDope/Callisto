@@ -12,11 +12,11 @@ import java.lang.StringBuilder;
 
 public class Sequence<E> {
 
-    private E[] array;
+    private E[] array = (E[]) new Object[100];
     private int endPointer = 0; // Track our current final index
     private int startPointer = 0; // Track our current first index
 
-    private double growthRate;
+    private double growthRate = 1.5;
 
     /* 
         =================================================
@@ -30,9 +30,7 @@ public class Sequence<E> {
     @SuppressWarnings("unchecked")
     public Sequence(){
         
-        // Instantiate the list with some idea of size
-        array = (E[]) new Object[100];
-        this.growthRate = 1.5;
+        // Default values are used
 
     }
 
@@ -43,9 +41,7 @@ public class Sequence<E> {
     @SuppressWarnings("unchecked")
     public Sequence(int size){
 
-        // Instantiate the list with some idea of size
         array = (E[]) new Object[size];
-        this.growthRate = 1.5;
 
     }
 
@@ -56,8 +52,6 @@ public class Sequence<E> {
     @SuppressWarnings("unchecked")
     public Sequence(double growthRate){
 
-        // Instantiate the list with some idea of size
-        array = (E[]) new Object[100];
         this.growthRate = growthRate;
 
     }
@@ -70,7 +64,6 @@ public class Sequence<E> {
     @SuppressWarnings("unchecked")
     public Sequence(int size, double growthRate){
 
-        // Instantiate the list with some idea of size
         array = (E[]) new Object[size];
         this.growthRate = growthRate;
 
@@ -162,5 +155,13 @@ public class Sequence<E> {
 
         // Return the string
         return sb.toString();
+    }
+
+    /**
+     * Returns the length of the underlying array not where terms are
+     * @return Int being the raw length of the array
+     */
+    public int rawLength(){
+        return array.length;
     }
 } 

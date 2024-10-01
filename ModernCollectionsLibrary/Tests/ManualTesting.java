@@ -18,10 +18,10 @@ public class ManualTesting {
         test.append(2);
         test.append(2);
         test.append(2);
-        System.out.println(test.toString());
+        System.out.println(test.rawLength());
         test.append(2);
 
-        System.out.println(test.toString());
+        System.out.println(test.rawLength());
         
     }
 
