@@ -6,9 +6,23 @@ public class ManualTesting {
     
     public static void main(String[] args) {
         
-        Sequence<Integer> test = new Sequence<Integer>();
+        Sequence<Integer> test = new Sequence<Integer>(10);
         
-        System.out.println(test.length());
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        test.append(2);
+        System.out.println(test.toString());
+        test.append(2);
+
+        System.out.println(test.toString());
+        
     }
 
 }

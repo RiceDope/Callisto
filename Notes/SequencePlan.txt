@@ -1,0 +1,27 @@
+Storage of variables:
+
+For the class to act as an ArrayList it must have the following functionality:
+- Append
+- Length
+- Remove
+- Get
+- Set
+- Clear
+- Sort?
+Additional requirements? https://www.w3schools.com/java/java_ref_arraylist.asp
+
+For the class to act as a Queue it must have the following functionality
+- Queue
+- Dequeue
+- Peek
+Inheritance from java.util.Collection: https://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
+
+Memory management plan for ArrayList and Queue:
+
+- A queue will be removed from index 0 and added at index i.
+- An arrayList has random access and any item can be removed and then added to and from.
+- Cannot shift all items down if index[0] is removed each time in a queue. Only makes.
+- Two pointers could exist to show a start and an end of the "list"
+- When end pointer reaches the same length as the list. All terms are shifted down the relevant amount of spaces 
+  (In relation to what has been removed). And the size of the array grows by 1.5x? Pointers for beginning and end are moved to
+  new positions relative to the new beginning and end.

@@ -8,34 +8,72 @@
 
 package ModernCollectionsLibrary.Src;
 
-import java.lang.reflect.Array;
 import java.lang.StringBuilder;
 
 public class Sequence<E> {
 
-    private E[] defaultList;
-    private int index = 0; // Track our current final index
+    private E[] array;
+    private int endPointer = 0; // Track our current final index
+    private int startPointer = 0; // Track our current first index
+
+    private double growthRate;
 
     /* 
-        ====================================================
-                    OVERLOADED JAVA CONSTRUCTOR             
-        ====================================================
+        =================================================
+                    OVERLOADED CONSTRUCTOR                          
+        =================================================
     */
 
-    // Used when no default size was used
+    /**
+     * Default constructor using default growth rate and size values
+     */
     @SuppressWarnings("unchecked")
     public Sequence(){
         
         // Instantiate the list with some idea of size
-        defaultList = (E[]) new Object[100];
+        array = (E[]) new Object[100];
+        this.growthRate = 1.5;
 
     }
 
-    // Allows for user to specify a starting size of the Array
+    /**
+     * Allows for specification of just the initial size of the array
+     * @param size Int initial size of the array
+     */
     @SuppressWarnings("unchecked")
     public Sequence(int size){
+
         // Instantiate the list with some idea of size
-        defaultList = (E[]) new Object[size];
+        array = (E[]) new Object[size];
+        this.growthRate = 1.5;
+
+    }
+
+    /**
+     * Allows for specification of just the growth rate
+     * @param growthRate Double initial growth rate of the array
+     */
+    @SuppressWarnings("unchecked")
+    public Sequence(double growthRate){
+
+        // Instantiate the list with some idea of size
+        array = (E[]) new Object[100];
+        this.growthRate = growthRate;
+
+    }
+
+    /**
+     * Allows for specification of both starting size and growth rate
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     */
+    @SuppressWarnings("unchecked")
+    public Sequence(int size, double growthRate){
+
+        // Instantiate the list with some idea of size
+        array = (E[]) new Object[size];
+        this.growthRate = growthRate;
+
     }
 
     /* 
@@ -44,22 +82,60 @@ public class Sequence<E> {
         ====================================================
     */
 
+    /**
+     * Add an item to the array. Automatically deals with expansion of the array
+     * @param item The item to add
+     */
     public void append(E item){
-        
-        defaultList[index] = item;
-        index++;
 
+        if (endPointer == array.length){ // We must expand the array
+            // Expand the array
+            arrayExpansion();
+
+            // Now add the new item
+            array[endPointer] = item;
+            endPointer++;
+
+        } else { // No need to expand array
+            array[endPointer] = item;
+            endPointer++;
+        }
     }
 
     /**
-     * Returns the length of a given list
+     * Expand the array by the given growth factor
+     */
+    @SuppressWarnings("unchecked")
+    private void arrayExpansion(){
+        // New array is created by expanding by growthFactor
+        int newLen = (int) Math.round(array.length*growthRate);
+        E[] newArray = (E[]) new Object[newLen];
+
+        // Now loop over and add all items to the larger list
+        int secondCount = 0; // This counts from index 0 for the new array
+        for (int i = startPointer; i < endPointer; i++){ // This counts from index startPointer for the old array
+            newArray[secondCount] = array[i];
+            secondCount++;
+        }
+
+        // Get the current term length of array to set pointers
+        int termLength = endPointer-startPointer;
+
+        // Now set array to newArray
+        array = newArray;
+        endPointer = termLength;
+        startPointer = 0;
+    }
+
+    /**
+     * Returns the length of a given sequence
      * 
-     * @return Int length of list
+     * @return Int length of sequence
      */
     public int length(){
     
-        // For now index points towards the next free index
-        return index;
+        // Length can be worked out via the difference between the startIndex and endIndex
+        return endPointer - startPointer;
     }
 
     /**
@@ -74,8 +150,8 @@ public class Sequence<E> {
         sb.append("[");
 
         // Add all terms to the StringBuilder
-        for (int i = 0; i < index; i++){
-            sb.append(defaultList[i] + ", ");
+        for (int i = 0; i < endPointer; i++){
+            sb.append(array[i] + ", ");
         }
         // Find and remove last comma and space
         int lastComma = sb.lastIndexOf(",");
