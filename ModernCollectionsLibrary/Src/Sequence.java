@@ -13,10 +13,13 @@ import java.lang.StringBuilder;
 @SuppressWarnings("unchecked")
 public class Sequence<E> {
 
-    private E[] array = (E[]) new Object[100];
+    // Runtime variables
     private int endPointer = 0; // Track our current final index
     private int startPointer = 0; // Track our current first index
+    private int removed = 0; // Track removed terms
 
+    // Subject to change in constructor
+    private E[] array = (E[]) new Object[100];
     private double growthRate = 1.5;
 
     /* 
@@ -130,7 +133,8 @@ public class Sequence<E> {
     }
 
     /**
-     * Expand the array by the given growth factor
+     * Expand the array by the given growth factor.
+     * Check for null items and remove
      */
     private void arrayExpansion(){
         // New array is created by expanding by growthFactor
@@ -139,18 +143,26 @@ public class Sequence<E> {
 
         // Now loop over and add all items to the larger list
         int secondCount = 0; // This counts from index 0 for the new array
-        for (int i = startPointer; i < endPointer; i++){ // This counts from index startPointer for the old array
-            newArray[secondCount] = array[i];
-            secondCount++;
-        }
+        for (int i = startPointer; i < endPointer-removed; i++){ // This counts from index startPointer for the old array
 
-        // Get the current term length of array to set pointers
-        int termLength = endPointer-startPointer;
+            // Get current term from the array
+            E curTerm = array[i];
+
+            if (curTerm == null){
+                // Skip as term not needed
+                continue;
+            } else {
+                newArray[secondCount] = curTerm;
+                secondCount++;
+            }
+    
+        }
 
         // Now set array to newArray
         array = newArray;
-        endPointer = termLength;
+        endPointer = length(); // Set to current length after expansion
         startPointer = 0;
+        removed = 0; // No items have been removed from list currently
     }
 
     /**
@@ -160,8 +172,8 @@ public class Sequence<E> {
      */
     public int length(){
     
-        // Length can be worked out via the difference between the startIndex and endIndex
-        return endPointer - startPointer;
+        // Length can be worked out via the difference between the startIndex and endIndex with removed taken off to track non existant terms.
+        return endPointer - startPointer - removed;
     }
 
     /**

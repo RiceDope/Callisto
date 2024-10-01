@@ -20,8 +20,42 @@ Memory management plan for ArrayList and Queue:
 
 - A queue will be removed from index 0 and added at index i.
 - An arrayList has random access and any item can be removed and then added to and from.
-- Cannot shift all items down if index[0] is removed each time in a queue. Only makes.
+- Cannot shift all items down if index[0] is removed each time in a queue.
 - Two pointers could exist to show a start and an end of the "list"
 - When end pointer reaches the same length as the list. All terms are shifted down the relevant amount of spaces 
   (In relation to what has been removed). And the size of the array grows by 1.5x? Pointers for beginning and end are moved to
   new positions relative to the new beginning and end.
+
+Removal from ArrayList:
+- List of length 100 has 50 terms. User is aware the list goes up to 50. Last 50 terms are not of their concern. They don't exist to user unless they use rawLength().
+- User wants to remove index[25].
+- Is there a good representation for a missing term:
+
+- Treat each removed term from the ArrayList as a "null" element.
+- Track how many have been removed in this way.
+- Once it reaches something like 10% of all tracked elements "refactor" the array.
+- Copy to new array of same length with startIndex being 0 and there being no gaps:
+
+arrayBefore = [1, 2, 3, null, 4, 5, 6, null, 7, 8, 9, 10, null, null, null]     length: 15 startIndex: 0 endIndex: 12 removed: 2
+Length calculation would be (endIndex - startIndex - removed)
+toString will have to account for nulls and ignore them
+Issues arise when access to a specific index is attempted
+
+say we tried this myArray.get(3); We are accessing a removed null element.
+Instead of erroring work out what should replace this. Naive approach would be to +1 until next non null term.
+However say myArray.get(7) was attempted there is a removed term before this at index 3 and itself at 7. So number after this are shifted by 2 not 1.
+Even if we wanted to access index[4] it would return the wrong item as index 4 after removal is 5 but we would get 4.
+
+Some form of lazy processing that when a get or change operation is attempted we can change the array. But until access is needed we just add as we would anyway.
+
+example:
+private void refactor(){ ... }
+arrayBefore = [1, 2, 3, null, 4, 5, 6, null, 7, 8, 9, 10, null, null, null]
+arrayAfter = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null, null, null, null, null]
+
+When no access is requested we can just add onto the end. If an array expansion happens then also remove these nulls.
+
+MAKE SURE ALL LENGTH CALCULATIONS TAKE INTO ACCOUNT REMOVED TERMS FOR POINTER POSITIONS
+
+CREATE REFACTOR METHOD FOR THE ARRAY.
+REFACTOR INSERTION OR RETRIEVAL

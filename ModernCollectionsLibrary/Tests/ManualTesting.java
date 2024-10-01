@@ -18,12 +18,10 @@ public class ManualTesting {
         test.append(2);
         test.append(2);
         test.append(2);
-        System.out.println(test.get(3));
+        System.out.println(test.toString());
         test.append(2);
 
-        System.out.println(test.get(0));
-        test.replace(12, 11);
-        System.out.println(test.get(11));
+        System.out.println(test.toString());
     }
 
 }
