@@ -76,6 +76,43 @@ public class Sequence<E> {
     */
 
     /**
+     * Gets a specific element from the array
+     * @param index The index of the element 
+     * @return The element
+     */
+    public E get (int index){
+
+        // Adjust in case 0 is not the starting point
+        int indexToAdjust = startPointer+index;
+
+        if (indexToAdjust > endPointer){ // If in unset positions
+            System.err.println("Index out of bounds");
+            return null;
+        } else { // All good
+            return array[indexToAdjust];
+        }
+
+    }
+
+    /**
+     * Replace a specifc item in the array
+     * @param value The value to insert
+     * @param index The index to insert at
+     */
+    public void replace(E value, int index){
+
+        // Adjust in case 0 is not the starting point
+        int indexToAdjust = startPointer+index;
+
+        if (indexToAdjust > endPointer){ // If in unset positions
+            System.err.println("Index out of bounds, Nothing to replace");
+        } else { // All good
+            array[startPointer+index] = value;
+        }
+
+    }
+
+    /**
      * Add an item to the array. Automatically deals with expansion of the array
      * @param item The item to add
      */
