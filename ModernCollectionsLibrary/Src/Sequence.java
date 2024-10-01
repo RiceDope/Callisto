@@ -1,9 +1,10 @@
 /**
  * Script that implements the basic functionality needed for Sequence
  * 
+ * Created: 30/09/2024
+ * Last Updated 01/10/2024
+ * 
  * @Author Rhys Walker
- * @Since 30/09/2024
- * @Version 0.1
  */
 
 package ModernCollectionsLibrary.Src;
