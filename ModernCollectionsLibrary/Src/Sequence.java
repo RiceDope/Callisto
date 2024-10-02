@@ -76,6 +76,10 @@ public class Sequence<E> {
         ====================================================
     */
 
+    public void remove(int index){
+        array[index] = null;
+    }
+
     /**
      * Gets a specific element from the array
      * @param index The index of the element 
@@ -86,7 +90,7 @@ public class Sequence<E> {
         // Adjust in case 0 is not the starting point
         int indexToAdjust = startPointer+index;
 
-        if (indexToAdjust > endPointer){ // If in unset positions
+        if (indexToAdjust > endPointer || index < 0){ // If in unset positions
             System.err.println("Index out of bounds, Nothing to get");
             return null;
         } else { // All good
@@ -105,11 +109,11 @@ public class Sequence<E> {
         // Force null check
         if (value == null){
             System.err.println("Null not allowed for replace, Action not taken");
-        }  else {
+        } else {
             // Adjust in case 0 is not the starting point
             int indexToAdjust = startPointer+index;
 
-            if (indexToAdjust > endPointer){ // If in unset positions
+            if (indexToAdjust > endPointer || index < 0){ // If in unset positions
                 System.err.println("Index out of bounds, Nothing to replace");
             } else { // All good
                 array[startPointer+index] = value;

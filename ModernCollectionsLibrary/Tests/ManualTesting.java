@@ -21,8 +21,6 @@ public class ManualTesting {
         System.out.println(test.toString());
         System.out.println(test.rawLength());
 
-        test.replace(null, 4);
-
         test.append(2);
         System.out.println(test.toString());
         System.out.println(test.rawLength());
