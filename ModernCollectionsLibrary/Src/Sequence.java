@@ -21,7 +21,7 @@ public class Sequence<E> {
     // Runtime variables
     private int endPointer = 0; // Track our current final index
     private int startPointer = 0; // Track our current first index
-    private int removed = 0; // Track removed terms
+    private int removed = 0; // Not used infrastructure in place for length and such
 
     // Subject to change in constructor
     private E[] array = (E[]) new Object[100]; // Default size of array if one is not chosen
@@ -80,6 +80,10 @@ public class Sequence<E> {
         ====================================================
     */
 
+    /**
+     * Remove an element by index
+     * @param index Index of the element to remove
+     */
     public void remove(int index){
         int indexToAdjust = startPointer+index;
         if (indexToAdjust > endPointer || index < 0) {
