@@ -24,7 +24,8 @@ public class Sequence<E> {
     private int removed = 0; // Not used infrastructure in place for length and such
 
     // Subject to change in constructor
-    private E[] array = (E[]) new Object[100]; // Default size of array if one is not chosen
+    private int initialSize = 100;
+    private E[] array = (E[]) new Object[initialSize]; // Default size of array if one is not chosen
     private double growthRate = 1.5; // Default growth rate if one isnt chosen
 
     /* 
@@ -48,6 +49,7 @@ public class Sequence<E> {
      */
     public Sequence(int size){
 
+        initialSize = size;
         array = (E[]) new Object[size];
 
     }
@@ -69,6 +71,7 @@ public class Sequence<E> {
      */
     public Sequence(int size, double growthRate){
 
+        initialSize = size;
         array = (E[]) new Object[size];
         this.growthRate = growthRate;
 
