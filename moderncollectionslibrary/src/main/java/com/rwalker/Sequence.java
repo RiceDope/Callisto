@@ -11,7 +11,7 @@
  * @Author Rhys Walker
  */
 
-package ModernCollectionsLibrary.Src;
+package com.rwalker;
 
 import java.lang.StringBuilder;
 
