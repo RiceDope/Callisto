@@ -18,12 +18,16 @@ public class ManualTesting {
         test.append(2);
         test.append(2);
         test.append(2);
-        System.out.println(test.toString());
-        System.out.println(test.rawLength());
-
         test.append(2);
-        System.out.println(test.toString());
-        System.out.println(test.rawLength());
+
+        // Example of issue when removing
+        System.out.println(test.rawString());
+        test.remove(0);
+        System.out.println(test.rawString());
+        test.remove(1);
+        System.out.println(test.rawString());
+        test.remove(2);
+        System.out.println(test.rawString());
     }
 
 }

@@ -2,7 +2,11 @@
  * Script that implements the basic functionality needed for Sequence
  * 
  * Created: 30/09/2024
- * Last Updated 01/10/2024
+ * Last Updated 02/10/2024
+ * 
+ * Important notes:
+ *      Infrastructure to deal with null removes and reduce array refactor is in place
+ *      Needs implementing in certain methods as when to refactor
  * 
  * @Author Rhys Walker
  */
@@ -77,7 +81,15 @@ public class Sequence<E> {
     */
 
     public void remove(int index){
-        array[index] = null;
+        int indexToAdjust = startPointer+index;
+        if (indexToAdjust > endPointer || index < 0) {
+            System.err.println("Index out of bounds, Nothing removed");
+        } else {
+
+            array[indexToAdjust] = null;
+
+            reformat(false);
+        }
     }
 
     /**
@@ -131,7 +143,7 @@ public class Sequence<E> {
         if (item != null){
             if (endPointer == array.length){ // We must expand the array
                 // Expand the array
-                arrayExpansion();
+                reformat(true);
 
                 // Now add the new item
                 array[endPointer] = item;
@@ -150,10 +162,17 @@ public class Sequence<E> {
      * Expand the array by the given growth factor.
      * Check for null items and remove
      */
-    private void arrayExpansion(){
-        // New array is created by expanding by growthFactor
-        int newLen = (int) Math.round(array.length*growthRate);
-        E[] newArray = (E[]) new Object[newLen];
+    private void reformat(boolean  expand){
+        E[] newArray;
+        if (expand == true){
+            // New array is created by expanding by growthFactor
+            int newLen = (int) Math.round(array.length*growthRate);
+            newArray = (E[]) new Object[newLen];
+        } else {
+            // If we dont want to expand the array but just re-format
+            newArray = (E[]) new Object[array.length];
+        }
+        
 
         // Now loop over and add all items to the larger list
         int secondCount = 0; // This counts from index 0 for the new array
@@ -202,7 +221,7 @@ public class Sequence<E> {
         sb.append("[");
 
         // Add all terms to the StringBuilder
-        for (int i = 0; i < endPointer; i++){
+        for (int i = startPointer; i < endPointer; i++){
             if (array[i] != null){
                 sb.append(array[i] + ", ");
             }
@@ -224,5 +243,30 @@ public class Sequence<E> {
      */
     public int rawLength(){
         return array.length;
+    }
+
+    /**
+     * Returns the array including null positions
+     * @return String containing full length of the array not just what is being worked on
+     */
+    public String rawString(){
+        StringBuilder sb = new StringBuilder();
+
+        // Add the beginning bracket
+        sb.append("[");
+
+        // Add all terms to the StringBuilder
+        for (int i = 0; i < array.length; i++){
+            sb.append(array[i] + ", ");
+        }
+        // Find and remove last comma and space
+        int lastComma = sb.lastIndexOf(",");
+        sb.delete(lastComma, lastComma+2);
+
+        // Add the final bracket
+        sb.append("]");
+
+        // Return the string
+        return sb.toString();
     }
 } 
