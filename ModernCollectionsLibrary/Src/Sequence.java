@@ -20,8 +20,8 @@ public class Sequence<E> {
     private int removed = 0; // Track removed terms
 
     // Subject to change in constructor
-    private E[] array = (E[]) new Object[100];
-    private double growthRate = 1.5;
+    private E[] array = (E[]) new Object[100]; // Default size of array if one is not chosen
+    private double growthRate = 1.5; // Default growth rate if one isnt chosen
 
     /* 
         =================================================
@@ -87,7 +87,7 @@ public class Sequence<E> {
         int indexToAdjust = startPointer+index;
 
         if (indexToAdjust > endPointer){ // If in unset positions
-            System.err.println("Index out of bounds");
+            System.err.println("Index out of bounds, Nothing to get");
             return null;
         } else { // All good
             return array[indexToAdjust];
@@ -102,13 +102,18 @@ public class Sequence<E> {
      */
     public void replace(E value, int index){
 
-        // Adjust in case 0 is not the starting point
-        int indexToAdjust = startPointer+index;
+        // Force null check
+        if (value == null){
+            System.err.println("Null not allowed for replace, Action not taken");
+        }  else {
+            // Adjust in case 0 is not the starting point
+            int indexToAdjust = startPointer+index;
 
-        if (indexToAdjust > endPointer){ // If in unset positions
-            System.err.println("Index out of bounds, Nothing to replace");
-        } else { // All good
-            array[startPointer+index] = value;
+            if (indexToAdjust > endPointer){ // If in unset positions
+                System.err.println("Index out of bounds, Nothing to replace");
+            } else { // All good
+                array[startPointer+index] = value;
+            }
         }
 
     }
@@ -118,18 +123,22 @@ public class Sequence<E> {
      * @param item The item to add
      */
     public void append(E item){
+        // Force null check
+        if (item != null){
+            if (endPointer == array.length){ // We must expand the array
+                // Expand the array
+                arrayExpansion();
 
-        if (endPointer == array.length){ // We must expand the array
-            // Expand the array
-            arrayExpansion();
+                // Now add the new item
+                array[endPointer] = item;
+                endPointer++;
 
-            // Now add the new item
-            array[endPointer] = item;
-            endPointer++;
-
-        } else { // No need to expand array
-            array[endPointer] = item;
-            endPointer++;
+            } else { // No need to expand array
+                array[endPointer] = item;
+                endPointer++;
+            }
+        } else {
+            System.err.println("Cannot insert null, Action not taken");
         }
     }
 
@@ -190,7 +199,9 @@ public class Sequence<E> {
 
         // Add all terms to the StringBuilder
         for (int i = 0; i < endPointer; i++){
-            sb.append(array[i] + ", ");
+            if (array[i] != null){
+                sb.append(array[i] + ", ");
+            }
         }
         // Find and remove last comma and space
         int lastComma = sb.lastIndexOf(",");

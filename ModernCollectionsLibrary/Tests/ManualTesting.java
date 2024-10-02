@@ -8,7 +8,7 @@ public class ManualTesting {
         
         Sequence<Integer> test = new Sequence<Integer>(10);
         
-        test.append(5);
+        test.append(2);
         test.append(2);
         test.append(2);
         test.append(10);
@@ -19,9 +19,13 @@ public class ManualTesting {
         test.append(2);
         test.append(2);
         System.out.println(test.toString());
-        test.append(2);
+        System.out.println(test.rawLength());
 
+        test.replace(null, 4);
+
+        test.append(2);
         System.out.println(test.toString());
+        System.out.println(test.rawLength());
     }
 
 }
