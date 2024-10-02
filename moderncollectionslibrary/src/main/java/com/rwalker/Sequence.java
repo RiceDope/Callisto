@@ -49,8 +49,12 @@ public class Sequence<E> {
      */
     public Sequence(int size){
 
-        initialSize = size;
-        array = (E[]) new Object[size];
+        if (size  > 0){
+            initialSize = size;
+            array = (E[]) new Object[size];
+        } else {
+            System.err.println("Negative size used, Defaults applied");
+        }
 
     }
 
@@ -58,9 +62,14 @@ public class Sequence<E> {
      * Allows for specification of just the growth rate
      * @param growthRate Double initial growth rate of the array
      */
-    public Sequence(double growthRate){
+    public Sequence(double customGrowthRate){
 
-        this.growthRate = growthRate;
+        if (customGrowthRate >  1.0){
+            this.growthRate = customGrowthRate;
+        } else {
+            System.err.println("Invalid growth rate: Default growth rate used");
+        }
+        
 
     }
 
@@ -69,11 +78,19 @@ public class Sequence<E> {
      * @param size Int starting size of the array
      * @param growthRate Double initial growth rate of the array
      */
-    public Sequence(int size, double growthRate){
+    public Sequence(int size, double customGrowthRate){
 
-        initialSize = size;
-        array = (E[]) new Object[size];
-        this.growthRate = growthRate;
+        if (size  > 0){
+            initialSize = size;
+            array = (E[]) new Object[size];
+        } else {
+            System.err.println("Negative size used, Defaults applied");
+        }
+        if (customGrowthRate >  1.0){
+            this.growthRate = customGrowthRate;
+        } else {
+            System.err.println("Invalid growth rate: Default growth rate used");
+        }
 
     }
 
@@ -236,15 +253,18 @@ public class Sequence<E> {
         // Add the beginning bracket
         sb.append("[");
 
-        // Add all terms to the StringBuilder
-        for (int i = startPointer; i < endPointer; i++){
-            if (array[i] != null){
-                sb.append(array[i] + ", ");
+        // As long as more than one element
+        if (length() != 0){
+            // Add all terms to the StringBuilder
+            for (int i = startPointer; i < endPointer; i++){
+                if (array[i] != null){
+                    sb.append(array[i] + ", ");
+                }
             }
+            // Find and remove last comma and space
+            int lastComma = sb.lastIndexOf(",");
+            sb.delete(lastComma, lastComma+2);
         }
-        // Find and remove last comma and space
-        int lastComma = sb.lastIndexOf(",");
-        sb.delete(lastComma, lastComma+2);
 
         // Add the final bracket
         sb.append("]");
@@ -284,5 +304,25 @@ public class Sequence<E> {
 
         // Return the string
         return sb.toString();
+    }
+
+    /**
+     * Set a custom growth rate for the array
+     * @param newRate The new growth rate
+     */
+    public void setGrowthRate(Double newRate){
+        if (newRate >  1.0){
+            this.growthRate = newRate;
+        } else {
+            System.err.println("Invalid growth rate: Growth rate above 1 is required");
+        }
+    }
+
+    /**
+     * Get the growth rate Sequence is using
+     * @return Double growth rate
+     */
+    public double getGrowthRate(){
+        return growthRate;
     }
 } 

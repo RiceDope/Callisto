@@ -2,8 +2,6 @@ package com.rwalker;
 
 import org.junit.Test;
 
-import com.rwalker.Sequence;
-
 public class ManualTest {
     
     @Test
