@@ -7,7 +7,6 @@ A modern collections library for java. Developed as part of my dissertation at t
 Tasks that are currently being worked on will appear here.
 
 - Setup repo with automatic testing
-- Build ArrayList tests
 
 ## Backlog
 
@@ -18,6 +17,12 @@ Tasks will appear here if they are needed but cannot be worked on immediately.
 - ArrayList sort operation (Returns a new ArrayList that is sorted. Or can overwrite current)
 - List wanted functionality
 - Create basic Queue
+
+## Constant
+
+Tasks that will require constant additions will appear here.
+
+- Build tests
 
 ## Completed
 
