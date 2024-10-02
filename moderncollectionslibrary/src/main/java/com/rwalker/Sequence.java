@@ -84,6 +84,16 @@ public class Sequence<E> {
     */
 
     /**
+     * Clears the array. New arrays size is initialSize
+     */
+    public void clear(){
+        E[] newArray = (E[]) new Object[initialSize];
+        array = newArray;
+        startPointer = 0;
+        endPointer = 0;
+    }
+
+    /**
      * Remove an element by index
      * @param index Index of the element to remove
      */
@@ -94,7 +104,6 @@ public class Sequence<E> {
         } else {
 
             array[indexToAdjust] = null;
-
             reformat(false);
         }
     }
