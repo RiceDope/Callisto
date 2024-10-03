@@ -111,7 +111,13 @@ public class Sequence<E> {
      * @return The next item in the queue
      */
     public E  peek(){
-        return array[startPointer];
+        if (length() > 0){
+            return array[startPointer];
+        } else {
+            System.err.println("No items to dequeue: null returned");
+            return null;
+        }
+        
     }
 
     /**
@@ -119,14 +125,20 @@ public class Sequence<E> {
      * @return The item that has  been dequeued
      */
     public E dequeue(){
-        E temp = array[startPointer];
-        array[startPointer] = null;
-        startPointer++;
-        return temp;
+        if (length() > 0){
+            E temp = array[startPointer];
+            array[startPointer] = null;
+            startPointer++;
+            return temp;
+        } else {
+            System.err.println("No items to dequeue: null returned");
+            return null;
+        }
     }
 
     /**
      * Enqueue an item at the end of the queue
+     * Functionaly the same as append. There is no difference
      * @param item
      */
     public void enqueue(E item){

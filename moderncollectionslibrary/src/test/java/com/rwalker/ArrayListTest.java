@@ -1,7 +1,6 @@
 package com.rwalker;
 
 // Junit tings
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -9,14 +8,6 @@ import org.junit.Test;
  * Unit test for ArrayList functionality of Sequence
  */
 public class ArrayListTest {
-    
-    /**
-     * Test that a sequence can be made
-     */
-    @Test
-    public void testCreation() {
-        assertNotNull(TestUtils.generateEmptySequence());
-    }
 
     /**
      * Test that adding the 10 items has worked and length function
@@ -36,6 +27,16 @@ public class ArrayListTest {
         testing.remove(4);
         testing.remove(7);
         assertEquals("[100, 52, 250, 5, 1052, 9, 100, 52]", testing.toString());
+    }
+
+    /**
+     * Test getting the 1st integer
+     */
+    @Test
+    public void testGet(){
+        Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
+        int out = testing.get(1);
+        assertEquals(2, out);
     }
 
     /**

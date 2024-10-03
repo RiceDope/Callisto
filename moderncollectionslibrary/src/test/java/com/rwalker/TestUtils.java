@@ -53,4 +53,24 @@ public class TestUtils {
 
         return testing;
     }
+
+    /**
+     * Generate a sequence and add ten items to the queue
+     * order = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+     * @return The queue with ten items added
+     */
+    public static Sequence<Integer> generateEnqueueTenItems(){
+        Sequence<Integer> testing = TestUtils.generateEmptySequence();
+        testing.enqueue(5);
+        testing.enqueue(10);
+        testing.enqueue(15);
+        testing.enqueue(20);
+        testing.enqueue(25);
+        testing.enqueue(30);
+        testing.enqueue(35);
+        testing.enqueue(40);
+        testing.enqueue(45);
+        testing.enqueue(50);
+        return testing;
+    }
 }
