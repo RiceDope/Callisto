@@ -16,7 +16,6 @@ Tasks will appear here if they are needed but cannot be worked on immediately.
 - ArrayList append (If enforceSort active then insert correctly)
 - ArrayList sort operation (Returns a new ArrayList that is sorted. Or can overwrite current)
 - List wanted functionality
-- Create basic Queue
 
 ## Constant
 
@@ -35,4 +34,5 @@ Full history of tasks that were noted down and have been completed.
 - Basic ArrayList functionality
 - Some structure in place for future optimisation
 - ArrayList clear operation
+- Create basic Queue
 
