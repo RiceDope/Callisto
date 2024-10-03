@@ -5,8 +5,10 @@
  * Last Updated 02/10/2024
  * 
  * Important notes:
- *      Infrastructure to deal with null removes and reduce array refactor is in place
+ *      Infrastructure to deal with null removes and reduce array refactor is in place partially
  *      Needs implementing in certain methods as when to refactor
+ * 
+ *      Some fields have been implemented for later use
  * 
  * @Author Rhys Walker
  */
@@ -28,7 +30,11 @@ public class Sequence<E> {
     private E[] array = (E[]) new Object[initialSize]; // Default size of array if one is not chosen
     private double growthRate = 1.5; // Default growth rate if one isnt chosen
 
-    /* 
+    // Boolean settings of the Sequence
+    private boolean enforceSort = false; // Do we want to enforce a sort
+    private boolean ascending = true; // When enforcing sort do we want ascending or descending
+
+    /*
         =================================================
                     OVERLOADED CONSTRUCTOR                          
         =================================================
@@ -99,6 +105,33 @@ public class Sequence<E> {
                                 END                                      
         ====================================================
     */
+
+    /**
+     * Peek at the next item in the queue
+     * @return The next item in the queue
+     */
+    public E  peek(){
+        return array[startPointer];
+    }
+
+    /**
+     * Dequeue an item
+     * @return The item that has  been dequeued
+     */
+    public E dequeue(){
+        E temp = array[startPointer];
+        array[startPointer] = null;
+        startPointer++;
+        return temp;
+    }
+
+    /**
+     * Enqueue an item at the end of the queue
+     * @param item
+     */
+    public void enqueue(E item){
+        append(item);
+    }
 
     /**
      * Clears the array. New arrays size is initialSize

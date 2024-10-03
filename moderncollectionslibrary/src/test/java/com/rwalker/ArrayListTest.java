@@ -54,7 +54,7 @@ public class ArrayListTest {
     @Test
     public void testExpansion(){
         // Generate a small sequence for testing
-        Sequence<Integer> testing = TestUtils.generateSmallSequence();
+        Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
 
         assertEquals(4, testing.rawLength());
 
@@ -69,7 +69,7 @@ public class ArrayListTest {
     @Test
     public void testBaseArrayShrink(){
 
-        Sequence<Integer> testing = TestUtils.generateSmallSequence();
+        Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
         // Expansion occurs here (size 6 rate x1.5 default)
         testing.append(5);
         assertEquals(6, testing.rawLength());
@@ -83,7 +83,7 @@ public class ArrayListTest {
      */
     @Test
     public void testCustomGrowthRate(){
-        Sequence<Integer> testing = TestUtils.generateSmallSequence();
+        Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
         testing.setGrowthRate(2.0);
         testing.append(10);
         assertEquals(8, testing.rawLength());

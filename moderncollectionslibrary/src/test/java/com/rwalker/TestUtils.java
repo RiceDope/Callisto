@@ -42,7 +42,7 @@ public class TestUtils {
      * order = [1, 2, 3, 4]
      * @return Full array of size 4
      */
-    public static Sequence<Integer> generateSmallSequence(){
+    public static Sequence<Integer> generateFullSmallSequence(){
 
         Sequence<Integer> testing = new Sequence<Integer>(4);
 
