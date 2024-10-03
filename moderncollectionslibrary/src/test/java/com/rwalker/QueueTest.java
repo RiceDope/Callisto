@@ -1,5 +1,11 @@
 package com.rwalker;
 
+/**
+ * Tests for the queue functionality of Sequence.java
+ * 
+ * @author Rhys Walker
+ */
+
 // Junit tings
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;

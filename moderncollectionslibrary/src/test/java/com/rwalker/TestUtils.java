@@ -1,5 +1,11 @@
 package com.rwalker;
 
+/**
+ * General utilities to aid in testing
+ * 
+ * @author Rhys Walker
+ */
+
 public class TestUtils {
     
     /**
