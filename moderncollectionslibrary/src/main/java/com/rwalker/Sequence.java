@@ -2,13 +2,15 @@
  * Script that implements the basic functionality needed for Sequence
  * 
  * Created: 30/09/2024
- * Last Updated 02/10/2024
+ * Last Updated 07/10/2024
  * 
  * Important notes:
  *      Infrastructure to deal with null removes and reduce array refactor is in place partially
  *      Needs implementing in certain methods as when to refactor
  * 
  *      Some fields have been implemented for later use
+ * 
+ *      Updated to throw exception rather than System.err
  * 
  * @Author Rhys Walker
  */
@@ -33,6 +35,9 @@ public class Sequence<E> {
     // Boolean settings of the Sequence
     private boolean enforceSort = false; // Do we want to enforce a sort
     private boolean ascending = true; // When enforcing sort do we want ascending or descending
+
+    // Developer settings for adjustment
+    private int minumumExpansion = 1; // Decide on minimum expansion requirements
 
     /*
         =================================================
@@ -237,12 +242,24 @@ public class Sequence<E> {
      * Expand the array by the given growth factor.
      * Check for null items and remove
      */
+    // TODO: Make sure expansion is only done when there is a good reason
     private void reformat(boolean  expand){
+
         E[] newArray;
+
         if (expand == true){
+            // Check for minimum growth requirement of 1
+            int length = array.length;
+            int newSize = (int) Math.ceil(length*growthRate);
+
+            if (newSize <= length){
+                newSize = newSize + minumumExpansion;
+            }
             // New array is created by expanding by growthFactor
-            int newLen = (int) Math.round(array.length*growthRate);
+            int newLen = (int) Math.round(newSize);
             newArray = (E[]) new Object[newLen];
+
+            
         } else {
             // If we dont want to expand the array but just re-format
             newArray = (E[]) new Object[array.length];

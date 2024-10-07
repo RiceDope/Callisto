@@ -1,4 +1,4 @@
-Error handling
+Error handling                               	DONE!
 Comparators for sorting
 Enforce sorting
 Stack
@@ -6,4 +6,5 @@ Check for paper on average array size
 GitHub actions
 Test coverage
 Test combinations
-Minimum growth requirements
+Minimum growth requirements			DONE!
+Work on when to expand. Be more precise
