@@ -99,7 +99,7 @@ public class ArrayListTest {
     /**
      * Test that growth rate is handled correctly when given an erronous growth input
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void instantiateWithNegativeGrowth(){
         Sequence<Integer> testing = new Sequence<Integer>(3, -2.0);
         // Use non deprecated method with "error range"
@@ -109,9 +109,8 @@ public class ArrayListTest {
     /**
      * Test that default size is applied when given erronous size input
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void instantiateWithNegativeSize(){
         Sequence<Integer> testing = new Sequence<Integer>(-10);
-        assertEquals(100, testing.rawLength());
     }
 }

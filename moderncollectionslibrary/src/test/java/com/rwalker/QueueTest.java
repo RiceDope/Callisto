@@ -37,7 +37,7 @@ public class QueueTest {
     /**
      * Test dequeuing on an empty queue
      */
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testEmptyDequeue(){
         Sequence<Integer> testing = TestUtils.generateEmptySequence();
         assertEquals(null, testing.dequeue());

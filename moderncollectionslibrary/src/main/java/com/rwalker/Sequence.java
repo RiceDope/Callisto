@@ -53,13 +53,13 @@ public class Sequence<E> {
      * Allows for specification of just the initial size of the array
      * @param size Int initial size of the array
      */
-    public Sequence(int size){
+    public Sequence(int size) throws IllegalArgumentException {
 
         if (size  > 0){
             initialSize = size;
             array = (E[]) new Object[size];
         } else {
-            System.err.println("Negative size used, Defaults applied");
+            throw new IllegalArgumentException("Cannot use size of 0 or less");
         }
 
     }
@@ -68,12 +68,12 @@ public class Sequence<E> {
      * Allows for specification of just the growth rate
      * @param growthRate Double initial growth rate of the array
      */
-    public Sequence(double customGrowthRate){
+    public Sequence(double customGrowthRate) throws IllegalArgumentException{
 
         if (customGrowthRate >  1.0){
             this.growthRate = customGrowthRate;
         } else {
-            System.err.println("Invalid growth rate: Default growth rate used");
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
         
 
@@ -84,18 +84,18 @@ public class Sequence<E> {
      * @param size Int starting size of the array
      * @param growthRate Double initial growth rate of the array
      */
-    public Sequence(int size, double customGrowthRate){
+    public Sequence(int size, double customGrowthRate) throws IllegalArgumentException{
 
         if (size  > 0){
             initialSize = size;
             array = (E[]) new Object[size];
         } else {
-            System.err.println("Negative size used, Defaults applied");
+            throw new IllegalArgumentException("Cannot use size of 0 or less");
         }
         if (customGrowthRate >  1.0){
             this.growthRate = customGrowthRate;
         } else {
-            System.err.println("Invalid growth rate: Default growth rate used");
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
 
     }
@@ -110,12 +110,11 @@ public class Sequence<E> {
      * Peek at the next item in the queue
      * @return The next item in the queue
      */
-    public E  peek(){
+    public E  peek() throws NullPointerException{ // TODO: Is this the right exception
         if (length() > 0){
             return array[startPointer];
         } else {
-            System.err.println("No items to dequeue: null returned");
-            return null;
+            throw new NullPointerException("No item to peek");
         }
         
     }
@@ -124,15 +123,14 @@ public class Sequence<E> {
      * Dequeue an item
      * @return The item that has  been dequeued
      */
-    public E dequeue(){
+    public E dequeue() throws NullPointerException{ // TODO: Is this the right exception
         if (length() > 0){
             E temp = array[startPointer];
             array[startPointer] = null;
             startPointer++;
             return temp;
         } else {
-            System.err.println("No items to dequeue: null returned");
-            return null;
+            throw new NullPointerException("No items to dequeue");
         }
     }
 
@@ -159,10 +157,10 @@ public class Sequence<E> {
      * Remove an element by index
      * @param index Index of the element to remove
      */
-    public void remove(int index){
+    public void remove(int index) throws ArrayIndexOutOfBoundsException{
         int indexToAdjust = startPointer+index;
         if (indexToAdjust > endPointer || index < 0) {
-            System.err.println("Index out of bounds, Nothing removed");
+            throw new ArrayIndexOutOfBoundsException("Index out of bounds");
         } else {
 
             array[indexToAdjust] = null;
@@ -175,14 +173,13 @@ public class Sequence<E> {
      * @param index The index of the element 
      * @return The element
      */
-    public E get (int index){
+    public E get (int index) throws ArrayIndexOutOfBoundsException{
 
         // Adjust in case 0 is not the starting point
         int indexToAdjust = startPointer+index;
 
         if (indexToAdjust > endPointer || index < 0){ // If in unset positions
-            System.err.println("Index out of bounds, Nothing to get");
-            return null;
+            throw new ArrayIndexOutOfBoundsException("Index out of bounds");
         } else { // All good
             return array[indexToAdjust];
         }
@@ -194,17 +191,17 @@ public class Sequence<E> {
      * @param value The value to insert
      * @param index The index to insert at
      */
-    public void replace(E value, int index){
+    public void replace(E value, int index) throws ArrayIndexOutOfBoundsException, IllegalArgumentException{
 
         // Force null check
         if (value == null){
-            System.err.println("Null not allowed for replace, Action not taken");
+            throw new IllegalArgumentException("null not allowed for replace");
         } else {
             // Adjust in case 0 is not the starting point
             int indexToAdjust = startPointer+index;
 
             if (indexToAdjust > endPointer || index < 0){ // If in unset positions
-                System.err.println("Index out of bounds, Nothing to replace");
+                throw new ArrayIndexOutOfBoundsException("Index out of bounds");
             } else { // All good
                 array[startPointer+index] = value;
             }
@@ -216,7 +213,7 @@ public class Sequence<E> {
      * Add an item to the array. Automatically deals with expansion of the array
      * @param item The item to add
      */
-    public void append(E item){
+    public void append(E item) throws IllegalArgumentException{
         // Force null check
         if (item != null){
             if (endPointer == array.length){ // We must expand the array
@@ -232,7 +229,7 @@ public class Sequence<E> {
                 endPointer++;
             }
         } else {
-            System.err.println("Cannot insert null, Action not taken");
+            throw new IllegalArgumentException("null not allowed for append");
         }
     }
 
@@ -355,11 +352,11 @@ public class Sequence<E> {
      * Set a custom growth rate for the array
      * @param newRate The new growth rate
      */
-    public void setGrowthRate(Double newRate){
+    public void setGrowthRate(Double newRate) throws IllegalArgumentException{
         if (newRate >  1.0){
             this.growthRate = newRate;
         } else {
-            System.err.println("Invalid growth rate: Growth rate above 1 is required");
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
     }
 

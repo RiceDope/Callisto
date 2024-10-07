@@ -6,3 +6,4 @@ Check for paper on average array size
 GitHub actions
 Test coverage
 Test combinations
+Minimum growth requirements
