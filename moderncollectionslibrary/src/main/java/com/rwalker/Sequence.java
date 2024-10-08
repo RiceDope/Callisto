@@ -18,6 +18,8 @@
 package com.rwalker;
 
 import java.lang.StringBuilder;
+import java.util.Arrays;
+import java.util.Collections;
 
 @SuppressWarnings("unchecked")
 public class Sequence<E> {
@@ -110,6 +112,53 @@ public class Sequence<E> {
                                 END                                      
         ====================================================
     */
+
+    public boolean getAscending(){
+        return ascending;
+    }
+
+    /**
+     * Set the value of ascending to either true or false
+     * This will change the natural ordering of terms in the array
+     * @param bool True = ascending sort, False = descending sort
+     */
+    public void setAscending(boolean bool){
+        ascending = bool;
+    }
+
+    /**
+     * Sorts the array in either ascending or descending order based on the field ascending
+     * !!! ANYTHING BEING SORTED MUST IMPLEMENT COMPARABLE !!!
+     */
+    public void sort(){
+
+        // Calculate the length of the array that contains terms
+        int arrSize = endPointer - startPointer;
+
+        // Generate a temporary array of that length
+        E[] tempArr = (E[]) new Object[arrSize];
+
+        // Add all terms over skipping nulls
+        int addCount = 0;
+        for (int i = 0; i < endPointer; i++){
+            if (array[i] == null){
+                continue;
+            } else {
+                tempArr[addCount] = array[i];
+                addCount++;
+            }
+        }
+
+        // Sort either ascending or descending
+        if (ascending == false){
+            Arrays.sort(tempArr, Collections.reverseOrder());
+        } else {
+            Arrays.sort(tempArr);
+        }
+        Arrays.fill(array, null); // Null out original to maintain terms
+        System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
+
+    }
 
     /**
      * Peek at the next item in the queue

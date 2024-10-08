@@ -1,8 +1,16 @@
 package com.rwalker;
 
+import java.util.Collections;
+
 public class ManualTesting {
     public static void main(String[] args){
-        Sequence<String> test = new Sequence<String>(10, 1.1);
-        test.setGrowthRate(0.5);
+        Sequence<Integer> test = new Sequence<Integer>();
+        test.append(500);
+        test.append(20);
+        test.append(250);
+        test.append(55);
+        System.out.println(test.toString());
+        test.sort();
+        System.out.println(test.toString());
     }
 }
