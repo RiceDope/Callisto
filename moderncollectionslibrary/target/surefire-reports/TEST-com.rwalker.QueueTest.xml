@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rwalker.ArrayListTest" time="0.037" tests="11" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rwalker.QueueTest" time="0.001" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,15 +58,8 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testCustomGrowthRate" classname="com.rwalker.ArrayListTest" time="0.005"/>
-  <testcase name="testGet" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testBaseArrayShrink" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testClear" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testSort" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="instantiateWithNegativeGrowth" classname="com.rwalker.ArrayListTest" time="0.002"/>
-  <testcase name="testEnforceSort" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testRandomRemoval" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testExpansion" classname="com.rwalker.ArrayListTest" time="0.001"/>
-  <testcase name="instantiateWithNegativeSize" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testPopulation" classname="com.rwalker.ArrayListTest" time="0"/>
+  <testcase name="testEnqueue" classname="com.rwalker.QueueTest" time="0"/>
+  <testcase name="testEmptyDequeue" classname="com.rwalker.QueueTest" time="0"/>
+  <testcase name="testPeek" classname="com.rwalker.QueueTest" time="0"/>
+  <testcase name="testDequeue" classname="com.rwalker.QueueTest" time="0"/>
 </testsuite>

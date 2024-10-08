@@ -2,11 +2,11 @@
  * Script that implements the basic functionality needed for Sequence
  * 
  * Created: 30/09/2024
- * Last Updated 07/10/2024
+ * Last Updated 08/10/2024
  * 
  * Important notes:
- *      Infrastructure to deal with null removes and reduce array refactor is in place partially
- *      Needs implementing in certain methods as when to refactor
+ *      
+ *      Too scared to remove removed worried it will break things
  * 
  *      Some fields have been implemented for later use
  * 
@@ -139,10 +139,14 @@ public class Sequence<E> {
     /**
      * Set the value of ascending to either true or false
      * This will change the natural ordering of terms in the array
+     * Will automatically apply sort() to the array if enforceSort is true
      * @param bool True = ascending sort, False = descending sort
      */
-    public void setAscending(boolean bool){
+    public void setAscending(boolean bool) throws NoSuchMethodException{
         ascending = bool;
+        if (enforceSort){
+            sort();
+        }
     }
 
     /**

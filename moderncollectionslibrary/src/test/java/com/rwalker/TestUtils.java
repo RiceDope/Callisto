@@ -79,4 +79,20 @@ public class TestUtils {
         testing.enqueue(50);
         return testing;
     }
+
+    /**
+     * Generate a sequence with four numbers in a "random" order
+     * 
+     * order = [3, 5, 10, 20] ASC
+     * order = [20, 10, 5, 3] DESC
+     * @return A sequence with four integers
+     */
+    public static Sequence<Integer> generateSequenceFourRandomNumbers() throws NoSuchMethodException{
+        Sequence<Integer> test = TestUtils.generateEmptySequence();
+        test.append(5);
+        test.append(3);
+        test.append(10);
+        test.append(20);
+        return test;
+    }
 }
