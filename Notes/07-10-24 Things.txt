@@ -1,6 +1,7 @@
 Error handling                               	DONE!
-Comparators for sorting
-Enforce sorting
+Comparators for sorting				DONE!
+Sort implementation				DONE!
+Enforce sorting					DONE!
 Stack
 Check for paper on average array size
 GitHub actions

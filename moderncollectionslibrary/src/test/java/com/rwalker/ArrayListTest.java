@@ -19,7 +19,7 @@ public class ArrayListTest {
      * Test that adding the 10 items has worked and length function
      */
     @Test
-    public void testPopulation() {
+    public void testPopulation() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.addTenInts(TestUtils.generateEmptySequence());
         assertEquals(10, testing.length());
     }
@@ -28,7 +28,7 @@ public class ArrayListTest {
      * Test removal of two items from the list
      */
     @Test
-    public void testRandomRemoval(){
+    public void testRandomRemoval() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.addTenInts(TestUtils.generateEmptySequence());
         testing.remove(4);
         testing.remove(7);
@@ -39,7 +39,7 @@ public class ArrayListTest {
      * Test getting the 1st integer
      */
     @Test
-    public void testGet(){
+    public void testGet() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
         int out = testing.get(1);
         assertEquals(2, out);
@@ -49,7 +49,7 @@ public class ArrayListTest {
      * Test clearing the array
      */
     @Test
-    public void testClear(){
+    public void testClear() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.addTenInts(TestUtils.generateEmptySequence());
         testing.clear();
         assertEquals("[]", testing.toString());
@@ -59,7 +59,7 @@ public class ArrayListTest {
      * Test the expansion of the base array as we add terms
      */
     @Test
-    public void testExpansion(){
+    public void testExpansion() throws NoSuchMethodException{
         // Generate a small sequence for testing
         Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
 
@@ -74,7 +74,7 @@ public class ArrayListTest {
      * Test the retraction of an array
      */
     @Test
-    public void testBaseArrayShrink(){
+    public void testBaseArrayShrink() throws NoSuchMethodException{
 
         Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
         // Expansion occurs here (size 6 rate x1.5 default)
@@ -89,7 +89,7 @@ public class ArrayListTest {
      * Test custom growth rate
      */
     @Test
-    public void testCustomGrowthRate(){
+    public void testCustomGrowthRate() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
         testing.setGrowthRate(2.0);
         testing.append(10);

@@ -7,15 +7,16 @@ A modern collections library for java. Developed as part of my dissertation at t
 Tasks that are currently being worked on will appear here.
 
 - Setup repo with automatic testing
+- Fully test all features
 
 ## Backlog
 
 Tasks will appear here if they are needed but cannot be worked on immediately.
 
-- ArrayList enforceSort function (All insertions will be carried out as a sorted array from then)
-- ArrayList append (If enforceSort active then insert correctly)
-- ArrayList sort operation (Returns a new ArrayList that is sorted. Or can overwrite current)
 - List wanted functionality
+- Insert method
+- Stack
+- Test coverage
 
 ## Constant
 
@@ -35,4 +36,7 @@ Full history of tasks that were noted down and have been completed.
 - Some structure in place for future optimisation
 - ArrayList clear operation
 - Create basic Queue
-
+- ArrayList append (If enforceSort active then insert correctly)
+- ArrayList sort operation (Overwrites current with new)
+- Enforce sort
+- Block certain functions when enforceSort is on

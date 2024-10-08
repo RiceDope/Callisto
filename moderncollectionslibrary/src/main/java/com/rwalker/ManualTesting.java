@@ -11,8 +11,11 @@ public class ManualTesting {
         test.append(new Student(17, "Thomas"));
         System.out.println(test.toString());
         test.setAscending(false);
-        test.sort();
+        test.setEnforceSort(true);
         System.out.println(test.toString());
+        test.append(new Student(19, "Moe"));
+        System.out.println(test.toString());
+        test.peek();
     }
 }
 

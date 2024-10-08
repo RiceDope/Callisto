@@ -1,0 +1,2 @@
+Proper exception handling. How many times do I need to write throws
+Certain methods will throw an exception if used with enforceSort

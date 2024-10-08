@@ -113,6 +113,21 @@ public class Sequence<E> {
         ====================================================
     */
 
+    // TODO: insert method
+
+    /**
+     * Change the value of enforceSort. Will sort automatically upon true
+     * @param bool The boolean that enforceSort is changed to
+     * @throws NoSuchMethodException from sort()
+     */
+    public void setEnforceSort(boolean bool) throws NoSuchMethodException {
+        enforceSort = bool;
+        // Sort if we just changed to true
+        if (enforceSort){
+            sort();
+        }
+    }
+
     /**
      * Get the value of ascending
      * @return Boolean value of ascending
@@ -133,7 +148,9 @@ public class Sequence<E> {
     /**
      * Sorts the array in either ascending or descending order based on the field ascending
      * !!! ANYTHING BEING SORTED MUST IMPLEMENT COMPARABLE !!!
+     * @throws NoSuchMethodException IMPLEMENT COMPARABLE
      */
+    // TODO: Custom sort algorithm?
     public void sort() throws NoSuchMethodException{
 
         // Calculate the length of the array that contains terms
@@ -175,37 +192,49 @@ public class Sequence<E> {
      * Peek at the next item in the queue
      * @return The next item in the queue
      */
-    public E  peek() throws NullPointerException{ // TODO: Is this the right exception
-        if (length() > 0){
-            return array[startPointer];
+    public E  peek() throws NullPointerException, IllegalStateException{ // TODO: Is this the right exception
+        if (enforceSort){
+            throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
-            throw new NullPointerException("No item to peek");
-        }
-        
+            if (length() > 0){
+                return array[startPointer];
+            } else {
+                throw new NullPointerException("No item to peek");
+            }
+        }   
     }
 
     /**
      * Dequeue an item
      * @return The item that has  been dequeued
      */
-    public E dequeue() throws NullPointerException{ // TODO: Is this the right exception
-        if (length() > 0){
-            E temp = array[startPointer];
-            array[startPointer] = null;
-            startPointer++;
-            return temp;
+    public E dequeue() throws NullPointerException, IllegalStateException { // TODO: Is this the right exception
+        if (enforceSort){
+            throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
-            throw new NullPointerException("No items to dequeue");
+            if (length() > 0){
+                E temp = array[startPointer];
+                array[startPointer] = null;
+                startPointer++;
+                return temp;
+            } else {
+                throw new NullPointerException("No items to dequeue");
+            }
         }
     }
 
     /**
      * Enqueue an item at the end of the queue
      * Functionaly the same as append. There is no difference
-     * @param item
+     * @param item The item to enqueue
      */
-    public void enqueue(E item){
-        append(item);
+    public void enqueue(E item) throws NoSuchMethodException, IllegalStateException{
+        if (enforceSort){
+            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+        } else {
+            // TODO: Update to not expand if enqueue, dequeue match
+            append(item);
+        }
     }
 
     /**
@@ -256,19 +285,23 @@ public class Sequence<E> {
      * @param value The value to insert
      * @param index The index to insert at
      */
-    public void replace(E value, int index) throws ArrayIndexOutOfBoundsException, IllegalArgumentException{
+    public void replace(E value, int index) throws ArrayIndexOutOfBoundsException, IllegalArgumentException, IllegalStateException{
 
-        // Force null check
-        if (value == null){
-            throw new IllegalArgumentException("null not allowed for replace");
+        if (enforceSort){
+            throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
-            // Adjust in case 0 is not the starting point
-            int indexToAdjust = startPointer+index;
+            // Force null check
+            if (value == null){
+                throw new IllegalArgumentException("null not allowed for replace");
+            } else {
+                // Adjust in case 0 is not the starting point
+                int indexToAdjust = startPointer+index;
 
-            if (indexToAdjust > endPointer || index < 0){ // If in unset positions
-                throw new ArrayIndexOutOfBoundsException("Index out of bounds");
-            } else { // All good
-                array[startPointer+index] = value;
+                if (indexToAdjust > endPointer || index < 0){ // If in unset positions
+                    throw new ArrayIndexOutOfBoundsException("Index out of bounds");
+                } else { // All good
+                    array[startPointer+index] = value;
+                }
             }
         }
 
@@ -278,7 +311,7 @@ public class Sequence<E> {
      * Add an item to the array. Automatically deals with expansion of the array
      * @param item The item to add
      */
-    public void append(E item) throws IllegalArgumentException{
+    public void append(E item) throws IllegalArgumentException, NoSuchMethodException{
         // Force null check
         if (item != null){
             if (endPointer == array.length){ // We must expand the array
@@ -295,6 +328,9 @@ public class Sequence<E> {
             }
         } else {
             throw new IllegalArgumentException("null not allowed for append");
+        }
+        if (enforceSort){ // Sort the array now we have added a new term
+            sort();
         }
     }
 

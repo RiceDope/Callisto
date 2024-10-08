@@ -26,7 +26,7 @@ public class TestUtils {
      * @param mySeq Sequence to add Integers to
      * @return Sequence with integers added
      */
-    public static Sequence<Integer> addTenInts(Sequence<Integer> mySeq){
+    public static Sequence<Integer> addTenInts(Sequence<Integer> mySeq) throws NoSuchMethodException{
 
         mySeq.append(100);
         mySeq.append(52);
@@ -48,7 +48,7 @@ public class TestUtils {
      * order = [1, 2, 3, 4]
      * @return Full array of size 4
      */
-    public static Sequence<Integer> generateFullSmallSequence(){
+    public static Sequence<Integer> generateFullSmallSequence() throws NoSuchMethodException{
 
         Sequence<Integer> testing = new Sequence<Integer>(4);
 
@@ -65,7 +65,7 @@ public class TestUtils {
      * order = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
      * @return The queue with ten items added
      */
-    public static Sequence<Integer> generateEnqueueTenItems(){
+    public static Sequence<Integer> generateEnqueueTenItems() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateEmptySequence();
         testing.enqueue(5);
         testing.enqueue(10);

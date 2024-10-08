@@ -17,7 +17,7 @@ public class QueueTest {
      * order = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
      */
     @Test
-    public void testEnqueue(){
+    public void testEnqueue() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateEnqueueTenItems();
         assertEquals("[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]", testing.toString());
     }
@@ -26,7 +26,7 @@ public class QueueTest {
      * Test dequeuing and check the output
      */
     @Test
-    public void testDequeue(){
+    public void testDequeue() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateEnqueueTenItems();
         int out = testing.dequeue();
         assertEquals(5, out);
@@ -47,7 +47,7 @@ public class QueueTest {
      * Test peek twice in order to check it doesnt remove and stays consistent
      */
     @Test
-    public void testPeek(){
+    public void testPeek() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateEnqueueTenItems();
         int out = testing.peek();
         assertEquals(5, out);
