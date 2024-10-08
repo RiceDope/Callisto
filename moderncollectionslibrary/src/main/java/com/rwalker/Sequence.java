@@ -113,6 +113,10 @@ public class Sequence<E> {
         ====================================================
     */
 
+    /**
+     * Get the value of ascending
+     * @return Boolean value of ascending
+     */
     public boolean getAscending(){
         return ascending;
     }
@@ -130,7 +134,7 @@ public class Sequence<E> {
      * Sorts the array in either ascending or descending order based on the field ascending
      * !!! ANYTHING BEING SORTED MUST IMPLEMENT COMPARABLE !!!
      */
-    public void sort(){
+    public void sort() throws NoSuchMethodException{
 
         // Calculate the length of the array that contains terms
         int arrSize = endPointer - startPointer;
@@ -149,14 +153,21 @@ public class Sequence<E> {
             }
         }
 
-        // Sort either ascending or descending
-        if (ascending == false){
-            Arrays.sort(tempArr, Collections.reverseOrder());
-        } else {
-            Arrays.sort(tempArr);
+        try {
+            // Sort either ascending or descending
+            if (ascending == false){
+                Arrays.sort(tempArr, Collections.reverseOrder());
+            } else {
+                Arrays.sort(tempArr);
+            }
+
+            Arrays.fill(array, null); // Null out original to maintain terms
+            System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
+        } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+            System.err.println(e);
+            throw new NoSuchMethodException("Class either does not implement Comparable or cannot be sorted");
         }
-        Arrays.fill(array, null); // Null out original to maintain terms
-        System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
+        
 
     }
 
