@@ -86,4 +86,30 @@ public class StackTest {
         Sequence<Integer> test = new Sequence<Integer>();
         test.peek(HowToFunction.STACK);
     }
+
+    /**
+     * Test the empty method for stack
+     * @throws NoSuchMethodException
+     */
+    @Test
+    public void testEmpty() throws NoSuchMethodException{
+        Sequence<Integer> test = new Sequence<Integer>();
+        test.push(10);
+        test.push(20);
+        test.empty();
+        assertEquals("[]", test.toString());
+    }
+
+    /**
+     * Test the size method for stack
+     * @throws NoSuchMethodException
+     */
+    @Test
+    public void testSize() throws NoSuchMethodException{
+        Sequence<Integer> test = new Sequence<Integer>();
+        test.push(10);
+        test.push(20);
+        test.size();
+        assertEquals(2, test.size());
+    }
 }
