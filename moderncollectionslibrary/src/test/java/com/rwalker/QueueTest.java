@@ -54,4 +54,13 @@ public class QueueTest {
         out = testing.peek(HowToFunction.QUEUE);
         assertEquals(5, out);
     }
+
+    /**
+     * Test peek on an empty queue
+     */
+    @Test(expected = NullPointerException.class)
+    public void testPeekEmpty() {
+        Sequence<Integer> testing = TestUtils.generateEmptySequence();
+        testing.peek(HowToFunction.QUEUE);
+    }
 }
