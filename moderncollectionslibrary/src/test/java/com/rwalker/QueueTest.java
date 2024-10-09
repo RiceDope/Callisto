@@ -49,9 +49,9 @@ public class QueueTest {
     @Test
     public void testPeek() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateEnqueueTenItems();
-        int out = testing.peek();
+        int out = testing.peek(HowToFunction.QUEUE);
         assertEquals(5, out);
-        out = testing.peek();
+        out = testing.peek(HowToFunction.QUEUE);
         assertEquals(5, out);
     }
 }

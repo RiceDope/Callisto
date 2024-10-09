@@ -114,7 +114,9 @@ public class Sequence<E> {
     */
 
     // TODO: insert method
-    // TODO: push, pop, peek, empty, size
+    // TODO: peek, empty, size
+
+
 
     /**
      * Push an item onto the stack
@@ -234,15 +236,24 @@ public class Sequence<E> {
      * Peek at the next item in the queue
      * @return The next item in the queue
      */
-    public E  peek() throws NullPointerException, IllegalStateException{ // TODO: Is this the right exception
+    public E  peek(HowToFunction acting) throws NullPointerException, IllegalStateException{ // TODO: Is this the right exception
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
             if (length() > 0){
-                return array[startPointer];
-            } else {
+                switch (acting){
+                    case STACK:
+                        return array[endPointer-1];
+                    case QUEUE: 
+                        return array[startPointer];
+                    default:
+                        throw new IllegalArgumentException("Not an enum of type HowToAct.ENUM");
+                } 
+            }
+            else {
                 throw new NullPointerException("No item to peek");
             }
+            
         }   
     }
 
@@ -524,3 +535,10 @@ public class Sequence<E> {
         return growthRate;
     }
 } 
+
+enum HowToFunction {
+    STACK,
+    QUEUE
+    // SORTEDARRAY,
+    // ARRAY
+}

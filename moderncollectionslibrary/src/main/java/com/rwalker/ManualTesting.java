@@ -15,7 +15,7 @@ public class ManualTesting {
         System.out.println(test.toString());
         test.append(new Student(19, "Moe"));
         System.out.println(test.toString());
-        test.peek();
+        test.peek(HowToFunction.QUEUE);
     }
 }
 

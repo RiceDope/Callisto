@@ -66,4 +66,24 @@ public class StackTest {
         Sequence<Integer> test = new Sequence<Integer>();
         test.pop();
     }
+
+    /**
+     * Test peek on the stacj
+     */
+    @Test
+    public void testPeek() throws NoSuchMethodException{
+        Sequence<Integer> test = new Sequence<Integer>();
+        test.push(10);
+        test.push(20);
+        assertEquals(20, (int) test.peek(HowToFunction.STACK));
+    }
+
+    /**
+     * Test peek on an empty list
+     */
+    @Test(expected = NullPointerException.class)
+    public void testPeekEmpty() {
+        Sequence<Integer> test = new Sequence<Integer>();
+        test.peek(HowToFunction.STACK);
+    }
 }
