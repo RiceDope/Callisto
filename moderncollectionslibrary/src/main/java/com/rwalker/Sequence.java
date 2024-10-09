@@ -114,6 +114,44 @@ public class Sequence<E> {
     */
 
     // TODO: insert method
+    // TODO: push, pop, peek, empty, size
+
+    /**
+     * Push an item onto the stack
+     * @param item The item to be pushed
+     * @throws NoSuchMethodException
+     * @throws IllegalStateException
+     */
+    // TODO: Update to not use append
+    public void push (E item) throws NoSuchMethodException, IllegalStateException{
+        if (enforceSort){
+            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+        } else {
+            append(item);
+        }
+    }
+
+    /**
+     * Pop an item off of the stack
+     * @return The item popped off of the stack
+     * @throws ArrayIndexOutOfBoundsException
+     * @throws IllegalStateException
+     * @throws RuntimeException
+     */
+    public E pop () throws ArrayIndexOutOfBoundsException, IllegalStateException, RuntimeException {
+        if(endPointer != 0 && enforceSort == false){
+            E temp = array[endPointer-1];
+            endPointer--;
+            array[endPointer] = null;
+            return temp;
+        } else if (endPointer == 0){
+            throw new ArrayIndexOutOfBoundsException("Nothing to pop");
+        } else if (enforceSort){
+            throw new IllegalStateException("Cannot use method while enforceSort = True");
+        } else {
+            throw new RuntimeException("Cannot pop, check code");
+        }
+    }
 
     /**
      * Change the value of enforceSort. Will sort automatically upon true
@@ -232,6 +270,7 @@ public class Sequence<E> {
      * Functionaly the same as append. There is no difference
      * @param item The item to enqueue
      */
+    // TODO: Update to not use append
     public void enqueue(E item) throws NoSuchMethodException, IllegalStateException{
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
