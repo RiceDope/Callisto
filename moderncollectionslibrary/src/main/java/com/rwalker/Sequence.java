@@ -114,9 +114,24 @@ public class Sequence<E> {
     */
 
     // TODO: insert method
-    // TODO: peek, empty, size
+    // TODO: isEmpty, isFull?
 
+    /**
+     * Alias for length method.
+     * Size typically used by stack
+     * @return The size of the stack
+     */
+    public int size(){
+        return length();
+    }
 
+    /**
+     * Alias for clear method.
+     * Empty typically used with stack
+     */
+    public void empty() {
+        clear();
+    }
 
     /**
      * Push an item onto the stack
