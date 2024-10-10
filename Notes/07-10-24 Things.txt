@@ -1,11 +1,11 @@
 Error handling                               	DONE!
-Comparators for sorting				DONE!
-Sort implementation				DONE!
-Enforce sorting					DONE!
-Stack
+Comparators for sorting				            DONE!
+Sort implementation				                DONE!
+Enforce sorting					                DONE!
+Stack                                           DONE!
 Check for paper on average array size
-GitHub actions
+GitHub actions                                  DONE!
 Test coverage
 Test combinations
-Minimum growth requirements			DONE!
+Minimum growth requirements			            DONE!
 Work on when to expand. Be more precise

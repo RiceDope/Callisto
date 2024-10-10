@@ -6,7 +6,6 @@ A modern collections library for java. Developed as part of my dissertation at t
 
 Tasks that are currently being worked on will appear here.
 
-- Setup repo with automatic testing
 - Fully test all features
 - Insert method
 
@@ -16,6 +15,7 @@ Tasks will appear here if they are needed but cannot be worked on immediately.
 
 - List wanted functionality
 - Test coverage
+- Potentially swap to using Enums for "confined functionality" Enforce sort ascending/descending. Or enforcing queue or stack. Will enable easier development and tidy up the amount of boolean flags used.
 
 ## Constant
 
@@ -39,3 +39,4 @@ Full history of tasks that were noted down and have been completed.
 - ArrayList sort operation (Overwrites current with new)
 - Enforce sort
 - Block certain functions when enforceSort is on
+- Setup repo with automatic testing
