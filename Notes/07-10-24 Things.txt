@@ -9,3 +9,4 @@ Test coverage
 Test combinations
 Minimum growth requirements			            DONE!
 Work on when to expand. Be more precise
+Insert method                                   DONE!

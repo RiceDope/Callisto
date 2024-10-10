@@ -7,7 +7,6 @@ A modern collections library for java. Developed as part of my dissertation at t
 Tasks that are currently being worked on will appear here.
 
 - Fully test all features
-- Insert method
 
 ## Backlog
 
@@ -17,6 +16,7 @@ Tasks will appear here if they are needed but cannot be worked on immediately.
 - Test coverage
 - Potentially swap to using Enums for "confined functionality" Enforce sort ascending/descending. Or enforcing queue or stack. Will enable easier development and tidy up the amount of boolean flags used.
 - Add a softQueue, One without a specific length and can expand. We should also be able to enforce a certain size on the queue. This would make all methods other than queue methods unusable until the flag is switched.
+- General code tidiness needs working on. Reorganise and list housekeeping.
 
 ## Constant
 
@@ -41,3 +41,5 @@ Full history of tasks that were noted down and have been completed.
 - Enforce sort
 - Block certain functions when enforceSort is on
 - Setup repo with automatic testing
+- Insert method
+
