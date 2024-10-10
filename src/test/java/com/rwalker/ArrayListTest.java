@@ -115,4 +115,64 @@ public class ArrayListTest {
         Sequence<Integer> testing = new Sequence<Integer>(-10);
     }
 
+    /**
+     * Test insertion at multiple points in the array
+     * @throws NoSuchMethodException
+     */
+    @Test
+    public void testInsert() throws NoSuchMethodException{
+        Sequence<Integer> testing = new Sequence<Integer>();
+        testing.append(5);
+        testing.append(10);
+        testing.append(15);
+        testing.append(20);
+        testing.insert(0, 100);
+        assertEquals("[100, 5, 10, 15, 20]", testing.toString());
+        testing.insert(2, 50);
+        assertEquals("[100, 5, 50, 10, 15, 20]", testing.toString());
+        testing.insert(6, 50);
+        assertEquals("[100, 5, 50, 10, 15, 20, 50]", testing.toString());
+    }
+
+    /**
+     * Test insertion into the array where it is out of bounds
+     * @throws NoSuchMethodException
+     */
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testOutOfBoundsExpansion() throws NoSuchMethodException{
+        Sequence<Integer> testing = new Sequence<Integer>();
+        testing.append(5);
+        testing.append(10);
+        testing.append(15);
+        testing.append(20);
+        testing.insert(10, 100);
+    }
+
+    /**
+     * Test that the sub-array expands when inserting into a full array
+     * @throws NoSuchMethodException
+     */
+    @Test
+    public void testArrayExpansionWithInsert() throws NoSuchMethodException {
+        Sequence<Integer> testing = new Sequence<Integer>(4);
+        testing.append(5);
+        testing.append(10);
+        testing.append(15);
+        testing.append(20);
+        assertEquals(4, testing.rawLength());
+        testing.insert(2, 100);
+        assertEquals(6, testing.rawLength());
+        assertEquals("[5, 10, 100, 15, 20]", testing.toString());
+    }
+
+    /**
+     * Test that we can insert into position 0 of the array
+     */
+    @Test
+    public void testInsertingIntoZeroEmptyArray(){
+        Sequence<Integer> testing = new Sequence<Integer>(4);
+        testing.insert(0, 10);
+        assertEquals("[10]", testing.toString());
+    }
+    
 }

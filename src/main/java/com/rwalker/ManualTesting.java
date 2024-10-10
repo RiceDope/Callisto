@@ -1,16 +1,14 @@
 package com.rwalker;
 
-import java.util.Collections;
-
 public class ManualTesting {
     public static void main(String[] args) throws NoSuchMethodException{
         Sequence<Student> test = new Sequence<Student>();
-        test.append(new Student(21, "George"));
-        test.append(new Student(20, "Nathan"));
-        test.append(new Student(16, "Ben"));
-        test.append(new Student(17, "Thomas"));
+        // test.append(new Student(21, "George"));
+        // test.append(new Student(20, "Nathan"));
+        // test.append(new Student(16, "Ben"));
+        // test.append(new Student(17, "Thomas"));
         System.out.println(test.toString());
-        test.insert(1, new Student(50, "Dave"));
+        test.insert(0, new Student(50, "Dave"));
         System.out.println(test.toString());
     }
 }

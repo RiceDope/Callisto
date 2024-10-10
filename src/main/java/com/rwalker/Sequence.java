@@ -142,7 +142,8 @@ public class Sequence<E> {
                     array[i] = curTerm;
                 }
             } else {
-                expand();
+                // Use reformat as expand() doesnt change current array
+                reformat(true);
                 for (int i = insertionIndex; i < endPointer+1; i++){
                     // Set our term to be inserted in this run
                     curTerm = nextTerm;
@@ -455,6 +456,10 @@ public class Sequence<E> {
         }
     }
 
+    /**
+     * Create and return a blank array of new size
+     * @return Array of new size
+     */
     private E[] expand(){
         // Check for minimum growth requirement of 1
         int length = array.length;
@@ -468,6 +473,8 @@ public class Sequence<E> {
         E[] newArray = (E[]) new Object[newLen];
         return newArray;
     }
+
+    // TODO: Correctly move around function so that expand() can be used without reformat
 
     /**
      * Expand the array by the given growth factor.
