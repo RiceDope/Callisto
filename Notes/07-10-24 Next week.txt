@@ -1,2 +1,4 @@
 Proper exception handling. How many times do I need to write throws
 Certain methods will throw an exception if used with enforceSort
+Is it even worth doing an isFull on a dynamic queue. Could enforce a kind of "soft" size. We can either allow it to exceed
+or it can have a strict length.

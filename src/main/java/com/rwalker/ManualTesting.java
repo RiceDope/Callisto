@@ -10,12 +10,8 @@ public class ManualTesting {
         test.append(new Student(16, "Ben"));
         test.append(new Student(17, "Thomas"));
         System.out.println(test.toString());
-        test.setAscending(false);
-        test.setEnforceSort(true);
+        test.insert(1, new Student(50, "Dave"));
         System.out.println(test.toString());
-        test.append(new Student(19, "Moe"));
-        System.out.println(test.toString());
-        test.peek(HowToFunction.QUEUE);
     }
 }
 

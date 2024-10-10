@@ -114,7 +114,59 @@ public class Sequence<E> {
     */
 
     // TODO: insert method
-    // TODO: isEmpty, isFull?
+    // TODO: isFull?
+
+    /**
+     * Inserts a term at a specific index. Rest of the list gets shuffled
+     * @param index index to insert the value at
+     * @param value value to be inserted
+     */
+    public void insert(int index, E value) throws IndexOutOfBoundsException{
+
+        // Calculate index we want to insert at
+        int insertionIndex = startPointer + index;
+
+        // Check if index is out of bounds
+        if (insertionIndex > endPointer){
+            throw new IndexOutOfBoundsException("Cannot insert into index outside of list");
+        } else {
+            E curTerm;
+            E nextTerm = value; // first value to insert is value
+            if (rawLength() > endPointer+1){
+                for (int i = insertionIndex; i < endPointer+1; i++){
+                    // Set our term to be inserted in this run
+                    curTerm = nextTerm;
+                    // Save the current term in that spot
+                    nextTerm = array[i];
+                    // Overwrite
+                    array[i] = curTerm;
+                }
+            } else {
+                expand();
+                for (int i = insertionIndex; i < endPointer+1; i++){
+                    // Set our term to be inserted in this run
+                    curTerm = nextTerm;
+                    // Save the current term in that spot
+                    nextTerm = array[i];
+                    // Overwrite
+                    array[i] = curTerm;
+                }
+            }
+            endPointer++; // Adjust as we have expanded by 1
+        }
+    }
+
+    /**
+     * Is the queue empty
+     * @return true if queue is empty, false if queue has terms
+     */
+    public boolean isEmpty(){
+        if (length() == 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Alias for length method.
@@ -403,9 +455,24 @@ public class Sequence<E> {
         }
     }
 
+    private E[] expand(){
+        // Check for minimum growth requirement of 1
+        int length = array.length;
+        int newSize = (int) Math.ceil(length*growthRate);
+
+        if (newSize <= length){
+            newSize = newSize + minumumExpansion;
+        }
+        // New array is created by expanding by growthFactor
+        int newLen = (int) Math.round(newSize);
+        E[] newArray = (E[]) new Object[newLen];
+        return newArray;
+    }
+
     /**
      * Expand the array by the given growth factor.
      * Check for null items and remove
+     * @param expand Boolean telling whether to expand or not
      */
     // TODO: Make sure expansion is only done when there is a good reason
     private void reformat(boolean  expand){
@@ -413,18 +480,8 @@ public class Sequence<E> {
         E[] newArray;
 
         if (expand == true){
-            // Check for minimum growth requirement of 1
-            int length = array.length;
-            int newSize = (int) Math.ceil(length*growthRate);
-
-            if (newSize <= length){
-                newSize = newSize + minumumExpansion;
-            }
-            // New array is created by expanding by growthFactor
-            int newLen = (int) Math.round(newSize);
-            newArray = (E[]) new Object[newLen];
-
-            
+            // If we choose to expand run the function expand
+            newArray = expand();
         } else {
             // If we dont want to expand the array but just re-format
             newArray = (E[]) new Object[array.length];

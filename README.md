@@ -16,6 +16,7 @@ Tasks will appear here if they are needed but cannot be worked on immediately.
 - List wanted functionality
 - Test coverage
 - Potentially swap to using Enums for "confined functionality" Enforce sort ascending/descending. Or enforcing queue or stack. Will enable easier development and tidy up the amount of boolean flags used.
+- Add a softQueue, One without a specific length and can expand. We should also be able to enforce a certain size on the queue. This would make all methods other than queue methods unusable until the flag is switched.
 
 ## Constant
 
