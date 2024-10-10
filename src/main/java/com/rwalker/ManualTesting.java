@@ -18,7 +18,7 @@ public class ManualTesting {
         test.peek(HowToFunction.QUEUE);
     }
 }
-
+// 
 // implements Comparable<Student>
 class Student implements Comparable<Student>{
 
