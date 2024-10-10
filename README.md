@@ -8,14 +8,13 @@ Tasks that are currently being worked on will appear here.
 
 - Setup repo with automatic testing
 - Fully test all features
+- Insert method
 
 ## Backlog
 
 Tasks will appear here if they are needed but cannot be worked on immediately.
 
 - List wanted functionality
-- Insert method
-- Stack
 - Test coverage
 
 ## Constant
