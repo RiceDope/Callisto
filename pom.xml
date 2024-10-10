@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.rwalker</groupId>
-  <artifactId>moderncollectionslibrary</artifactId>
-  <version>modernCollectionsLibrary</version>
+  <artifactId>COMP6200-Modern-Collections-Library</artifactId>
+  <version>COMP6200-Modern-Collections-Library</version>
 
-  <name>moderncollectionslibrary</name>
+  <name>COMP6200-Modern-Collections-Library</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
