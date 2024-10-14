@@ -208,7 +208,7 @@ public class Sequence<E> {
      * @throws IllegalStateException
      * @throws RuntimeException
      */
-    public E pop () throws ArrayIndexOutOfBoundsException, IllegalStateException, RuntimeException {
+    public E pop () {
         if(endPointer != 0 && enforceSort == false){
             E temp = array[endPointer-1];
             endPointer--;

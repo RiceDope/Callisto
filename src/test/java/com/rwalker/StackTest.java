@@ -68,7 +68,7 @@ public class StackTest {
     }
 
     /**
-     * Test peek on the stacj
+     * Test peek on the stack
      */
     @Test
     public void testPeek() throws NoSuchMethodException{
