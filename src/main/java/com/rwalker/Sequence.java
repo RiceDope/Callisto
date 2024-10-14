@@ -20,6 +20,9 @@ package com.rwalker;
 import java.lang.StringBuilder;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+
+import javax.management.RuntimeErrorException;
 
 @SuppressWarnings("unchecked")
 public class Sequence<E> {
@@ -60,7 +63,7 @@ public class Sequence<E> {
      * Allows for specification of just the initial size of the array
      * @param size Int initial size of the array
      */
-    public Sequence(int size) throws IllegalArgumentException {
+    public Sequence(int size){
 
         if (size  > 0){
             initialSize = size;
@@ -75,7 +78,7 @@ public class Sequence<E> {
      * Allows for specification of just the growth rate
      * @param growthRate Double initial growth rate of the array
      */
-    public Sequence(double customGrowthRate) throws IllegalArgumentException{
+    public Sequence(double customGrowthRate){
 
         if (customGrowthRate >  1.0){
             this.growthRate = customGrowthRate;
@@ -91,7 +94,7 @@ public class Sequence<E> {
      * @param size Int starting size of the array
      * @param growthRate Double initial growth rate of the array
      */
-    public Sequence(int size, double customGrowthRate) throws IllegalArgumentException{
+    public Sequence(int size, double customGrowthRate){
 
         if (size  > 0){
             initialSize = size;
@@ -121,7 +124,7 @@ public class Sequence<E> {
      * @param index index to insert the value at
      * @param value value to be inserted
      */
-    public void insert(int index, E value) throws IndexOutOfBoundsException{
+    public void insert(int index, E value){
 
         // Calculate index we want to insert at
         int insertionIndex = startPointer + index;
@@ -189,11 +192,9 @@ public class Sequence<E> {
     /**
      * Push an item onto the stack
      * @param item The item to be pushed
-     * @throws NoSuchMethodException
-     * @throws IllegalStateException
      */
     // TODO: Update to not use append
-    public void push (E item) throws NoSuchMethodException, IllegalStateException{
+    public void push (E item) {
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
@@ -204,9 +205,6 @@ public class Sequence<E> {
     /**
      * Pop an item off of the stack
      * @return The item popped off of the stack
-     * @throws ArrayIndexOutOfBoundsException
-     * @throws IllegalStateException
-     * @throws RuntimeException
      */
     public E pop () {
         if(endPointer != 0 && enforceSort == false){
@@ -223,18 +221,45 @@ public class Sequence<E> {
         }
     }
 
+    /*
+     * Overloaded setEnforceSort function
+     */
+
     /**
      * Change the value of enforceSort. Will sort automatically upon true
+     * !! For use with user defined classes
      * @param bool The boolean that enforceSort is changed to
-     * @throws NoSuchMethodException from sort()
+     * @param comparator A comparator to sort by
      */
-    public void setEnforceSort(boolean bool) throws NoSuchMethodException {
+    public void setEnforceSort(boolean bool, Comparator<E> comparator) {
         enforceSort = bool;
         // Sort if we just changed to true
         if (enforceSort){
-            sort();
+            sort(comparator);
         }
     }
+
+    /**
+     * Change the value of enforceSort. Will sort automatically upon true
+     * !! For use with java primitives
+     * @param bool The boolean that enforceSort is changed to
+     */
+    public void setEnforceSort(boolean bool) throws NoSuchMethodException{
+        enforceSort = bool;
+        // Sort if we just changed to true
+        if (enforceSort){
+            try {
+                sort();
+            } catch(Exception e){
+                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
+            }
+            
+        }
+    }
+
+    /*
+     * End of overloaded setEnforceSort function
+     */
 
     /**
      * Get the value of ascending
@@ -244,26 +269,58 @@ public class Sequence<E> {
         return ascending;
     }
 
+    /*
+     * Overloaded setAscending function
+     */
+
     /**
      * Set the value of ascending to either true or false
      * This will change the natural ordering of terms in the array
      * Will automatically apply sort() to the array if enforceSort is true
+     * !! For use with java primitives
      * @param bool True = ascending sort, False = descending sort
      */
     public void setAscending(boolean bool) throws NoSuchMethodException{
         ascending = bool;
         if (enforceSort){
-            sort();
+            try {
+                sort();
+            } catch(Exception e){
+                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
+            }
         }
     }
 
     /**
-     * Sorts the array in either ascending or descending order based on the field ascending
-     * !!! ANYTHING BEING SORTED MUST IMPLEMENT COMPARABLE !!!
-     * @throws NoSuchMethodException IMPLEMENT COMPARABLE
+     * Set the value of ascending to either true or false
+     * This will change the natural ordering of terms in the array
+     * Will automatically apply sort() to the array if enforceSort is true
+     * !! For use with user defined functions
+     * @param bool True = ascending sort, False = descending sort
      */
-    // TODO: Custom sort algorithm?
-    public void sort() throws NoSuchMethodException{
+    public void setAscending(boolean bool, Comparator<E> comparator) {
+        ascending = bool;
+        if (enforceSort){
+            sort(comparator);
+        }
+    }
+
+    /*
+     * End of overloaded setAscending function
+     */
+
+    /*
+     * OVERLOADED SORT() FUNCTION
+     */
+
+     // TODO: Custom sort algorithm?
+    /**
+     * Sorts the array in either ascending or descending order based on the field ascending
+     * !! STANDARD SORT TO BE USED WHEN SORTING PRIMITIVES
+     * 
+     * Can alternatively implement Comparable to use this function
+     */
+    public void sort(){
 
         // Calculate the length of the array that contains terms
         int arrSize = endPointer - startPointer;
@@ -294,17 +351,63 @@ public class Sequence<E> {
             System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
         } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
             System.err.println(e);
-            throw new NoSuchMethodException("Class either does not implement Comparable or cannot be sorted");
+            throw new UnknownError("Class either does not implement Comparable or no Comparator given for a user defined class");
         }
         
 
     }
 
     /**
+     * Sorts the array in either ascending or descending order based on the field ascending
+     * !! TO BE USED WHEN SORTING USER DEFINED CLASSES
+     * @param comparator The comparator for comparing the types
+     */
+    public void sort(Comparator<E> comparator){
+
+        // Calculate the length of the array that contains terms
+        int arrSize = endPointer - startPointer;
+
+        // Generate a temporary array of that length
+        E[] tempArr = (E[]) new Object[arrSize];
+
+        // Add all terms over skipping nulls
+        int addCount = 0;
+        for (int i = 0; i < endPointer; i++){
+            if (array[i] == null){
+                continue;
+            } else {
+                tempArr[addCount] = array[i];
+                addCount++;
+            }
+        }
+
+        try {
+            // Sort either ascending or descending
+            if (ascending == false){
+                Arrays.sort(tempArr, Collections.reverseOrder(comparator));
+            } else {
+                Arrays.sort(tempArr, comparator);
+            }
+
+            Arrays.fill(array, null); // Null out original to maintain terms
+            System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
+        } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+            System.err.println(e);
+            throw new UnknownError("Comparator either not valid or cannot be compared");
+        }
+        
+
+    }
+
+    /*
+     * END OF OVERLOADED SORT() FUNCTION
+     */
+
+    /**
      * Peek at the next item in the queue
      * @return The next item in the queue
      */
-    public E  peek(HowToFunction acting) throws NullPointerException, IllegalStateException{ // TODO: Is this the right exception
+    public E  peek(HowToFunction acting) { // TODO: Is this the right exception
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
@@ -329,7 +432,7 @@ public class Sequence<E> {
      * Dequeue an item
      * @return The item that has  been dequeued
      */
-    public E dequeue() throws NullPointerException, IllegalStateException { // TODO: Is this the right exception
+    public E dequeue() { // TODO: Is this the right exception
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
@@ -350,7 +453,7 @@ public class Sequence<E> {
      * @param item The item to enqueue
      */
     // TODO: Update to not use append
-    public void enqueue(E item) throws NoSuchMethodException, IllegalStateException{
+    public void enqueue(E item){
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
@@ -373,7 +476,7 @@ public class Sequence<E> {
      * Remove an element by index
      * @param index Index of the element to remove
      */
-    public void remove(int index) throws ArrayIndexOutOfBoundsException{
+    public void remove(int index){
         int indexToAdjust = startPointer+index;
         if (indexToAdjust > endPointer || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
@@ -389,7 +492,7 @@ public class Sequence<E> {
      * @param index The index of the element 
      * @return The element
      */
-    public E get (int index) throws ArrayIndexOutOfBoundsException{
+    public E get (int index){
 
         // Adjust in case 0 is not the starting point
         int indexToAdjust = startPointer+index;
@@ -407,7 +510,7 @@ public class Sequence<E> {
      * @param value The value to insert
      * @param index The index to insert at
      */
-    public void replace(E value, int index) throws ArrayIndexOutOfBoundsException, IllegalArgumentException, IllegalStateException{
+    public void replace(E value, int index) {
 
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
@@ -433,7 +536,7 @@ public class Sequence<E> {
      * Add an item to the array. Automatically deals with expansion of the array
      * @param item The item to add
      */
-    public void append(E item) throws IllegalArgumentException, NoSuchMethodException{
+    public void append(E item){
         // Force null check
         if (item != null){
             if (endPointer == array.length){ // We must expand the array
@@ -598,7 +701,7 @@ public class Sequence<E> {
      * Set a custom growth rate for the array
      * @param newRate The new growth rate
      */
-    public void setGrowthRate(Double newRate) throws IllegalArgumentException{
+    public void setGrowthRate(Double newRate){
         if (newRate >  1.0){
             this.growthRate = newRate;
         } else {
