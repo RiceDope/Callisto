@@ -1,16 +1,11 @@
 /**
- * Script that implements the basic functionality needed for Sequence
+ * Script that implements the functionality of ArrayList, Stack, Queue, SortedArray.
+ * For use as a general purpose dynamic collections library
+ * 
+ * GitHub: https://github.com/RiceDope/COMP6200-Modern-Collections-Library
  * 
  * Created: 30/09/2024
- * Last Updated 08/10/2024
- * 
- * Important notes:
- *      
- *      Too scared to remove removed worried it will break things
- * 
- *      Some fields have been implemented for later use
- * 
- *      Updated to throw exception rather than System.err
+ * Last Updated 14/10/2024
  * 
  * @Author Rhys Walker
  */
@@ -21,8 +16,6 @@ import java.lang.StringBuilder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-
-import javax.management.RuntimeErrorException;
 
 @SuppressWarnings("unchecked")
 public class Sequence<E> {
@@ -40,6 +33,11 @@ public class Sequence<E> {
     // Boolean settings of the Sequence
     private boolean enforceSort = false; // Do we want to enforce a sort
     private boolean ascending = true; // When enforcing sort do we want ascending or descending
+
+    private boolean enforceFunctionality = false;
+    private HowToFunction functionality = HowToFunction.OPEN;
+    private HowToSort defaultSort = HowToSort.ASCENDING;
+    private Comparator<E> defaultComparator; // User can set in constructor or in runtime
 
     // Developer settings for adjustment
     private int minumumExpansion = 1; // Decide on minimum expansion requirements
@@ -64,14 +62,35 @@ public class Sequence<E> {
      * @param size Int initial size of the array
      */
     public Sequence(int size){
-
         if (size  > 0){
             initialSize = size;
             array = (E[]) new Object[size];
         } else {
             throw new IllegalArgumentException("Cannot use size of 0 or less");
         }
+    }
 
+    /**
+     * Allows for the specification of a comparator
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(Comparator<E> comparator){
+        defaultComparator = comparator;
+    }
+
+    /**
+     * Allows for specification of initial array size and a comparator
+     * @param size Int initial size of the array
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(int size, Comparator<E> comparator){
+        if (size  > 0){
+            initialSize = size;
+            array = (E[]) new Object[size];
+        } else {
+            throw new IllegalArgumentException("Cannot use size of 0 or less");
+        }
+        defaultComparator = comparator;
     }
 
     /**
@@ -79,14 +98,25 @@ public class Sequence<E> {
      * @param growthRate Double initial growth rate of the array
      */
     public Sequence(double customGrowthRate){
-
         if (customGrowthRate >  1.0){
             this.growthRate = customGrowthRate;
         } else {
             throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
-        
+    }
 
+    /**
+     * Allows for specification of growth rate and default comparator
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(double customGrowthRate, Comparator<E> comparator){
+        if (customGrowthRate >  1.0){
+            this.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        defaultComparator = comparator;
     }
 
     /**
@@ -95,6 +125,26 @@ public class Sequence<E> {
      * @param growthRate Double initial growth rate of the array
      */
     public Sequence(int size, double customGrowthRate){
+        if (size  > 0){
+            initialSize = size;
+            array = (E[]) new Object[size];
+        } else {
+            throw new IllegalArgumentException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            this.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+    }
+
+    /**
+     * Allows for specification of starting size, growth rate and a comparator
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(int size, double customGrowthRate, Comparator<E> comparator){
 
         if (size  > 0){
             initialSize = size;
@@ -107,6 +157,7 @@ public class Sequence<E> {
         } else {
             throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
+        defaultComparator = comparator;
 
     }
 
@@ -116,8 +167,13 @@ public class Sequence<E> {
         ====================================================
     */
 
-    // TODO: insert method
     // TODO: isFull?
+
+    /*
+     * ======================================================
+     *                  ARRAY OPERATIONS
+     * ======================================================
+     */
 
     /**
      * Inserts a term at a specific index. Rest of the list gets shuffled
@@ -161,153 +217,102 @@ public class Sequence<E> {
     }
 
     /**
-     * Is the queue empty
-     * @return true if queue is empty, false if queue has terms
+     * Returns the length of a given sequence
+     * 
+     * @return Int length of sequence
      */
-    public boolean isEmpty(){
-        if (length() == 0){
-            return true;
+    public int length(){
+    
+        // Length can be worked out via the difference between the startIndex and endIndex with removed taken off to track non existant terms.
+        return endPointer - startPointer - removed;
+    }
+
+    /**
+     * Add an item to the array. Automatically deals with expansion of the array
+     * @param item The item to add
+     */
+    public void append(E item){
+        // Force null check
+        if (item != null){
+            if (endPointer == array.length){ // We must expand the array
+                // Expand the array
+                reformat(true);
+
+                // Now add the new item
+                array[endPointer] = item;
+                endPointer++;
+
+            } else { // No need to expand array
+                array[endPointer] = item;
+                endPointer++;
+            }
         } else {
-            return false;
+            throw new IllegalArgumentException("null not allowed for append");
+        }
+        if (enforceSort){ // Sort the array now we have added a new term
+            sort();
         }
     }
 
     /**
-     * Alias for length method.
-     * Size typically used by stack
-     * @return The size of the stack
+     * Replace a specifc item in the array
+     * @param value The value to insert
+     * @param index The index to insert at
      */
-    public int size(){
-        return length();
-    }
+    public void replace(E value, int index) {
 
-    /**
-     * Alias for clear method.
-     * Empty typically used with stack
-     */
-    public void empty() {
-        clear();
-    }
-
-    /**
-     * Push an item onto the stack
-     * @param item The item to be pushed
-     */
-    // TODO: Update to not use append
-    public void push (E item) {
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
-            append(item);
+            // Force null check
+            if (value == null){
+                throw new IllegalArgumentException("null not allowed for replace");
+            } else {
+                // Adjust in case 0 is not the starting point
+                int indexToAdjust = startPointer+index;
+
+                if (indexToAdjust > endPointer || index < 0){ // If in unset positions
+                    throw new ArrayIndexOutOfBoundsException("Index out of bounds");
+                } else { // All good
+                    array[startPointer+index] = value;
+                }
+            }
         }
+
     }
 
     /**
-     * Pop an item off of the stack
-     * @return The item popped off of the stack
+     * Remove an element by index
+     * @param index Index of the element to remove
      */
-    public E pop () {
-        if(endPointer != 0 && enforceSort == false){
-            E temp = array[endPointer-1];
-            endPointer--;
-            array[endPointer] = null;
-            return temp;
-        } else if (endPointer == 0){
-            throw new ArrayIndexOutOfBoundsException("Nothing to pop");
-        } else if (enforceSort){
-            throw new IllegalStateException("Cannot use method while enforceSort = True");
+    public void remove(int index){
+        int indexToAdjust = startPointer+index;
+        if (indexToAdjust > endPointer || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index out of bounds");
         } else {
-            throw new RuntimeException("Cannot pop, check code");
-        }
-    }
 
-    /*
-     * Overloaded setEnforceSort function
-     */
-
-    /**
-     * Change the value of enforceSort. Will sort automatically upon true
-     * !! For use with user defined classes
-     * @param bool The boolean that enforceSort is changed to
-     * @param comparator A comparator to sort by
-     */
-    public void setEnforceSort(boolean bool, Comparator<E> comparator) {
-        enforceSort = bool;
-        // Sort if we just changed to true
-        if (enforceSort){
-            sort(comparator);
+            array[indexToAdjust] = null;
+            reformat(false);
         }
     }
 
     /**
-     * Change the value of enforceSort. Will sort automatically upon true
-     * !! For use with java primitives
-     * @param bool The boolean that enforceSort is changed to
+     * Gets a specific element from the array
+     * @param index The index of the element 
+     * @return The element
      */
-    public void setEnforceSort(boolean bool) throws NoSuchMethodException{
-        enforceSort = bool;
-        // Sort if we just changed to true
-        if (enforceSort){
-            try {
-                sort();
-            } catch(Exception e){
-                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
-            }
-            
+    public E get (int index){
+
+        // Adjust in case 0 is not the starting point
+        int indexToAdjust = startPointer+index;
+
+        if (indexToAdjust > endPointer || index < 0){ // If in unset positions
+            throw new ArrayIndexOutOfBoundsException("Index out of bounds");
+        } else { // All good
+            return array[indexToAdjust];
         }
+
     }
-
-    /*
-     * End of overloaded setEnforceSort function
-     */
-
-    /**
-     * Get the value of ascending
-     * @return Boolean value of ascending
-     */
-    public boolean getAscending(){
-        return ascending;
-    }
-
-    /*
-     * Overloaded setAscending function
-     */
-
-    /**
-     * Set the value of ascending to either true or false
-     * This will change the natural ordering of terms in the array
-     * Will automatically apply sort() to the array if enforceSort is true
-     * !! For use with java primitives
-     * @param bool True = ascending sort, False = descending sort
-     */
-    public void setAscending(boolean bool) throws NoSuchMethodException{
-        ascending = bool;
-        if (enforceSort){
-            try {
-                sort();
-            } catch(Exception e){
-                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
-            }
-        }
-    }
-
-    /**
-     * Set the value of ascending to either true or false
-     * This will change the natural ordering of terms in the array
-     * Will automatically apply sort() to the array if enforceSort is true
-     * !! For use with user defined functions
-     * @param bool True = ascending sort, False = descending sort
-     */
-    public void setAscending(boolean bool, Comparator<E> comparator) {
-        ascending = bool;
-        if (enforceSort){
-            sort(comparator);
-        }
-    }
-
-    /*
-     * End of overloaded setAscending function
-     */
 
     /*
      * OVERLOADED SORT() FUNCTION
@@ -403,29 +408,28 @@ public class Sequence<E> {
      * END OF OVERLOADED SORT() FUNCTION
      */
 
-    /**
-     * Peek at the next item in the queue
-     * @return The next item in the queue
+    /*
+     * ======================================================
+     *                  END ARRAY OPERATIONS
+     * ======================================================
      */
-    public E  peek(HowToFunction acting) { // TODO: Is this the right exception
-        if (enforceSort){
-            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+
+    /*
+     * ======================================================
+     *                    QUEUE FUNCTIONS
+     * ======================================================
+     */
+
+    /**
+     * Is the queue empty
+     * @return true if queue is empty, false if queue has terms
+     */
+    public boolean isEmpty(){
+        if (length() == 0){
+            return true;
         } else {
-            if (length() > 0){
-                switch (acting){
-                    case STACK:
-                        return array[endPointer-1];
-                    case QUEUE: 
-                        return array[startPointer];
-                    default:
-                        throw new IllegalArgumentException("Not an enum of type HowToAct.ENUM");
-                } 
-            }
-            else {
-                throw new NullPointerException("No item to peek");
-            }
-            
-        }   
+            return false;
+        }
     }
 
     /**
@@ -462,6 +466,103 @@ public class Sequence<E> {
         }
     }
 
+    /*
+     * ======================================================
+     *                END OF QUEUE FUNCTIONS
+     * ======================================================
+     */
+
+    /*
+     * ======================================================
+     *                   STACK FUNCTIONS
+     * ======================================================
+     */
+
+    /**
+     * Alias for length method.
+     * Size typically used by stack
+     * @return The size of the stack
+     */
+    public int size(){
+        return length();
+    }
+
+    /**
+     * Push an item onto the stack
+     * @param item The item to be pushed
+     */
+    // TODO: Update to not use append
+    public void push (E item) {
+        if (enforceSort){
+            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+        } else {
+            append(item);
+        }
+    }
+
+    /**
+     * Pop an item off of the stack
+     * @return The item popped off of the stack
+     */
+    public E pop () {
+        if(endPointer != 0 && enforceSort == false){
+            E temp = array[endPointer-1];
+            endPointer--;
+            array[endPointer] = null;
+            return temp;
+        } else if (endPointer == 0){
+            throw new ArrayIndexOutOfBoundsException("Nothing to pop");
+        } else if (enforceSort){
+            throw new IllegalStateException("Cannot use method while enforceSort = True");
+        } else {
+            throw new RuntimeException("Cannot pop, check code");
+        }
+    }
+
+    /*
+     * ======================================================
+     *                END OF STACK FUNCTIONS
+     * ======================================================
+     */
+
+    /**
+     * Alias for clear method.
+     * Empty typically used with stack
+     */
+    public void empty() {
+        clear();
+    }
+
+    /*
+     * End of overloaded setAscending function
+     */
+
+    /**
+     * Peek at the next item in the queue or stack depending on the enum
+     * @param acting Enum of type HowToFunction being either QUEUE or STACK
+     * @return The next item in the queue
+     */
+    public E  peek(HowToFunction acting) {
+        if (enforceSort){
+            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+        } else {
+            if (length() > 0){
+                switch (acting){
+                    case STACK:
+                        return array[endPointer-1];
+                    case QUEUE: 
+                        return array[startPointer];
+                    default:
+                        throw new IllegalArgumentException("Not an enum allowed with peek. Choose STACK/QUEUE");
+                } 
+            }
+            else {
+                throw new NullPointerException("No item to peek");
+            }
+            
+        }   
+    }
+
     /**
      * Clears the array. New arrays size is initialSize
      */
@@ -470,93 +571,6 @@ public class Sequence<E> {
         array = newArray;
         startPointer = 0;
         endPointer = 0;
-    }
-
-    /**
-     * Remove an element by index
-     * @param index Index of the element to remove
-     */
-    public void remove(int index){
-        int indexToAdjust = startPointer+index;
-        if (indexToAdjust > endPointer || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Index out of bounds");
-        } else {
-
-            array[indexToAdjust] = null;
-            reformat(false);
-        }
-    }
-
-    /**
-     * Gets a specific element from the array
-     * @param index The index of the element 
-     * @return The element
-     */
-    public E get (int index){
-
-        // Adjust in case 0 is not the starting point
-        int indexToAdjust = startPointer+index;
-
-        if (indexToAdjust > endPointer || index < 0){ // If in unset positions
-            throw new ArrayIndexOutOfBoundsException("Index out of bounds");
-        } else { // All good
-            return array[indexToAdjust];
-        }
-
-    }
-
-    /**
-     * Replace a specifc item in the array
-     * @param value The value to insert
-     * @param index The index to insert at
-     */
-    public void replace(E value, int index) {
-
-        if (enforceSort){
-            throw new IllegalStateException ("Cannot use method while enforceSort = True");
-        } else {
-            // Force null check
-            if (value == null){
-                throw new IllegalArgumentException("null not allowed for replace");
-            } else {
-                // Adjust in case 0 is not the starting point
-                int indexToAdjust = startPointer+index;
-
-                if (indexToAdjust > endPointer || index < 0){ // If in unset positions
-                    throw new ArrayIndexOutOfBoundsException("Index out of bounds");
-                } else { // All good
-                    array[startPointer+index] = value;
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Add an item to the array. Automatically deals with expansion of the array
-     * @param item The item to add
-     */
-    public void append(E item){
-        // Force null check
-        if (item != null){
-            if (endPointer == array.length){ // We must expand the array
-                // Expand the array
-                reformat(true);
-
-                // Now add the new item
-                array[endPointer] = item;
-                endPointer++;
-
-            } else { // No need to expand array
-                array[endPointer] = item;
-                endPointer++;
-            }
-        } else {
-            throw new IllegalArgumentException("null not allowed for append");
-        }
-        if (enforceSort){ // Sort the array now we have added a new term
-            sort();
-        }
     }
 
     /**
@@ -620,17 +634,6 @@ public class Sequence<E> {
         endPointer = length(); // Set to current length after expansion
         startPointer = 0;
         removed = 0; // No items have been removed from list currently
-    }
-
-    /**
-     * Returns the length of a given sequence
-     * 
-     * @return Int length of sequence
-     */
-    public int length(){
-    
-        // Length can be worked out via the difference between the startIndex and endIndex with removed taken off to track non existant terms.
-        return endPointer - startPointer - removed;
     }
 
     /**
@@ -716,11 +719,111 @@ public class Sequence<E> {
     public double getGrowthRate(){
         return growthRate;
     }
+
+        /*
+     * Overloaded setEnforceSort function
+     */
+
+    /**
+     * Change the value of enforceSort. Will sort automatically upon true
+     * !! For use with user defined classes
+     * @param bool The boolean that enforceSort is changed to
+     * @param comparator A comparator to sort by
+     */
+    public void setEnforceSort(boolean bool, Comparator<E> comparator) {
+        enforceSort = bool;
+        // Sort if we just changed to true
+        if (enforceSort){
+            sort(comparator);
+        }
+    }
+
+    /**
+     * Change the value of enforceSort. Will sort automatically upon true
+     * !! For use with java primitives
+     * @param bool The boolean that enforceSort is changed to
+     */
+    public void setEnforceSort(boolean bool) throws NoSuchMethodException{
+        enforceSort = bool;
+        // Sort if we just changed to true
+        if (enforceSort){
+            try {
+                sort();
+            } catch(Exception e){
+                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
+            }
+            
+        }
+    }
+
+    /*
+     * End of overloaded setEnforceSort function
+     */
+
+    /**
+     * Get the value of ascending
+     * @return Boolean value of ascending
+     */
+    public boolean getAscending(){
+        return ascending;
+    }
+
+    /*
+     * Overloaded setAscending function
+     */
+
+    /**
+     * Set the value of ascending to either true or false
+     * This will change the natural ordering of terms in the array
+     * Will automatically apply sort() to the array if enforceSort is true
+     * !! For use with java primitives
+     * @param bool True = ascending sort, False = descending sort
+     */
+    public void setAscending(boolean bool) throws NoSuchMethodException{
+        ascending = bool;
+        if (enforceSort){
+            try {
+                sort();
+            } catch(Exception e){
+                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
+            }
+        }
+    }
+
+    /**
+     * Set the value of ascending to either true or false
+     * This will change the natural ordering of terms in the array
+     * Will automatically apply sort() to the array if enforceSort is true
+     * !! For use with user defined functions
+     * @param bool True = ascending sort, False = descending sort
+     */
+    public void setAscending(boolean bool, Comparator<E> comparator) {
+        ascending = bool;
+        if (enforceSort){
+            sort(comparator);
+        }
+    }
 } 
 
+// Enum to allow the user to specify functionality
 enum HowToFunction {
-    STACK,
-    QUEUE
-    // SORTEDARRAY,
-    // ARRAY
+    OPEN, // Can function in any way
+    STACK, // Can only function as a stack
+    QUEUE, // Can only function as a queue
+    ARRAY, // Can only function as an array
+    SORTED // Specify the array must be sorted
 }
+
+// Enum to allow the user to specify how to sort
+enum HowToSort {
+    ASCENDING,
+    DESCENDING
+}
+
+/*
+ * Methods allowed for each function
+ * 
+ * OPEN*
+ * STACK pop, push, peek, size, clear
+ * QUEUE enqueue, dequeue, peek, size, clear
+ */

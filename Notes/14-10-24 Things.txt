@@ -1,10 +1,10 @@
-Remove some "throws" keyword
-Comparator.
-Consider a naming strategy
+Remove some "throws" keyword                            DONE!
+Comparator.                                             DONE!
+Consider a naming strategy  
 Survey other languages and library naming convetions
 Change the append to insert rather than sort()
 Potential B+ tree for sorted arrays
-Priority queue (
+Priority queue
 Stack arithmetic example
 Venue booking example
 JMH (https://github.com/openjdk/jmh)

@@ -174,5 +174,8 @@ public class ArrayListTest {
         testing.insert(0, 10);
         assertEquals("[10]", testing.toString());
     }
+
+    //TODO: test overloaded functions for sorting with comparator
+    //TODO: test using a comparable for sorting
     
 }

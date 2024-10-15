@@ -1,7 +1,5 @@
 package com.rwalker;
 
-import java.util.Arrays;
-
 public class ManualTesting {
     public static void main(String[] args) throws NoSuchMethodException{
         Sequence<Student> test = new Sequence<Student>();

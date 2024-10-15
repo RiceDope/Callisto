@@ -2,6 +2,7 @@ package com.rwalker;
 
 /**
  * Demonstration class for use of a Comparator when sorting through the array
+ * GitHub: https://github.com/RiceDope/COMP6200-Modern-Collections-Library
  * 
  * @author Rhys Walker
  * @since 14/10/2024
