@@ -42,7 +42,8 @@ public class StackTest {
     @Test(expected = IllegalStateException.class)
     public void testEnforceSortPush() throws NoSuchMethodException{
         Sequence<Integer> test = new Sequence<Integer>();
-        test.setEnforceSort(true);
+        test.setEnforce(true);
+        test.setFunctionality(HowToFunction.SORTED);
         test.push(10);
     }
 
@@ -54,7 +55,8 @@ public class StackTest {
     public void testEnforceSortPop() throws NoSuchMethodException{
         Sequence<Integer> test = new Sequence<Integer>();
         test.push(10);
-        test.setEnforceSort(true);
+        test.setEnforce(true);
+        test.setFunctionality(HowToFunction.SORTED);
         test.pop();
     }
 
