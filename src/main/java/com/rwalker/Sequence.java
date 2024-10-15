@@ -34,6 +34,7 @@ public class Sequence<E> {
     private boolean enforceSort = false; // Do we want to enforce a sort
     private boolean ascending = true; // When enforcing sort do we want ascending or descending
 
+    // Allow for the setting of functionality and general use
     private boolean enforceFunctionality = false;
     private HowToFunction functionality = HowToFunction.OPEN;
     private HowToSort defaultSort = HowToSort.ASCENDING;
@@ -525,16 +526,10 @@ public class Sequence<E> {
      * ======================================================
      */
 
-    /**
-     * Alias for clear method.
-     * Empty typically used with stack
-     */
-    public void empty() {
-        clear();
-    }
-
     /*
-     * End of overloaded setAscending function
+     * ======================================================
+     *              MULTI PURPOSE FUNCTIONS
+     * ======================================================
      */
 
     /**
@@ -563,6 +558,18 @@ public class Sequence<E> {
         }   
     }
 
+    /*
+     * ======================================================
+     *            END OF MULTI PURPOSE FUNCTIONS
+     * ======================================================
+     */
+
+    /*
+     * ============================================
+     *          GENERAL PURPOSE FUNCTIONS
+     * ============================================
+     */
+
     /**
      * Clears the array. New arrays size is initialSize
      */
@@ -574,6 +581,55 @@ public class Sequence<E> {
     }
 
     /**
+     * Alias for clear method.
+     * Empty typically used with stack
+     */
+    public void empty() {
+        clear();
+    }
+
+    /**
+     * Custom toString method for generics.
+     * 
+     * @return String form of the array [term1, term2, term3]
+     */
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+
+        // Add the beginning bracket
+        sb.append("[");
+
+        // As long as more than one element
+        if (length() != 0){
+            // Add all terms to the StringBuilder
+            for (int i = startPointer; i < endPointer; i++){
+                if (array[i] != null){
+                    sb.append(array[i] + ", ");
+                }
+            }
+            // Find and remove last comma and space
+            int lastComma = sb.lastIndexOf(",");
+            sb.delete(lastComma, lastComma+2);
+        }
+
+        // Add the final bracket
+        sb.append("]");
+
+        // Return the string
+        return sb.toString();
+    }
+
+    /*
+     * ============================================
+     *      END OF GENERAL PURPOSE FUNCTIONS
+     * ============================================
+     */
+
+    /*
+     * SYSTEM FUNCTIONS
+     */
+
+     /**
      * Create and return a blank array of new size
      * @return Array of new size
      */
@@ -636,36 +692,15 @@ public class Sequence<E> {
         removed = 0; // No items have been removed from list currently
     }
 
-    /**
-     * Custom toString method for generics.
-     * 
-     * @return String form of the array [term1, term2, term3]
+    /*
+     * END OF SYSTEM FUNCTIONS
      */
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
 
-        // Add the beginning bracket
-        sb.append("[");
-
-        // As long as more than one element
-        if (length() != 0){
-            // Add all terms to the StringBuilder
-            for (int i = startPointer; i < endPointer; i++){
-                if (array[i] != null){
-                    sb.append(array[i] + ", ");
-                }
-            }
-            // Find and remove last comma and space
-            int lastComma = sb.lastIndexOf(",");
-            sb.delete(lastComma, lastComma+2);
-        }
-
-        // Add the final bracket
-        sb.append("]");
-
-        // Return the string
-        return sb.toString();
-    }
+    /*
+     * ================================================
+     *             EXPERT USER FUNCTIONS
+     * ================================================
+     */
 
     /**
      * Returns the length of the underlying array not where terms are
@@ -720,7 +755,15 @@ public class Sequence<E> {
         return growthRate;
     }
 
-        /*
+    /*
+     * ================================================
+     *          END OF EXPERT USER FUNCTIONS
+     * ================================================
+     */
+
+    // TODO: remove functions from this point onwards once replacements are in place
+
+    /*
      * Overloaded setEnforceSort function
      */
 
