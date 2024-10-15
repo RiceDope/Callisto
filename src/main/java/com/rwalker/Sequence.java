@@ -245,18 +245,7 @@ public class Sequence<E> {
 
         // Force null check
         if (item != null){
-            if (endPointer == array.length){ // We must expand the array
-                // Expand the array
-                reformat(true);
-
-                // Now add the new item
-                array[endPointer] = item;
-                endPointer++;
-
-            } else { // No need to expand array
-                array[endPointer] = item;
-                endPointer++;
-            }
+            addToEnd(item);
         } else {
             throw new IllegalArgumentException("null not allowed for append");
         }
@@ -523,7 +512,11 @@ public class Sequence<E> {
             throw new IllegalStateException("Cannot enqueue with current HowToFunction and enforceFunctionality = true");
         }
 
-        append(item); //TODO: Update to not use append
+        if (item != null){
+            addToEnd(item);
+        } else {
+            throw new IllegalArgumentException("null not allowed for append");
+        }
 
     }
 
@@ -553,8 +546,12 @@ public class Sequence<E> {
             throw new IllegalStateException("Cannot push with current HowToFunction and enforceFunctionality = true");
         }
         
-        // TODO: Update to not use append as won't work with enforce
-        append(item);
+        if (item != null){
+            addToEnd(item);
+        } else {
+            throw new IllegalArgumentException("null not allowed for append");
+        }
+        
 
     }
 
@@ -736,6 +733,25 @@ public class Sequence<E> {
     /*
      * SYSTEM FUNCTIONS
      */
+
+    /**
+     * Add an item to the end of the array correctly
+     * @param item
+     */
+    private void addToEnd(E item){
+        if (endPointer == array.length){ // We must expand the array
+            // Expand the array
+            reformat(true);
+
+            // Now add the new item
+            array[endPointer] = item;
+            endPointer++;
+
+        } else { // No need to expand array
+            array[endPointer] = item;
+            endPointer++;
+        }
+    }
 
      /**
      * Create and return a blank array of new size

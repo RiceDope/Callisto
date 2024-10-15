@@ -7,11 +7,11 @@ public class ManualTesting {
         test.append(10);
         test.append(15);
         test.append(20);
-        test.setFunctionality(HowToFunction.STACK);
-        test.setEnforce(false);
-        test.append(13);
+        test.setFunctionality(HowToFunction.QUEUE);
+        test.setEnforce(true);
+        test.enqueue(13);
 
-        System.out.println(test.peek());
+        System.out.println(test.toString());
     }
 }
 
