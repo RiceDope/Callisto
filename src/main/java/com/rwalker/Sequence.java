@@ -465,6 +465,16 @@ public class Sequence<E> {
      * @return true if queue is empty, false if queue has terms
      */
     public boolean isEmpty(){
+
+        if (enforceFunctionality && functionality == HowToFunction.QUEUE || functionality == HowToFunction.OPEN){
+            // We can function as normal
+        } else if (enforceFunctionality == false){
+            // We can function as normal
+        } else {
+            // We cannot function as functionality is not allowed
+            throw new IllegalStateException("Cannot isEmpty() with current HowToFunction and enforceFunctionality = true");
+        }
+
         if (length() == 0){
             return true;
         } else {
@@ -477,17 +487,23 @@ public class Sequence<E> {
      * @return The item that has  been dequeued
      */
     public E dequeue() {
-        if (enforceSort){
-            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+
+        if (enforceFunctionality && functionality == HowToFunction.QUEUE || functionality == HowToFunction.OPEN){
+            // We can dequeue as normal
+        } else if (enforceFunctionality == false){
+            // We can dequeue as normal
         } else {
-            if (length() > 0){
-                E temp = array[startPointer];
-                array[startPointer] = null;
-                startPointer++;
-                return temp;
-            } else {
-                throw new NullPointerException("No items to dequeue");
-            }
+            // We cannot dequeue as functionality is not allowed
+            throw new IllegalStateException("Cannot dequeue with current HowToFunction and enforceFunctionality = true");
+        }
+
+        if (length() > 0){
+            E temp = array[startPointer];
+            array[startPointer] = null;
+            startPointer++;
+            return temp;
+        } else {
+            throw new NullPointerException("No items to dequeue");
         }
     }
 
@@ -496,12 +512,21 @@ public class Sequence<E> {
      * Functionaly the same as append. There is no difference
      * @param item The item to enqueue
      */
-    // TODO: Update to not use append
     public void enqueue(E item){
+
+        if (enforceFunctionality && functionality == HowToFunction.QUEUE || functionality == HowToFunction.OPEN){
+            // We can function as normal
+        } else if (enforceFunctionality == false){
+            // We can function as normal
+        } else {
+            // We cannot function as functionality is not allowed
+            throw new IllegalStateException("Cannot enqueue with current HowToFunction and enforceFunctionality = true");
+        }
+
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
-            append(item);
+            append(item); //TODO: Update to not use append
         }
     }
 
