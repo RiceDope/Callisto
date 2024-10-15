@@ -20,7 +20,7 @@ public class GenericSequenceTests {
         assertNotNull(TestUtils.generateEmptySequence());
     }
 
-        /**
+    /**
      * Test ascending and descending sort function
      * 
      * order = [3, 5, 10, 20]
@@ -31,11 +31,11 @@ public class GenericSequenceTests {
         Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
 
         // Test regular sort
-        test.sort();
+        test.sort(); // default is ascending
         assertEquals("[3, 5, 10, 20]", test.toString());
 
         // Test descending
-        test.setAscending(false);
+        test.setSort(HowToSort.DESCENDING);
         test.sort();
         assertEquals("[20, 10, 5, 3]", test.toString());
     }
@@ -48,7 +48,9 @@ public class GenericSequenceTests {
         Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
 
         // Test automatic sort after enforceSort becomes true
-        test.setEnforceSort(true);
+        test.setEnforce(true);
+        test.setFunctionality(HowToFunction.SORTED);
+        test.sort();
         assertEquals("[3, 5, 10, 20]", test.toString());
 
         // Test automatic sort on insertion
@@ -56,7 +58,7 @@ public class GenericSequenceTests {
         assertEquals("[3, 4, 5, 10, 20]", test.toString());
 
         // Test automatic sort in descending mode
-        test.setAscending(false);
+        test.setSort(HowToSort.DESCENDING);
         test.append(15);
         assertEquals("[20, 15, 10, 5, 4, 3]", test.toString());
     }

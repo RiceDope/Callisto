@@ -30,10 +30,6 @@ public class Sequence<E> {
     private E[] array = (E[]) new Object[initialSize]; // Default size of array if one is not chosen
     private double growthRate = 1.5; // Default growth rate if one isnt chosen
 
-    // Boolean settings of the Sequence
-    private boolean enforceSort = false; // Do we want to enforce a sort
-    private boolean ascending = true; // When enforcing sort do we want ascending or descending
-
     // Allow for the setting of functionality and general use
     private boolean enforceFunctionality = false;
     private HowToFunction functionality = HowToFunction.OPEN;
@@ -234,23 +230,28 @@ public class Sequence<E> {
 
         if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN){
             // Just regular append operation when enforcing
+            if (item != null){
+                addToEnd(item);
+            } else {
+                throw new IllegalArgumentException("null not allowed for append");
+            }
         } else if (enforceFunctionality && functionality == HowToFunction.SORTED){
             // Sorted append operation
+            if (item != null){
+                addToEnd(item);
+                sort();
+            } else {
+                throw new IllegalArgumentException("null not allowed for append");
+            }
         } else if (enforceFunctionality == false) {
             // Regular append operation
+            if (item != null){
+                addToEnd(item);
+            } else {
+                throw new IllegalArgumentException("null not allowed for append");
+            }
         } else {
             throw new IllegalStateException("Cannot append with current set functionality and enforceFunctionality true");
-        }
-
-
-        // Force null check
-        if (item != null){
-            addToEnd(item);
-        } else {
-            throw new IllegalArgumentException("null not allowed for append");
-        }
-        if (enforceSort){ // Sort the array now we have added a new term
-            sort();
         }
     }
 
@@ -270,21 +271,17 @@ public class Sequence<E> {
             throw new IllegalStateException("Cannot replace with current HowToFunction and enforceFunctionality = true");
         }
 
-        if (enforceSort){
-            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+        // Force null check
+        if (value == null){
+            throw new IllegalArgumentException("null not allowed for replace");
         } else {
-            // Force null check
-            if (value == null){
-                throw new IllegalArgumentException("null not allowed for replace");
-            } else {
-                // Adjust in case 0 is not the starting point
-                int indexToAdjust = startPointer+index;
+            // Adjust in case 0 is not the starting point
+            int indexToAdjust = startPointer+index;
 
-                if (indexToAdjust > endPointer || index < 0){ // If in unset positions
-                    throw new ArrayIndexOutOfBoundsException("Index out of bounds");
-                } else { // All good
-                    array[startPointer+index] = value;
-                }
+            if (indexToAdjust > endPointer || index < 0){ // If in unset positions
+                throw new ArrayIndexOutOfBoundsException("Index out of bounds");
+            } else { // All good
+                array[startPointer+index] = value;
             }
         }
 
@@ -375,7 +372,7 @@ public class Sequence<E> {
 
         try {
             // Sort either ascending or descending
-            if (ascending == false){
+            if (defaultSort == HowToSort.DESCENDING){
                 Arrays.sort(tempArr, Collections.reverseOrder());
             } else {
                 Arrays.sort(tempArr);
@@ -417,7 +414,7 @@ public class Sequence<E> {
 
         try {
             // Sort either ascending or descending
-            if (ascending == false){
+            if (defaultSort == HowToSort.DESCENDING){
                 Arrays.sort(tempArr, Collections.reverseOrder(comparator));
             } else {
                 Arrays.sort(tempArr, comparator);
@@ -570,7 +567,7 @@ public class Sequence<E> {
             throw new IllegalStateException("Cannot pop with current HowToFunction and enforceFunctionality = true");
         }
 
-        if(endPointer != 0 && enforceSort == false){
+        if(endPointer != 0){
             E temp = array[endPointer-1];
             endPointer--;
             array[endPointer] = null;
@@ -605,23 +602,22 @@ public class Sequence<E> {
      * @return The next item in the queue
      */
     public E peek(HowToFunction acting) {
-        if (enforceSort){
-            throw new IllegalStateException ("Cannot use method while enforceSort = True");
-        } else {
-            if (length() > 0){
-                switch (acting){
-                    case STACK:
-                        return array[endPointer-1];
-                    case QUEUE: 
-                        return array[startPointer];
-                    default:
-                        throw new IllegalArgumentException("Not an enum allowed with peek. Choose STACK/QUEUE");
-                } 
-            }
-            else {
-                throw new NullPointerException("No item to peek");
-            }
-        }   
+
+        // TODO: restrict access
+
+        if (length() > 0){
+            switch (acting){
+                case STACK:
+                    return array[endPointer-1];
+                case QUEUE: 
+                    return array[startPointer];
+                default:
+                    throw new IllegalArgumentException("Not an enum allowed with peek. Choose STACK/QUEUE");
+            } 
+        }
+        else {
+            throw new NullPointerException("No item to peek");
+        }
     }
 
     /**
@@ -859,6 +855,14 @@ public class Sequence<E> {
     }
 
     /**
+     * Set the method of sorting to use
+     * @param sorting An enum of type HowToSort
+     */
+    public void setSort(HowToSort sorting){
+        defaultSort = sorting;
+    }
+
+    /**
      * Returns the length of the underlying array not where terms are
      * @return Int being the raw length of the array
      */
@@ -917,91 +921,6 @@ public class Sequence<E> {
      * ================================================
      */
 
-    // TODO: remove functions from this point onwards once replacements are in place
-
-    /*
-     * Overloaded setEnforceSort function
-     */
-
-    /**
-     * Change the value of enforceSort. Will sort automatically upon true
-     * !! For use with user defined classes
-     * @param bool The boolean that enforceSort is changed to
-     * @param comparator A comparator to sort by
-     */
-    public void setEnforceSort(boolean bool, Comparator<E> comparator) {
-        enforceSort = bool;
-        // Sort if we just changed to true
-        if (enforceSort){
-            sort(comparator);
-        }
-    }
-
-    /**
-     * Change the value of enforceSort. Will sort automatically upon true
-     * !! For use with java primitives
-     * @param bool The boolean that enforceSort is changed to
-     */
-    public void setEnforceSort(boolean bool) throws NoSuchMethodException{
-        enforceSort = bool;
-        // Sort if we just changed to true
-        if (enforceSort){
-            try {
-                sort();
-            } catch(Exception e){
-                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
-            }
-            
-        }
-    }
-
-    /*
-     * End of overloaded setEnforceSort function
-     */
-
-    /**
-     * Get the value of ascending
-     * @return Boolean value of ascending
-     */
-    public boolean getAscending(){
-        return ascending;
-    }
-
-    /*
-     * Overloaded setAscending function
-     */
-
-    /**
-     * Set the value of ascending to either true or false
-     * This will change the natural ordering of terms in the array
-     * Will automatically apply sort() to the array if enforceSort is true
-     * !! For use with java primitives
-     * @param bool True = ascending sort, False = descending sort
-     */
-    public void setAscending(boolean bool) throws NoSuchMethodException{
-        ascending = bool;
-        if (enforceSort){
-            try {
-                sort();
-            } catch(Exception e){
-                throw new NoSuchMethodException("Cannot compare a user defined class without a comparator");
-            }
-        }
-    }
-
-    /**
-     * Set the value of ascending to either true or false
-     * This will change the natural ordering of terms in the array
-     * Will automatically apply sort() to the array if enforceSort is true
-     * !! For use with user defined functions
-     * @param bool True = ascending sort, False = descending sort
-     */
-    public void setAscending(boolean bool, Comparator<E> comparator) {
-        ascending = bool;
-        if (enforceSort){
-            sort(comparator);
-        }
-    }
 } 
 
 // Enum to allow the user to specify functionality
