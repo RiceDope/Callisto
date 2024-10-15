@@ -183,6 +183,15 @@ public class Sequence<E> {
      */
     public void insert(int index, E value){
 
+        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN){
+            // We can insert as normal
+        } else if (enforceFunctionality == false){
+            // We can insert as normal
+        } else {
+            // We cannot insert as functionality is not allowed
+            throw new IllegalStateException("Cannot insert with current HowToFunction and enforceFunctionality = true");
+        }
+
         // Calculate index we want to insert at
         int insertionIndex = startPointer + index;
 
@@ -218,21 +227,22 @@ public class Sequence<E> {
     }
 
     /**
-     * Returns the length of a given sequence
-     * 
-     * @return Int length of sequence
-     */
-    public int length(){
-    
-        // Length can be worked out via the difference between the startIndex and endIndex with removed taken off to track non existant terms.
-        return endPointer - startPointer - removed;
-    }
-
-    /**
      * Add an item to the array. Automatically deals with expansion of the array
      * @param item The item to add
      */
     public void append(E item){
+
+        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN){
+            // Just regular append operation when enforcing
+        } else if (enforceFunctionality && functionality == HowToFunction.SORTED){
+            // Sorted append operation
+        } else if (enforceFunctionality == false) {
+            // Regular append operation
+        } else {
+            throw new IllegalStateException("Cannot append with current set functionality and enforceFunctionality true");
+        }
+
+
         // Force null check
         if (item != null){
             if (endPointer == array.length){ // We must expand the array
@@ -262,6 +272,15 @@ public class Sequence<E> {
      */
     public void replace(E value, int index) {
 
+        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN){
+            // We can insert as normal
+        } else if (enforceFunctionality == false){
+            // We can insert as normal
+        } else {
+            // We cannot insert as functionality is not allowed
+            throw new IllegalStateException("Cannot replace with current HowToFunction and enforceFunctionality = true");
+        }
+
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
@@ -287,6 +306,16 @@ public class Sequence<E> {
      * @param index Index of the element to remove
      */
     public void remove(int index){
+
+        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN || functionality == HowToFunction.SORTED){
+            // We can insert as normal
+        } else if (enforceFunctionality == false){
+            // We can insert as normal
+        } else {
+            // We cannot insert as functionality is not allowed
+            throw new IllegalStateException("Cannot remove with current HowToFunction and enforceFunctionality = true");
+        }
+
         int indexToAdjust = startPointer+index;
         if (indexToAdjust > endPointer || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
@@ -304,6 +333,15 @@ public class Sequence<E> {
      */
     public E get (int index){
 
+        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN || functionality == HowToFunction.SORTED){
+            // We can insert as normal
+        } else if (enforceFunctionality == false){
+            // We can insert as normal
+        } else {
+            // We cannot insert as functionality is not allowed
+            throw new IllegalStateException("Cannot get with current HowToFunction and enforceFunctionality = true");
+        }
+
         // Adjust in case 0 is not the starting point
         int indexToAdjust = startPointer+index;
 
@@ -319,7 +357,8 @@ public class Sequence<E> {
      * OVERLOADED SORT() FUNCTION
      */
 
-     // TODO: Custom sort algorithm?
+    // TODO: Add enforce checks to this
+
     /**
      * Sorts the array in either ascending or descending order based on the field ascending
      * !! STANDARD SORT TO BE USED WHEN SORTING PRIMITIVES
@@ -437,7 +476,7 @@ public class Sequence<E> {
      * Dequeue an item
      * @return The item that has  been dequeued
      */
-    public E dequeue() { // TODO: Is this the right exception
+    public E dequeue() {
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
@@ -462,7 +501,6 @@ public class Sequence<E> {
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
-            // TODO: Update to not expand if enqueue, dequeue match
             append(item);
         }
     }
@@ -492,7 +530,7 @@ public class Sequence<E> {
      * Push an item onto the stack
      * @param item The item to be pushed
      */
-    // TODO: Update to not use append
+    // TODO: Update to not use append as won't work with enforce
     public void push (E item) {
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
@@ -569,6 +607,17 @@ public class Sequence<E> {
      *          GENERAL PURPOSE FUNCTIONS
      * ============================================
      */
+
+    /**
+     * Returns the length of a given sequence
+     * 
+     * @return Int length of sequence
+     */
+    public int length(){
+    
+        // Length can be worked out via the difference between the startIndex and endIndex with removed taken off to track non existant terms.
+        return endPointer - startPointer - removed;
+    }
 
     /**
      * Clears the array. New arrays size is initialSize
@@ -701,6 +750,38 @@ public class Sequence<E> {
      *             EXPERT USER FUNCTIONS
      * ================================================
      */
+
+    /**
+     * Return the currently set functionality
+     * @return The current enum contained within functionality
+     */
+    public HowToFunction getFunctionality(){
+        return functionality;
+    }
+
+    /**
+     * Set the functionality of the Sequence
+     * @param newFunctionality Enum of how it should function
+     */
+    public void setFunctionality(HowToFunction newFunctionality){
+        functionality = newFunctionality;
+    }
+
+    /**
+     * Set the boolean flag enforceFunctionality
+     * @param value Boolean value to set the field
+     */
+    public void setEnforce (boolean value){
+        enforceFunctionality = value;
+    }
+
+    /**
+     * Get the current value for the boolean flag enforceFunctionality
+     * @return The value of enforceFunctionality
+     */
+    public boolean getEnforce(){
+        return enforceFunctionality;
+    }
 
     /**
      * Returns the length of the underlying array not where terms are
