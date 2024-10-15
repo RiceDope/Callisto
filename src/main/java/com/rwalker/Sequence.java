@@ -844,6 +844,8 @@ public class Sequence<E> {
      */
     public void setEnforce (boolean value){
         enforceFunctionality = value;
+
+        // TODO: figure out a way to automatically sort when no comparator available "primitives"
     }
 
     /**
@@ -860,6 +862,7 @@ public class Sequence<E> {
      */
     public void setSort(HowToSort sorting){
         defaultSort = sorting;
+        // TODO: if enforceSort sort the array. Need to wait for Comparator problem to be solved
     }
 
     /**
