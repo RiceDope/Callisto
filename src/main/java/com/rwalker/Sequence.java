@@ -523,11 +523,8 @@ public class Sequence<E> {
             throw new IllegalStateException("Cannot enqueue with current HowToFunction and enforceFunctionality = true");
         }
 
-        if (enforceSort){
-            throw new IllegalStateException ("Cannot use method while enforceSort = True");
-        } else {
-            append(item); //TODO: Update to not use append
-        }
+        append(item); //TODO: Update to not use append
+
     }
 
     /*
@@ -543,25 +540,22 @@ public class Sequence<E> {
      */
 
     /**
-     * Alias for length method.
-     * Size typically used by stack
-     * @return The size of the stack
-     */
-    public int size(){
-        return length();
-    }
-
-    /**
      * Push an item onto the stack
      * @param item The item to be pushed
      */
-    // TODO: Update to not use append as won't work with enforce
     public void push (E item) {
-        if (enforceSort){
-            throw new IllegalStateException ("Cannot use method while enforceSort = True");
+        if (enforceFunctionality && functionality == HowToFunction.STACK || functionality == HowToFunction.OPEN){
+            // We can function as normal
+        } else if (enforceFunctionality == false){
+            // We can function as normal
         } else {
-            append(item);
+            // We cannot function as functionality is not allowed
+            throw new IllegalStateException("Cannot push with current HowToFunction and enforceFunctionality = true");
         }
+        
+        // TODO: Update to not use append as won't work with enforce
+        append(item);
+
     }
 
     /**
@@ -569,6 +563,16 @@ public class Sequence<E> {
      * @return The item popped off of the stack
      */
     public E pop () {
+
+        if (enforceFunctionality && functionality == HowToFunction.STACK || functionality == HowToFunction.OPEN){
+            // We can function as normal
+        } else if (enforceFunctionality == false){
+            // We can function as normal
+        } else {
+            // We cannot function as functionality is not allowed
+            throw new IllegalStateException("Cannot pop with current HowToFunction and enforceFunctionality = true");
+        }
+
         if(endPointer != 0 && enforceSort == false){
             E temp = array[endPointer-1];
             endPointer--;
@@ -576,8 +580,6 @@ public class Sequence<E> {
             return temp;
         } else if (endPointer == 0){
             throw new ArrayIndexOutOfBoundsException("Nothing to pop");
-        } else if (enforceSort){
-            throw new IllegalStateException("Cannot use method while enforceSort = True");
         } else {
             throw new RuntimeException("Cannot pop, check code");
         }
@@ -595,12 +597,17 @@ public class Sequence<E> {
      * ======================================================
      */
 
+    /*
+     * OVERLOADED PEEK METHOD
+     */
+
     /**
      * Peek at the next item in the queue or stack depending on the enum
+     * !! FOR USE WHEN HowToFunction is either open or not set
      * @param acting Enum of type HowToFunction being either QUEUE or STACK
      * @return The next item in the queue
      */
-    public E  peek(HowToFunction acting) {
+    public E peek(HowToFunction acting) {
         if (enforceSort){
             throw new IllegalStateException ("Cannot use method while enforceSort = True");
         } else {
@@ -617,9 +624,27 @@ public class Sequence<E> {
             else {
                 throw new NullPointerException("No item to peek");
             }
-            
         }   
     }
+
+    /**
+     * Peek at the next item in the stack or queue depending on if functionality is set
+     * !! FOR USE WHEN HOW TO FUNCTION IS SET or IF ENFORCING FUNCTIONALITY
+     * @return The item being peeked on
+     */
+    public E peek(){
+        if (functionality == HowToFunction.STACK){
+            return array[endPointer-1];
+        } else if (functionality == HowToFunction.QUEUE){
+            return array[startPointer];
+        } else {
+            throw new IllegalStateException("How to function not set correctly");
+        }
+    }
+
+    /*
+     * END OF OVERLOADED PEEK FUNCTION
+     */
 
     /*
      * ======================================================
@@ -632,6 +657,15 @@ public class Sequence<E> {
      *          GENERAL PURPOSE FUNCTIONS
      * ============================================
      */
+
+    /**
+     * Alias for length method.
+     * Size typically used by stack
+     * @return The size of the stack
+     */
+    public int size(){
+        return length();
+    }
 
     /**
      * Returns the length of a given sequence
