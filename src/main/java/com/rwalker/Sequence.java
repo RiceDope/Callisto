@@ -32,7 +32,7 @@ public class Sequence<E> {
 
     // Allow for the setting of functionality and general use
     private boolean enforceFunctionality = false;
-    private HowToFunction functionality = HowToFunction.OPEN;
+    private boolean enforceSort = false;
     private HowToSort defaultSort = HowToSort.ASCENDING;
     private Comparator<E> defaultComparator; // User can set in constructor or in runtime
 
@@ -155,7 +155,6 @@ public class Sequence<E> {
             throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
         defaultComparator = comparator;
-
     }
 
     /* 
@@ -179,15 +178,6 @@ public class Sequence<E> {
      * @param value value to be inserted
      */
     public void insert(int index, E value){
-
-        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN){
-            // We can insert as normal
-        } else if (enforceFunctionality == false){
-            // We can insert as normal
-        } else {
-            // We cannot insert as functionality is not allowed
-            throw new IllegalStateException("Cannot insert with current HowToFunction and enforceFunctionality = true");
-        }
 
         // Calculate index we want to insert at
         int insertionIndex = startPointer + index;
@@ -229,14 +219,14 @@ public class Sequence<E> {
      */
     public void append(E item){
 
-        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN){
+        if (!enforceSort){
             // Just regular append operation when enforcing
             if (item != null){
                 addToEnd(item);
             } else {
                 throw new IllegalArgumentException("null not allowed for append");
             }
-        } else if (enforceFunctionality && functionality == HowToFunction.SORTED){
+        } else if (enforceSort){
             // Sorted append operation
             if (item != null){
                 /*
@@ -244,25 +234,15 @@ public class Sequence<E> {
                  * Then use the insert operation to do this
                  */
 
-                // TODO: Currently only works with custom types with a comparator also only sorts ascending
-                // int index = BinarySearch.findIndex(array, startPointer, endPointer, item, defaultComparator);
-                // int appendIndex = index-startPointer; // Convert from subarray index
-                // insert(appendIndex, item);
+                int index = BinarySearch.findIndex(array, startPointer, endPointer, item, defaultComparator);
+                int appendIndex = index-startPointer; // Convert from subarray index
+                insert(appendIndex, item);
 
-                addToEnd(item);
-                sort();
+                // addToEnd(item);
+                // sort();
             } else {
                 throw new IllegalArgumentException("null not allowed for append");
             }
-        } else if (enforceFunctionality == false) {
-            // Regular append operation
-            if (item != null){
-                addToEnd(item);
-            } else {
-                throw new IllegalArgumentException("null not allowed for append");
-            }
-        } else {
-            throw new IllegalStateException("Cannot append with current set functionality and enforceFunctionality true");
         }
     }
 
@@ -272,15 +252,6 @@ public class Sequence<E> {
      * @param index The index to insert at
      */
     public void replace(E value, int index) {
-
-        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN){
-            // We can insert as normal
-        } else if (enforceFunctionality == false){
-            // We can insert as normal
-        } else {
-            // We cannot insert as functionality is not allowed
-            throw new IllegalStateException("Cannot replace with current HowToFunction and enforceFunctionality = true");
-        }
 
         // Force null check
         if (value == null){
@@ -304,15 +275,6 @@ public class Sequence<E> {
      */
     public void remove(int index){
 
-        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN || functionality == HowToFunction.SORTED){
-            // We can insert as normal
-        } else if (enforceFunctionality == false){
-            // We can insert as normal
-        } else {
-            // We cannot insert as functionality is not allowed
-            throw new IllegalStateException("Cannot remove with current HowToFunction and enforceFunctionality = true");
-        }
-
         int indexToAdjust = startPointer+index;
         if (indexToAdjust > endPointer || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
@@ -330,15 +292,6 @@ public class Sequence<E> {
      */
     public E get (int index){
 
-        if (enforceFunctionality && functionality == HowToFunction.ARRAY || functionality == HowToFunction.OPEN || functionality == HowToFunction.SORTED){
-            // We can insert as normal
-        } else if (enforceFunctionality == false){
-            // We can insert as normal
-        } else {
-            // We cannot insert as functionality is not allowed
-            throw new IllegalStateException("Cannot get with current HowToFunction and enforceFunctionality = true");
-        }
-
         // Adjust in case 0 is not the starting point
         int indexToAdjust = startPointer+index;
 
@@ -354,54 +307,48 @@ public class Sequence<E> {
      * OVERLOADED SORT() FUNCTION
      */
 
-    // TODO: Add enforce checks to this
-
     /**
-     * Sorts the array in either ascending or descending order based on the field ascending
-     * !! STANDARD SORT TO BE USED WHEN SORTING PRIMITIVES
-     * 
-     * Can alternatively implement Comparable to use this function
+     * Sorts the array based on the field defaultComparator. Must be set
      */
     public void sort(){
 
-        // Calculate the length of the array that contains terms
-        int arrSize = endPointer - startPointer;
+        if (defaultComparator != null){
+            // Calculate the length of the array that contains terms
+            int arrSize = endPointer - startPointer;
 
-        // Generate a temporary array of that length
-        E[] tempArr = (E[]) new Object[arrSize];
+            // Generate a temporary array of that length
+            E[] tempArr = (E[]) new Object[arrSize];
 
-        // Add all terms over skipping nulls
-        int addCount = 0;
-        for (int i = 0; i < endPointer; i++){
-            if (array[i] == null){
-                continue;
-            } else {
-                tempArr[addCount] = array[i];
-                addCount++;
-            }
-        }
-
-        try {
-            // Sort either ascending or descending
-            if (defaultSort == HowToSort.DESCENDING){
-                Arrays.sort(tempArr, Collections.reverseOrder());
-            } else {
-                Arrays.sort(tempArr);
+            // Add all terms over skipping nulls
+            int addCount = 0;
+            for (int i = 0; i < endPointer; i++){
+                if (array[i] == null){
+                    continue;
+                } else {
+                    tempArr[addCount] = array[i];
+                    addCount++;
+                }
             }
 
-            Arrays.fill(array, null); // Null out original to maintain terms
-            System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
-        } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
-            System.err.println(e);
-            throw new UnknownError("Class either does not implement Comparable or no Comparator given for a user defined class");
-        }
-        
+            try {
 
+                // Sort the array
+                Arrays.sort(tempArr, defaultComparator);
+
+                Arrays.fill(array, null); // Null out original to maintain terms
+                System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
+
+            } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+                System.err.println(e);
+                throw new UnknownError("Comparator incorrect or not set");
+            }
+        } else {
+            throw new IllegalStateException("Default comparator must be set to use this sort");
+        }
     }
 
     /**
-     * Sorts the array in either ascending or descending order based on the field ascending
-     * !! TO BE USED WHEN SORTING USER DEFINED CLASSES
+     * Allows the user to sort based on a comparator not defined in defaultComparator
      * @param comparator The comparator for comparing the types
      */
     public void sort(Comparator<E> comparator){
@@ -463,15 +410,6 @@ public class Sequence<E> {
      */
     public boolean isEmpty(){
 
-        if (enforceFunctionality && functionality == HowToFunction.QUEUE || functionality == HowToFunction.OPEN){
-            // We can function as normal
-        } else if (enforceFunctionality == false){
-            // We can function as normal
-        } else {
-            // We cannot function as functionality is not allowed
-            throw new IllegalStateException("Cannot isEmpty() with current HowToFunction and enforceFunctionality = true");
-        }
-
         if (length() == 0){
             return true;
         } else {
@@ -484,15 +422,6 @@ public class Sequence<E> {
      * @return The item that has  been dequeued
      */
     public E dequeue() {
-
-        if (enforceFunctionality && functionality == HowToFunction.QUEUE || functionality == HowToFunction.OPEN){
-            // We can dequeue as normal
-        } else if (enforceFunctionality == false){
-            // We can dequeue as normal
-        } else {
-            // We cannot dequeue as functionality is not allowed
-            throw new IllegalStateException("Cannot dequeue with current HowToFunction and enforceFunctionality = true");
-        }
 
         if (length() > 0){
             E temp = array[startPointer];
@@ -507,18 +436,12 @@ public class Sequence<E> {
     /**
      * Enqueue an item at the end of the queue
      * Functionaly the same as append. There is no difference
+     * 
+     * !! Not intended for use with enforceSort = true / Will work but will not automatically sort
+     * 
      * @param item The item to enqueue
      */
     public void enqueue(E item){
-
-        if (enforceFunctionality && functionality == HowToFunction.QUEUE || functionality == HowToFunction.OPEN){
-            // We can function as normal
-        } else if (enforceFunctionality == false){
-            // We can function as normal
-        } else {
-            // We cannot function as functionality is not allowed
-            throw new IllegalStateException("Cannot enqueue with current HowToFunction and enforceFunctionality = true");
-        }
 
         if (item != null){
             addToEnd(item);
@@ -542,17 +465,12 @@ public class Sequence<E> {
 
     /**
      * Push an item onto the stack
+     * 
+     * !! Not intended for use with enforceSort = true / Will work but will not automatically sort
+     * 
      * @param item The item to be pushed
      */
     public void push (E item) {
-        if (enforceFunctionality && functionality == HowToFunction.STACK || functionality == HowToFunction.OPEN){
-            // We can function as normal
-        } else if (enforceFunctionality == false){
-            // We can function as normal
-        } else {
-            // We cannot function as functionality is not allowed
-            throw new IllegalStateException("Cannot push with current HowToFunction and enforceFunctionality = true");
-        }
         
         if (item != null){
             addToEnd(item);
@@ -568,15 +486,6 @@ public class Sequence<E> {
      * @return The item popped off of the stack
      */
     public E pop () {
-
-        if (enforceFunctionality && functionality == HowToFunction.STACK || functionality == HowToFunction.OPEN){
-            // We can function as normal
-        } else if (enforceFunctionality == false){
-            // We can function as normal
-        } else {
-            // We cannot function as functionality is not allowed
-            throw new IllegalStateException("Cannot pop with current HowToFunction and enforceFunctionality = true");
-        }
 
         if(endPointer != 0){
             E temp = array[endPointer-1];
@@ -614,8 +523,6 @@ public class Sequence<E> {
      */
     public E peek(HowToFunction acting) {
 
-        // TODO: restrict access
-
         if (length() > 0){
             switch (acting){
                 case STACK:
@@ -628,21 +535,6 @@ public class Sequence<E> {
         }
         else {
             throw new NullPointerException("No item to peek");
-        }
-    }
-
-    /**
-     * Peek at the next item in the stack or queue depending on if functionality is set
-     * !! FOR USE WHEN HOW TO FUNCTION IS SET or IF ENFORCING FUNCTIONALITY
-     * @return The item being peeked on
-     */
-    public E peek(){
-        if (functionality == HowToFunction.STACK){
-            return array[endPointer-1];
-        } else if (functionality == HowToFunction.QUEUE){
-            return array[startPointer];
-        } else {
-            throw new IllegalStateException("How to function not set correctly");
         }
     }
 
@@ -833,38 +725,34 @@ public class Sequence<E> {
      * ================================================
      */
 
-    /**
-     * Return the currently set functionality
-     * @return The current enum contained within functionality
-     */
-    public HowToFunction getFunctionality(){
-        return functionality;
+     /**
+      * Set the comparator to be used
+      * @param comparator
+      */
+    public void setComparator (Comparator<E> comparator){
+        defaultComparator = comparator;
     }
 
     /**
-     * Set the functionality of the Sequence
-     * @param newFunctionality Enum of how it should function
-     */
-    public void setFunctionality(HowToFunction newFunctionality){
-        functionality = newFunctionality;
-    }
-
-    /**
-     * Set the boolean flag enforceFunctionality
+     * Set the boolean flag enforceSort
      * @param value Boolean value to set the field
      */
-    public void setEnforce (boolean value){
-        enforceFunctionality = value;
+    public void setEnforceSort (boolean value){
 
-        // TODO: figure out a way to automatically sort when no comparator available "primitives"
+        // If no comparator is set we cannot enforce a sort
+        if (defaultComparator == null){
+            throw new IllegalStateException("Cannot enforce sort without a comparator set");
+        }
+
+        enforceSort = value;
     }
 
     /**
      * Get the current value for the boolean flag enforceFunctionality
      * @return The value of enforceFunctionality
      */
-    public boolean getEnforce(){
-        return enforceFunctionality;
+    public boolean getEnforceSort(){
+        return enforceSort;
     }
 
     /**
@@ -939,11 +827,8 @@ public class Sequence<E> {
 
 // Enum to allow the user to specify functionality
 enum HowToFunction {
-    OPEN, // Can function in any way
     STACK, // Can only function as a stack
-    QUEUE, // Can only function as a queue
-    ARRAY, // Can only function as an array
-    SORTED // Specify the array must be sorted
+    QUEUE // Can only function as a queue
 }
 
 // Enum to allow the user to specify how to sort

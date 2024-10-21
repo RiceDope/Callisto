@@ -5,20 +5,22 @@ import java.util.Comparator;
 public class ManualTesting {
     public static void main(String[] args) throws NoSuchMethodException{
 
-        Sequence<Student> test = new Sequence<Student>(new SortByAge());
+        // (a, b) ->  a.getAge() - b.getAge()
+        Sequence<Student> test = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
         test.append(new Student(20, "Rhys"));
         test.append(new Student(15, "Rhys"));
         test.append(new Student(30, "Rhys"));
-        test.setFunctionality(HowToFunction.SORTED);
-        test.setSort(HowToSort.ASCENDING);
-        test.setEnforce(true);
+        test.setEnforceSort(true);
+        // test.sort((a, b) ->  a.getAge() - b.getAge());
+        test.sort();
 
-        test.sort((a, b) ->  b.getAge() - a.getAge());
+        // test.sort((a, b) ->  b.getAge() - a.getAge());
 
         // test.sort(Student::getMother);
 
         //test.sort(new SortByAge());
-        //test.append(new Student(17, "Rhys"));
+        test.append(new Student(13, "Rhys"));
+        test.append(new Student(35, "Rhys"));
 
         System.out.println(test.toString());
 

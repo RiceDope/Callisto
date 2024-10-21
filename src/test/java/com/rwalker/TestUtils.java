@@ -87,7 +87,7 @@ public class TestUtils {
      * order = [20, 10, 5, 3] DESC
      * @return A sequence with four integers
      */
-    public static Sequence<Integer> generateSequenceFourRandomNumbers() throws NoSuchMethodException{
+    public static Sequence<Integer> generateSequenceFourRandomNumbers(){
         Sequence<Integer> test = TestUtils.generateEmptySequence();
         test.append(5);
         test.append(3);

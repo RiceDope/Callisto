@@ -31,13 +31,24 @@ public class GenericSequenceTests {
         Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
 
         // Test regular sort
-        test.sort(); // default is ascending
+        test.sort((a, b) -> a - b); // default is ascending
         assertEquals("[3, 5, 10, 20]", test.toString());
 
         // Test descending
-        test.setSort(HowToSort.DESCENDING);
-        test.sort();
+        test.sort((a, b) -> b - a);
         assertEquals("[20, 10, 5, 3]", test.toString());
+    }
+
+    /**
+     * Test that when we try to sort without a comparator set it will throw an error
+     */
+    @Test(expected = IllegalStateException.class)
+    public void testEnforceSortWithoutComparatorThrowsError(){
+        Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
+
+        // Test automatic sort after enforceSort becomes true
+        test.setEnforceSort(true);
+        test.sort();
     }
 
     /**
@@ -48,8 +59,8 @@ public class GenericSequenceTests {
         Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
 
         // Test automatic sort after enforceSort becomes true
-        test.setEnforce(true);
-        test.setFunctionality(HowToFunction.SORTED);
+        test.setComparator((a, b) -> a - b);
+        test.setEnforceSort(true);
         test.sort();
         assertEquals("[3, 5, 10, 20]", test.toString());
 
@@ -58,9 +69,29 @@ public class GenericSequenceTests {
         assertEquals("[3, 4, 5, 10, 20]", test.toString());
 
         // Test automatic sort in descending mode
-        test.setSort(HowToSort.DESCENDING);
+        test.setComparator((a, b) -> b - a);
+        test.sort();
         test.append(15);
         assertEquals("[20, 15, 10, 5, 4, 3]", test.toString());
     }
 
+    /**
+     * Test enforce sort when inserting at index 0 and index max
+     */
+    @Test
+    public void testEnforceSortBounds() throws NoSuchMethodException{
+        Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
+
+        // Test automatic sort after enforceSort becomes true
+        test.setComparator((a, b) -> a - b);
+        test.setEnforceSort(true);
+        test.sort();
+        assertEquals("[3, 5, 10, 20]", test.toString());
+
+        test.append(2); // Should insert into the first position
+        assertEquals("[2, 3, 5, 10, 20]", test.toString());
+
+        test.append(25); // Should insert into the last position
+        assertEquals("[2, 3, 5, 10, 20, 25]", test.toString());
+    }
 }

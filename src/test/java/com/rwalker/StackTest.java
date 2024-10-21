@@ -36,31 +36,6 @@ public class StackTest {
     }
 
     /**
-     * Test that IllegalStateException is thrown upon enforcing sort
-     * @throws NoSuchMethodException
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testEnforceSortPush() throws NoSuchMethodException{
-        Sequence<Integer> test = new Sequence<Integer>();
-        test.setEnforce(true);
-        test.setFunctionality(HowToFunction.SORTED);
-        test.push(10);
-    }
-
-    /**
-     * Test that IllegalStateException is thrown upon enforcing sort
-     * @throws NoSuchMethodException
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testEnforceSortPop() throws NoSuchMethodException{
-        Sequence<Integer> test = new Sequence<Integer>();
-        test.push(10);
-        test.setEnforce(true);
-        test.setFunctionality(HowToFunction.SORTED);
-        test.pop();
-    }
-
-    /**
      * Test pop on an empty list throws error
      */
     @Test(expected = IndexOutOfBoundsException.class)

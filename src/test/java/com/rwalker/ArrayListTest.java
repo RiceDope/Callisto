@@ -109,7 +109,7 @@ public class ArrayListTest {
     /**
      * Test that default size is applied when given erronous size input
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NegativeArraySizeException.class)
     public void instantiateWithNegativeSize(){
         @SuppressWarnings("unused")
         Sequence<Integer> testing = new Sequence<Integer>(-10);
