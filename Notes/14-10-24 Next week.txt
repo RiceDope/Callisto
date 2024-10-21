@@ -1,0 +1,4 @@
+Issue with comparators being used. Need to know how to differentiate between a user defined type as well as
+primitives which can be compared anyway. This is for use with the EnforceSort method.
+
+Changed append to use insert when sorting

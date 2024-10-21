@@ -63,7 +63,7 @@ public class Sequence<E> {
             initialSize = size;
             array = (E[]) new Object[size];
         } else {
-            throw new IllegalArgumentException("Cannot use size of 0 or less");
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
     }
 
@@ -85,7 +85,7 @@ public class Sequence<E> {
             initialSize = size;
             array = (E[]) new Object[size];
         } else {
-            throw new IllegalArgumentException("Cannot use size of 0 or less");
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
         defaultComparator = comparator;
     }
@@ -126,7 +126,7 @@ public class Sequence<E> {
             initialSize = size;
             array = (E[]) new Object[size];
         } else {
-            throw new IllegalArgumentException("Cannot use size of 0 or less");
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
         if (customGrowthRate >  1.0){
             this.growthRate = customGrowthRate;
@@ -147,7 +147,7 @@ public class Sequence<E> {
             initialSize = size;
             array = (E[]) new Object[size];
         } else {
-            throw new IllegalArgumentException("Cannot use size of 0 or less");
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
         if (customGrowthRate >  1.0){
             this.growthRate = customGrowthRate;
@@ -165,6 +165,7 @@ public class Sequence<E> {
     */
 
     // TODO: isFull?
+    // TODO: allIndexsOf, firstIndexOf
 
     /*
      * ======================================================
@@ -238,6 +239,16 @@ public class Sequence<E> {
         } else if (enforceFunctionality && functionality == HowToFunction.SORTED){
             // Sorted append operation
             if (item != null){
+                /*
+                 * First calculate the index for the term to be inserted into (Binary search)
+                 * Then use the insert operation to do this
+                 */
+
+                // TODO: Currently only works with custom types with a comparator also only sorts ascending
+                // int index = BinarySearch.findIndex(array, startPointer, endPointer, item, defaultComparator);
+                // int appendIndex = index-startPointer; // Convert from subarray index
+                // insert(appendIndex, item);
+
                 addToEnd(item);
                 sort();
             } else {
