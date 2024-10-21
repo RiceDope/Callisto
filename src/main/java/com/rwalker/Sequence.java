@@ -31,7 +31,6 @@ public class Sequence<E> {
     private double growthRate = 1.5; // Default growth rate if one isnt chosen
 
     // Allow for the setting of functionality and general use
-    private boolean enforceFunctionality = false;
     private boolean enforceSort = false;
     private HowToSort defaultSort = HowToSort.ASCENDING;
     private Comparator<E> defaultComparator; // User can set in constructor or in runtime
@@ -349,6 +348,15 @@ public class Sequence<E> {
 
     /**
      * Allows the user to sort based on a comparator not defined in defaultComparator
+     * 
+     * !! WARNING:
+     *          If you enforce sort and then call this with a different comparator and then try to append
+     *          the append operation will insert incorrectly. Please be mindfull as to when you specify a
+     *          comparator here. This should only be used as more of a one off sort not while enforceSort is
+     *          true.
+     *          If it is strictly crucial that the item be inserted while after a different sort then just call
+     *          .sort() after which will remedy the problem. Example in readme.md
+     * 
      * @param comparator The comparator for comparing the types
      */
     public void sort(Comparator<E> comparator){
@@ -670,14 +678,11 @@ public class Sequence<E> {
         return newArray;
     }
 
-    // TODO: Correctly move around function so that expand() can be used without reformat
-
     /**
      * Expand the array by the given growth factor.
      * Check for null items and remove
      * @param expand Boolean telling whether to expand or not
      */
-    // TODO: Make sure expansion is only done when there is a good reason
     private void reformat(boolean  expand){
 
         E[] newArray;
@@ -761,7 +766,6 @@ public class Sequence<E> {
      */
     public void setSort(HowToSort sorting){
         defaultSort = sorting;
-        // TODO: if enforceSort sort the array. Need to wait for Comparator problem to be solved
     }
 
     /**

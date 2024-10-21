@@ -175,7 +175,5 @@ public class ArrayListTest {
         assertEquals("[10]", testing.toString());
     }
 
-    //TODO: test overloaded functions for sorting with comparator
-    //TODO: test using a comparable for sorting
-    
+    //TODO: test overloaded functions for sorting with comparator    
 }

@@ -1,3 +1,2 @@
-Remove EnforceFunctionality
 Change back to EnforceSort (decide which methods will use enforceSort)
 Change comparators

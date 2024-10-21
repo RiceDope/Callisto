@@ -6,23 +6,33 @@ public class ManualTesting {
     public static void main(String[] args) throws NoSuchMethodException{
 
         // (a, b) ->  a.getAge() - b.getAge()
+
+        // Instantiate with a comparator sorting ascending
         Sequence<Student> test = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
-        test.append(new Student(20, "Rhys"));
-        test.append(new Student(15, "Rhys"));
-        test.append(new Student(30, "Rhys"));
+
+        // Add some Students
+        test.append(new Student(20, "a"));
+        test.append(new Student(15, "b"));
+        test.append(new Student(30, "c"));
+
+        // Enforce sort on the array
         test.setEnforceSort(true);
-        // test.sort((a, b) ->  a.getAge() - b.getAge());
+
+        // Now sort in decending order
+        test.sort((a, b) -> b.getAge() - a.getAge());
+
+        // These will insert into the wrong position
+        test.append(new Student(13, "d"));
+        test.append(new Student(35, "e"));
+
+        // OUTPUT = "[Age 13 Name d , Age 30 Name c , Age 20 Name a , Age 15 Name b , Age 35 Name e ]"
+        System.out.println(test.toString()); // Not correctly sorted
+
+        // Call now with default comparator that was set at instantiation
         test.sort();
 
-        // test.sort((a, b) ->  b.getAge() - a.getAge());
-
-        // test.sort(Student::getMother);
-
-        //test.sort(new SortByAge());
-        test.append(new Student(13, "Rhys"));
-        test.append(new Student(35, "Rhys"));
-
-        System.out.println(test.toString());
+        // OUTPUT = "[Age 13 Name d , Age 15 Name b , Age 20 Name a , Age 30 Name c , Age 35 Name e ]"
+        System.out.println(test.toString()); // Now correctly sorted
 
         // Integer[] test = new Integer[10];
         // test[3] = 10;
