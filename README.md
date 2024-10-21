@@ -1,6 +1,10 @@
 # Modern Collections Library
 This is a Collections library that is being developed as a part of my dissertation at the University of Kent.
 
+## Be aware
+
+### EnforceSort
+Please be aware that when enforcing sort how you sort the array and whether you give a comparator. Explanation below
 ```
 // Instantiate with a comparator sorting ascending
         Sequence<Student> test = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
@@ -15,6 +19,8 @@ This is a Collections library that is being developed as a part of my dissertati
 
         // Now sort in decending order
         test.sort((a, b) -> b.getAge() - a.getAge());
+
+        // Now do what was needed with descending order
 
         // These will insert into the wrong position
         test.append(new Student(13, "d"));
