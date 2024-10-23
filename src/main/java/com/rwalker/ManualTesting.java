@@ -34,6 +34,10 @@ public class ManualTesting {
         // OUTPUT = "[Age 13 Name d , Age 15 Name b , Age 20 Name a , Age 30 Name c , Age 35 Name e ]"
         System.out.println(test.toString()); // Now correctly sorted
 
+        test.sort();
+
+        System.out.println(test.contains(new Student(30, "c")));
+
         // Integer[] test = new Integer[10];
         // test[3] = 10;
         // test[4] = 15;

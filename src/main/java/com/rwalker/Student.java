@@ -5,7 +5,8 @@ package com.rwalker;
  * GitHub: https://github.com/RiceDope/COMP6200-Modern-Collections-Library
  * 
  * @author Rhys Walker
- * @since 14/10/2024
+ * Created: 14/10/24
+ * Updated: 23/10/24
  */
 
 import java.util.Comparator;
@@ -14,6 +15,10 @@ public class Student {
 
     private String name;
     private int age;
+
+    // Example lambda comparator stored (Can declare comparator class instead)
+    private Comparator<Student> ageComp = (a, b) -> a.getAge() - b.getAge();
+    private Comparator<Student> nameComp = (a, b) -> a.getName().compareTo(b.getName());
     
     public Student(int age, String name){
         this.age = age;
@@ -60,7 +65,19 @@ public class Student {
         return "Age " + age + " Name " + name + " "; 
     }
 
+    /**
+     * Overrides Object equals method
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+            Student that = (Student) o;
+            return name.equals(that.name) && age == that.age; 
+    }
 }
+
+// CAN USE LAMBDA CALCULUS INSTEAD
 
 /**
  * Allows for comparison of Student via age

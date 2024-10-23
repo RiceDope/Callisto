@@ -5,7 +5,7 @@
  * GitHub: https://github.com/RiceDope/COMP6200-Modern-Collections-Library
  * 
  * Created: 30/09/2024
- * Last Updated 14/10/2024
+ * Last Updated 23/10/2024
  * 
  * @Author Rhys Walker
  */
@@ -14,7 +14,6 @@ package com.rwalker;
 
 import java.lang.StringBuilder;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 
 @SuppressWarnings("unchecked")
@@ -32,7 +31,6 @@ public class Sequence<E> {
 
     // Allow for the setting of functionality and general use
     private boolean enforceSort = false;
-    private HowToSort defaultSort = HowToSort.ASCENDING;
     private Comparator<E> defaultComparator; // User can set in constructor or in runtime
 
     // Developer settings for adjustment
@@ -250,7 +248,7 @@ public class Sequence<E> {
      * @param value The value to insert
      * @param index The index to insert at
      */
-    public void replace(E value, int index) {
+    public void replace(int index, E value) {
 
         // Force null check
         if (value == null){
@@ -379,13 +377,7 @@ public class Sequence<E> {
         }
 
         try {
-            // Sort either ascending or descending
-            if (defaultSort == HowToSort.DESCENDING){
-                Arrays.sort(tempArr, Collections.reverseOrder(comparator));
-            } else {
-                Arrays.sort(tempArr, comparator);
-            }
-
+            Arrays.sort(tempArr, comparator);
             Arrays.fill(array, null); // Null out original to maintain terms
             System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
         } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
@@ -399,6 +391,36 @@ public class Sequence<E> {
     /*
      * END OF OVERLOADED SORT() FUNCTION
      */
+
+    /**
+      * Set the comparator to be used
+      * @param comparator
+      */
+      public void setComparator (Comparator<E> comparator){
+        defaultComparator = comparator;
+    }
+
+    /**
+     * Set the boolean flag enforceSort
+     * @param value Boolean value to set the field
+     */
+    public void setEnforceSort (boolean value){
+
+        // If no comparator is set we cannot enforce a sort
+        if (defaultComparator == null){
+            throw new IllegalStateException("Cannot enforce sort without a comparator set");
+        }
+
+        enforceSort = value;
+    }
+
+    /**
+     * Get the current value for the boolean flag enforceFunctionality
+     * @return The value of enforceFunctionality
+     */
+    public boolean getEnforceSort(){
+        return enforceSort;
+    }
 
     /*
      * ======================================================
@@ -519,13 +541,8 @@ public class Sequence<E> {
      * ======================================================
      */
 
-    /*
-     * OVERLOADED PEEK METHOD
-     */
-
     /**
      * Peek at the next item in the queue or stack depending on the enum
-     * !! FOR USE WHEN HowToFunction is either open or not set
      * @param acting Enum of type HowToFunction being either QUEUE or STACK
      * @return The next item in the queue
      */
@@ -545,10 +562,6 @@ public class Sequence<E> {
             throw new NullPointerException("No item to peek");
         }
     }
-
-    /*
-     * END OF OVERLOADED PEEK FUNCTION
-     */
 
     /*
      * ======================================================
@@ -629,6 +642,29 @@ public class Sequence<E> {
 
         // Return the string
         return sb.toString();
+    }
+
+    /**
+     * Returns true if item is contained and false if not
+     * 
+     * !!! Objects must override equals to use this function properly
+     *     otherwise objects will be compared on object referrence
+     * 
+     * @param value The value to check for
+     * @return true if yes, false if no
+     */
+    public boolean contains(E value){
+
+        for (int i = startPointer; i < endPointer; i++){
+            if (value.equals(array[i])){ // If same value then return true
+                return true;
+            } else {
+                continue;
+            }
+        }
+
+        // If get here then value not contained
+        return false;
     }
 
     /*
@@ -730,44 +766,6 @@ public class Sequence<E> {
      * ================================================
      */
 
-     /**
-      * Set the comparator to be used
-      * @param comparator
-      */
-    public void setComparator (Comparator<E> comparator){
-        defaultComparator = comparator;
-    }
-
-    /**
-     * Set the boolean flag enforceSort
-     * @param value Boolean value to set the field
-     */
-    public void setEnforceSort (boolean value){
-
-        // If no comparator is set we cannot enforce a sort
-        if (defaultComparator == null){
-            throw new IllegalStateException("Cannot enforce sort without a comparator set");
-        }
-
-        enforceSort = value;
-    }
-
-    /**
-     * Get the current value for the boolean flag enforceFunctionality
-     * @return The value of enforceFunctionality
-     */
-    public boolean getEnforceSort(){
-        return enforceSort;
-    }
-
-    /**
-     * Set the method of sorting to use
-     * @param sorting An enum of type HowToSort
-     */
-    public void setSort(HowToSort sorting){
-        defaultSort = sorting;
-    }
-
     /**
      * Returns the length of the underlying array not where terms are
      * @return Int being the raw length of the array
@@ -834,17 +832,3 @@ enum HowToFunction {
     STACK, // Can only function as a stack
     QUEUE // Can only function as a queue
 }
-
-// Enum to allow the user to specify how to sort
-enum HowToSort {
-    ASCENDING,
-    DESCENDING
-}
-
-/*
- * Methods allowed for each function
- * 
- * OPEN*
- * STACK pop, push, peek, size, clear
- * QUEUE enqueue, dequeue, peek, size, clear
- */
