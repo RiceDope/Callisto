@@ -6,7 +6,7 @@ This is a Collections library that is being developed as a part of my dissertati
 ### EnforceSort
 Please be aware that when enforcing sort how you sort the array and whether you give a comparator. Explanation below
 ```
-// Instantiate with a comparator sorting ascending
+        // Instantiate with a comparator sorting ascending
         Sequence<Student> test = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
 
         // Add some Students
