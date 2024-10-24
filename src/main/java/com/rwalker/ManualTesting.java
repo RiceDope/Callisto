@@ -36,7 +36,16 @@ public class ManualTesting {
 
         test.sort();
 
+        test.append(new Student(30, "c"));
+
+        System.out.println(test.toString());
+
         System.out.println(test.contains(new Student(30, "c")));
+
+        Integer[] example = test.allIndexesOf(new Student(30, "c"));
+        for (int i = 0; i < example.length; i++){
+            System.out.println(example[i]);
+        }
 
         // Integer[] test = new Integer[10];
         // test[3] = 10;

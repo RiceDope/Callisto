@@ -73,6 +73,12 @@ public class SequenceHowTo {
 
         // We can also clear the array (Important to note that this does not remove any comparators or enforcing)
         example.clear();
+
+        // Will return Integer containing the first index. Or null if not found
+        example.firstIndexOf("The fool on the hill");
+
+        // Will return Integer[] containing all indexes. Or null if not found
+        example.allIndexesOf("The fool on the hill");
     }
 
     /**

@@ -162,6 +162,7 @@ public class Sequence<E> {
 
     // TODO: isFull?
     // TODO: allIndexsOf, firstIndexOf
+    // TODO: override .equals()
 
     /*
      * ======================================================
@@ -665,6 +666,68 @@ public class Sequence<E> {
 
         // If get here then value not contained
         return false;
+    }
+
+    /**
+     * Returns the first index of a given value in the array
+     * 
+     * !!! Objects must override equals to use this function properly
+     *     otherwise objects will be compared on object referrence
+     * 
+     * @param value The value to check for
+     * @return The index if item is there or null if it isnt
+     */
+    public Integer firstIndexOf(E value){
+
+        // Search over all terms and check their equivalence to ours
+        for (int i = startPointer; i < endPointer; i++){
+            if (value.equals(array[i])){ // If same value then return true
+                return i;
+            } else {
+                continue;
+            }
+        }
+
+        // If we get here no terms match
+        return null;
+    }
+
+    /**
+     * Returns all indexes of a given element
+     * 
+     * !!! Objects must override equals to use this function properly
+     *     otherwise objects will be compared on object referrence
+     * 
+     * @param value The value to search for
+     * @return A Integer[] containing all the indexes that the value occurs at
+     */
+    public Integer[] allIndexesOf(E value){
+
+        // Create an array of length total
+        Integer[] loopList = new Integer[length()];
+
+        // Each time we add one we increment this
+        int count = 0;
+
+        // Search over all terms and check their equivalence to ours
+        for (int i = startPointer; i < endPointer; i++){
+            if (value.equals(array[i])){ // If same value then add to array and increment
+                loopList[count] = i;
+                count++;
+            } else {
+                continue;
+            }
+        }
+
+        if (count > 0){
+            // Create a new array being the size we have found
+            Integer[] returnable = new Integer[count];
+            // Copy over to the new array of correct size
+            System.arraycopy(loopList, 0, returnable, 0, count);
+            return returnable;
+        }
+
+        return null;
     }
 
     /*
