@@ -182,6 +182,8 @@ public class Sequence<E> {
         // Check if index is out of bounds
         if (insertionIndex > endPointer){
             throw new IndexOutOfBoundsException("Cannot insert into index outside of list");
+        } else if (insertionIndex < startPointer) {
+            throw new IndexOutOfBoundsException("Cannot insert into negative index");
         } else {
             E curTerm;
             E nextTerm = value; // first value to insert is value

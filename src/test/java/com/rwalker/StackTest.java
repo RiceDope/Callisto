@@ -12,10 +12,9 @@ public class StackTest {
     
     /**
      * Test pushing items
-     * @throws NoSuchMethodException
      */
     @Test
-    public void testPush() throws NoSuchMethodException{
+    public void testPush(){
         Sequence<Integer> test = new Sequence<Integer>();
         test.push(10);
         test.push(20);
@@ -27,7 +26,7 @@ public class StackTest {
      * @throws NoSuchMethodException
      */
     @Test
-    public void testPop() throws NoSuchMethodException{
+    public void testPop(){
         Sequence<Integer> test = new Sequence<Integer>();
         test.push(10);
         test.push(20);
@@ -48,7 +47,7 @@ public class StackTest {
      * Test peek on the stack
      */
     @Test
-    public void testPeek() throws NoSuchMethodException{
+    public void testPeek(){
         Sequence<Integer> test = new Sequence<Integer>();
         test.push(10);
         test.push(20);
@@ -66,10 +65,9 @@ public class StackTest {
 
     /**
      * Test the empty method for stack
-     * @throws NoSuchMethodException
      */
     @Test
-    public void testEmpty() throws NoSuchMethodException{
+    public void testEmpty(){
         Sequence<Integer> test = new Sequence<Integer>();
         test.push(10);
         test.push(20);
@@ -79,10 +77,9 @@ public class StackTest {
 
     /**
      * Test the size method for stack
-     * @throws NoSuchMethodException
      */
     @Test
-    public void testSize() throws NoSuchMethodException{
+    public void testSize(){
         Sequence<Integer> test = new Sequence<Integer>();
         test.push(10);
         test.push(20);

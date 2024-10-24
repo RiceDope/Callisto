@@ -8,6 +8,9 @@ package com.rwalker;
 
 // Junit tings
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class QueueTest {
@@ -17,7 +20,7 @@ public class QueueTest {
      * order = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
      */
     @Test
-    public void testEnqueue() throws NoSuchMethodException{
+    public void testEnqueue() {
         Sequence<Integer> testing = TestUtils.generateEnqueueTenItems();
         assertEquals("[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]", testing.toString());
     }
@@ -26,7 +29,7 @@ public class QueueTest {
      * Test dequeuing and check the output
      */
     @Test
-    public void testDequeue() throws NoSuchMethodException{
+    public void testDequeue(){
         Sequence<Integer> testing = TestUtils.generateEnqueueTenItems();
         int out = testing.dequeue();
         assertEquals(5, out);
@@ -62,5 +65,24 @@ public class QueueTest {
     public void testPeekEmpty() {
         Sequence<Integer> testing = TestUtils.generateEmptySequence();
         testing.peek(Sequence.HowToFunction.QUEUE);
+    }
+
+    /**
+     * Test isEmpty when queue is empty
+     */
+    @Test
+    public void testIsEmptyEmpty(){
+        Sequence<Integer> testing = new Sequence<>();
+        assertTrue(testing.isEmpty());
+    }
+
+    /**
+     * Test isEmpty when queue is empty
+     */
+    @Test
+    public void testIsEmptyNotEmpty(){
+        Sequence<Integer> testing = new Sequence<>();
+        testing.enqueue(10);
+        assertFalse(testing.isEmpty());
     }
 }
