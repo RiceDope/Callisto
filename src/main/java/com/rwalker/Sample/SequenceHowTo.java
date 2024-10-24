@@ -1,4 +1,6 @@
-package com.rwalker;
+package com.rwalker.Sample;
+
+import com.rwalker.Sequence;
 
 /**
  * This file is intended to define a general ruleset to be used when working with the Sequence class
@@ -151,7 +153,7 @@ public class SequenceHowTo {
         example.isEmpty(); // Will return false here
 
         // Pass a enum of type HowToFunction as a queue to peek at the front
-        System.out.println(example.peek(HowToFunction.QUEUE));
+        System.out.println(example.peek(Sequence.HowToFunction.QUEUE));
     }
 
     /**
@@ -166,7 +168,7 @@ public class SequenceHowTo {
         example.push("World");
 
         // Peek at the top item
-        System.out.println(example.peek(HowToFunction.STACK));
+        System.out.println(example.peek(Sequence.HowToFunction.STACK));
 
         // Then pop an item off the stack
         example.pop();

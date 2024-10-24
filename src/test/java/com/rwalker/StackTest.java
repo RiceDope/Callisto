@@ -52,7 +52,7 @@ public class StackTest {
         Sequence<Integer> test = new Sequence<Integer>();
         test.push(10);
         test.push(20);
-        assertEquals(20, (int) test.peek(HowToFunction.STACK));
+        assertEquals(20, (int) test.peek(Sequence.HowToFunction.STACK));
     }
 
     /**
@@ -61,7 +61,7 @@ public class StackTest {
     @Test(expected = NullPointerException.class)
     public void testPeekEmpty() {
         Sequence<Integer> test = new Sequence<Integer>();
-        test.peek(HowToFunction.STACK);
+        test.peek(Sequence.HowToFunction.STACK);
     }
 
     /**

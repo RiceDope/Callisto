@@ -161,7 +161,7 @@ public class Sequence<E> {
     */
 
     // TODO: isFull?
-    // TODO: strictEquals();
+    // TODO: strictEquals?
 
     /*
      * ======================================================
@@ -937,10 +937,9 @@ public class Sequence<E> {
      * ================================================
      */
 
+    // Enum to allow the user to specify functionality
+    public enum HowToFunction {
+        STACK, // Can only function as a stack
+        QUEUE // Can only function as a queue
+    }
 } 
-
-// Enum to allow the user to specify functionality
-enum HowToFunction {
-    STACK, // Can only function as a stack
-    QUEUE // Can only function as a queue
-}
