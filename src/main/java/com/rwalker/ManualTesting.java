@@ -47,6 +47,20 @@ public class ManualTesting {
             System.out.println(example[i]);
         }
 
+        Sequence<Student> testing = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
+        testing.append(new Student(20, "a"));
+        testing.append(new Student(15, "b"));
+        testing.append(new Student(30, "c"));
+        testing.append(new Student(30, "c"));
+        testing.append(new Student(13, "d"));
+        testing.append(new Student(35, "e"));
+
+        testing.sort();
+        
+        System.out.println(testing.toString());
+
+        System.out.println(test.equals(testing));
+
         // Integer[] test = new Integer[10];
         // test[3] = 10;
         // test[4] = 15;

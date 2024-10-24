@@ -161,8 +161,7 @@ public class Sequence<E> {
     */
 
     // TODO: isFull?
-    // TODO: allIndexsOf, firstIndexOf
-    // TODO: override .equals()
+    // TODO: strictEquals();
 
     /*
      * ======================================================
@@ -615,10 +614,60 @@ public class Sequence<E> {
     }
 
     /**
+     * Are these two sequences identical. Objects must be at the same index and same length
+     * 
+     * !! IMPORTANT
+     *      Does not check the "settings" of the Sequence.
+     *      Not Checked:
+     *          - Comparator
+     *          - EnforceSort
+     *          - CustomGrowthRate
+     *          - InitialSize
+     *      Checked:
+     *          - Same length
+     *          - Same terms at each index
+     * 
+     * @return boolean true if same / false if not
+     */
+    @Override
+    public boolean equals(Object seq){
+
+        if (this == seq){ // If memory address equal they are the same
+            return true;
+        } else if (seq instanceof Sequence<?>){
+
+            // Convert to correct type
+            Sequence<E> comp = (Sequence<E>) seq;
+
+            // Do they have the same length
+            if (length() != comp.length()){
+                return false;
+            } else { 
+                for (int i = 0; i < length(); i++){ // Check each term now
+                    if (get(i).equals(comp.get(i))){
+                        continue; // Equal so can continue
+                    } else { // If one term incorrect then not the same
+                        return false;
+                    }
+                }
+            }
+
+            
+        } else {
+            // If they aren't the same memory location or same type then false
+            return false;
+        }
+        
+        // If we make it through they are equal
+        return true;
+    }
+
+    /**
      * Custom toString method for generics.
      * 
      * @return String form of the array [term1, term2, term3]
      */
+    @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
 

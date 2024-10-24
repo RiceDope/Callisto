@@ -15,7 +15,7 @@ package com.rwalker;
  *      Check Student.java for an example of a "good" object for Sequence
  * 
  * @author Rhys Walker
- * Updated: 23/10/24
+ * Updated: 24/10/24
  * Created: 23/10/24
  */
 
@@ -29,6 +29,7 @@ public class SequenceHowTo {
         // sequenceQueue();
         // sequenceStack();
         // constructorsAdvancedFunctions();
+        // generalPurposeFunctions();
     }
     
     /**
@@ -192,7 +193,7 @@ public class SequenceHowTo {
          * combination of them.
          */
 
-         Sequence<Integer> example = new Sequence<>(10, 1.5, (a, b) -> a - b);
+        Sequence<Integer> example = new Sequence<>(10, 1.5, (a, b) -> a - b);
 
         // returns the boolean flag enforceSort
         example.getEnforceSort();
@@ -208,5 +209,27 @@ public class SequenceHowTo {
         
         // returns the current growth rate
         example.getGrowthRate();
+    }
+
+    /**
+     * Gives an overview of the general purpose functions available in Sequence
+     */
+    public static void generalPurposeFunctions() {
+
+        Sequence<Integer> example1 = new Sequence<>();
+        Sequence<Integer> example2 = new Sequence<>();
+
+        example1.append(10);
+        example2.append(10);
+
+        // Converts the Sequence into a string calling .toString() on each element
+        System.out.println(example1.toString());
+
+        // Are the two Sequences equal
+        System.out.println(example1.equals(example2));
+
+        example1.replace(0, 15);
+        System.out.println(example1.equals(example2));
+
     }
 }
