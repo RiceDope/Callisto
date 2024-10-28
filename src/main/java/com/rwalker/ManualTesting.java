@@ -3,63 +3,63 @@ package com.rwalker;
 import java.util.Comparator;
 
 public class ManualTesting {
-    public static void main(String[] args) throws NoSuchMethodException{
+    public static void main(String[] args) {
 
         // (a, b) ->  a.getAge() - b.getAge()
 
         // Instantiate with a comparator sorting ascending
-        Sequence<Student> test = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
+        // Sequence<Student> test = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
 
-        // Add some Students
-        test.append(new Student(20, "a"));
-        test.append(new Student(15, "b"));
-        test.append(new Student(30, "c"));
+        // // Add some Students
+        // test.append(new Student(20, "a"));
+        // test.append(new Student(15, "b"));
+        // test.append(new Student(30, "c"));
 
-        // Enforce sort on the array
-        test.setEnforceSort(true);
+        // // Enforce sort on the array
+        // test.setEnforceSort(true);
 
-        // Now sort in decending order
-        test.sort((a, b) -> b.getAge() - a.getAge());
+        // // Now sort in decending order
+        // test.sort((a, b) -> b.getAge() - a.getAge());
 
-        // These will insert into the wrong position
-        test.append(new Student(13, "d"));
-        test.append(new Student(35, "e"));
+        // // These will insert into the wrong position
+        // test.append(new Student(13, "d"));
+        // test.append(new Student(35, "e"));
 
-        // OUTPUT = "[Age 13 Name d , Age 30 Name c , Age 20 Name a , Age 15 Name b , Age 35 Name e ]"
-        System.out.println(test.toString()); // Not correctly sorted
+        // // OUTPUT = "[Age 13 Name d , Age 30 Name c , Age 20 Name a , Age 15 Name b , Age 35 Name e ]"
+        // System.out.println(test.toString()); // Not correctly sorted
 
-        // Call now with default comparator that was set at instantiation
-        test.sort();
+        // // Call now with default comparator that was set at instantiation
+        // test.sort();
 
-        // OUTPUT = "[Age 13 Name d , Age 15 Name b , Age 20 Name a , Age 30 Name c , Age 35 Name e ]"
-        System.out.println(test.toString()); // Now correctly sorted
+        // // OUTPUT = "[Age 13 Name d , Age 15 Name b , Age 20 Name a , Age 30 Name c , Age 35 Name e ]"
+        // System.out.println(test.toString()); // Now correctly sorted
 
-        test.sort();
+        // test.sort();
 
-        test.append(new Student(30, "c"));
+        // test.append(new Student(30, "c"));
 
-        System.out.println(test.toString());
+        // System.out.println(test.toString());
 
-        System.out.println(test.contains(new Student(30, "c")));
+        // System.out.println(test.contains(new Student(30, "c")));
 
-        int[] example = test.allIndexesOf(new Student(30, "c"));
-        for (int i = 0; i < example.length; i++){
-            System.out.println(example[i]);
-        }
+        // int[] example = test.allIndexesOf(new Student(30, "c"));
+        // for (int i = 0; i < example.length; i++){
+        //     System.out.println(example[i]);
+        // }
 
-        Sequence<Student> testing = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
-        testing.append(new Student(20, "a"));
-        testing.append(new Student(15, "b"));
-        testing.append(new Student(30, "c"));
-        testing.append(new Student(30, "c"));
-        testing.append(new Student(13, "d"));
-        testing.append(new Student(35, "e"));
+        // Sequence<Student> testing = new Sequence<Student>((a, b) ->  a.getAge() - b.getAge());
+        // testing.append(new Student(20, "a"));
+        // testing.append(new Student(15, "b"));
+        // testing.append(new Student(30, "c"));
+        // testing.append(new Student(30, "c"));
+        // testing.append(new Student(13, "d"));
+        // testing.append(new Student(35, "e"));
 
-        testing.sort();
+        // testing.sort();
         
-        System.out.println(testing.toString());
+        // System.out.println(testing.toString());
 
-        System.out.println(test.equals(testing));
+        // System.out.println(test.equals(testing));
 
         // Integer[] test = new Integer[10];
         // test[3] = 10;
@@ -71,6 +71,20 @@ public class ManualTesting {
 
 
         // System.out.println(BinarySearch.findIndex(test, start, end, 14, (a, b) -> a-b));
+
+        String inputTest = "Moron1";
+        int hashCode = inputTest.hashCode() % 4;
+        if (hashCode < 0){
+            hashCode = hashCode * -1;
+        }
+
+        System.out.println(hashCode);
+
+        Map<String, Integer> test = new Map<>(4);
+
+        test.put("Hello", 100);
+        test.put("Moron1", 150);
+        System.out.println(test.get("Moron1"));
 
     }
 }
