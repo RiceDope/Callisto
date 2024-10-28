@@ -752,10 +752,10 @@ public class Sequence<E> {
      * @param value The value to search for
      * @return A Integer[] containing all the indexes that the value occurs at
      */
-    public Integer[] allIndexesOf(E value){
+    public int[] allIndexesOf(E value){
 
         // Create an array of length total
-        Integer[] loopList = new Integer[length()];
+        int[] loopList = new int[length()];
 
         // Each time we add one we increment this
         int count = 0;
@@ -772,7 +772,7 @@ public class Sequence<E> {
 
         if (count > 0){
             // Create a new array being the size we have found
-            Integer[] returnable = new Integer[count];
+            int[] returnable = new int[count];
             // Copy over to the new array of correct size
             System.arraycopy(loopList, 0, returnable, 0, count);
             return returnable;
