@@ -1,7 +1,6 @@
 package com.rwalker;
 
 import java.util.Comparator;
-
 public class ManualTesting {
     public static void main(String[] args) {
 
@@ -72,28 +71,27 @@ public class ManualTesting {
 
         // System.out.println(BinarySearch.findIndex(test, start, end, 14, (a, b) -> a-b));
 
-        String inputTest = "Moron1";
-        int hashCode = inputTest.hashCode() % 4;
-        if (hashCode < 0){
-            hashCode = hashCode * -1;
-        }
+        // String inputTest = "Moron1";
+        // int hashCode = inputTest.hashCode() % 4;
+        // if (hashCode < 0){
+        //     hashCode = hashCode * -1;
+        // }
 
-        System.out.println(hashCode);
+        // System.out.println(hashCode);
 
-        Map<String, Integer> test = new Map<>(4);
+        Map<String, Integer> test = new Map<>(4, 0.75f, 2.0f);
 
         test.put("Hello", 100);
         test.put("Moron1", 150);
+        test.put("Moronic", 450);
+        test.put("ALA", 600);
+        test.put("HFHF", 100);
+        test.put("HEHEHEHEHEH", 700);
+        test.put("KEEFED", 999);
+        test.put("Crack", 153);
         System.out.println(test.get("Moron1"));
+        System.out.println(test.get("Hello"));
+        System.out.println(test.toString());
 
     }
-}
-
-class SortByInt implements Comparator<Integer> {
-
-    @Override
-    public int compare(Integer o1, Integer o2) {
-        return o1 - o2;
-    }
-
 }
