@@ -1,18 +1,17 @@
 package com.rwalker;
 
+// Junit tings
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import org.junit.Test;
 
 /**
  * General tests for Sequence
  */
 
-// Junit tings
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
 
 public class GenericSequenceTests {
     

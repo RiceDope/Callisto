@@ -4,7 +4,7 @@ package com.rwalker;
  * Class that implements HashMaps
  * 
  * Created: 28/10/2024
- * Updated: 28/10/2024
+ * Updated: 29/10/2024
  * 
  * @author Rhys Walker
  * 
@@ -87,18 +87,23 @@ public class Map <K, E> {
     }
 
     /**
-     * Internal version of put, allows us to specify a entry to add to
+     * Internal version of put allows for finer grained control over putting anything inside of the map
      * @param key The key to insert with
      * @param entry The entry to insert
      * @param mapToAddTo The map to add to
+     * @param keysToAdd The list of keys to be used
+     * @param newBuckets Are there new buckets being added (i.e. are we rehashing at the minute)
+     * @param buckets How many buckets are there
      */
     private void internalPut(K key, E entry, MapEntry<K, E>[] mapToAddTo, Sequence<K> keysToAdd, boolean newBuckets, int buckets){
+        
         // Calculate the index to insert into
         int index;
         if (!newBuckets){
+            // Hash function for normal operation
             index = generateHashIndex(key);
         } else {
-            // Using insertion hashFunction
+            // Hash function for while we are inserting
             index = generateHashIndexInsertion(key, buckets);
         }
         
@@ -121,6 +126,7 @@ public class Map <K, E> {
                 // Bucket is empty add a new entry
                 mapToAddTo[index] = new MapEntry<K, E>(key, entry);
                 keysToAdd.append(key);
+
             } else {
                 // Bucket is not empty find and add to the LinkedList
                 MapEntry<K, E> temp = mapToAddTo[index];
@@ -170,13 +176,11 @@ public class Map <K, E> {
         return index;
     }
 
+    /**
+     * Rehash the array
+     */
     private void rehash() {
-
-        System.out.println("Expanding");
-
-        //TODO: gives error when buckets is changed here as it cannot locate terms correctly
-        //TODO: gives error when buckets is changed after as they are inserted wrong
-
+        
         int newAmountOfBuckets = (int) Math.ceil((buckets * expansionFactor)); // calculate the new number of buckets
         MapEntry<K, E>[] savedList = bucketList; // save the old array of entries
         bucketList = new MapEntry[newAmountOfBuckets]; // create the new larger array
