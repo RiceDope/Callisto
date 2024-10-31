@@ -1,10 +1,13 @@
 package com.rwalker;
 
+import java.util.Comparator;
+
 /**
- * Class that implements HashMaps
+ * Class that implements HashMaps, LinkedHashMaps
+ * As standard keys are kept in the order they are inserted
  * 
  * Created: 28/10/2024
- * Updated: 29/10/2024
+ * Updated: 31/10/2024
  * 
  * @author Rhys Walker
  * 
@@ -41,8 +44,17 @@ public class Map <K, E> {
      * Returns the keyset in the order they were inserted
      * @return
      */
-    public Sequence<K> keys(){
-        return null;
+    public Sequence<K> keySet(){
+        return keys;
+    }
+
+    /**
+     * Returns the keyset in the order specified
+     * @param comparator
+     * @return
+     */
+    public Sequence<K> sortedKeySet(Comparator<K> comparator){
+        return keys.sort(comparator);
     }
 
     /**
