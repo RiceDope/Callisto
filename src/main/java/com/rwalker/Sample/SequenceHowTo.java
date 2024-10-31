@@ -96,7 +96,7 @@ public class SequenceHowTo {
         example.append(35);
 
         // Sort using a comparator as no default set this will return a Sequence
-        Sequence<Integer> temp = example.sort((a, b) -> a - b);
+        Sequence<Integer> temp = example.sortCopy((a, b) -> a - b);
 
         System.out.println(example.toString());
 
@@ -116,12 +116,11 @@ public class SequenceHowTo {
          * This will change only the append method to work alongside
          * sorting. The items will be inserted in the correct place.
          * 
-         * Warning when using enforcing sort and specifying a comparator
-         * for a sort check README.md for more details.
          */
 
-        example.setEnforceSort(true);
+        example.sortOnwards(); // Will sort and then sort from then onwards
         example.append(50); // This will now get appended in place
+        example.stopSorting(); // Will stop sorting automatically from here onwards
 
         /*
          * Important to note is that setEnforceSort(true) will not
@@ -195,9 +194,6 @@ public class SequenceHowTo {
          */
 
         Sequence<Integer> example = new Sequence<>(10, 1.5, (a, b) -> a - b);
-
-        // returns the boolean flag enforceSort
-        example.getEnforceSort();
 
         // returns the length of the sub array
         example.rawLength();

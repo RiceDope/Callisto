@@ -54,7 +54,7 @@ public class Map <K, E> {
      * @return
      */
     public Sequence<K> sortedKeySet(Comparator<K> comparator){
-        return keys.sort(comparator);
+        return keys.sortCopy(comparator);
     }
 
     /**

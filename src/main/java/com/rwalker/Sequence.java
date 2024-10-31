@@ -349,13 +349,21 @@ public class Sequence<E> {
     }
 
     /**
+     * Sort the array and then enforce sort from then onwards
+     */
+    public void sortOnwards() {
+        sort();
+        setEnforceSort(true);
+    }
+
+    /**
      * Sorts the array based on the comarator given and returns a new Copy.
      * This method does not overwrite the current array
      * 
      * @param comparator The comparator for comparing the types
      * @return A sorted Sequence
      */
-    public Sequence<E> sort(Comparator<E> comparator){
+    public Sequence<E> sortCopy(Comparator<E> comparator){
 
         // Calculate the length of the array that contains terms
         int arrSize = endPointer - startPointer;
@@ -387,6 +395,13 @@ public class Sequence<E> {
 
     }
 
+    /**
+     * Stop sorting the array automatically
+     */
+    public void stopSorting() {
+        setEnforceSort(false);
+    }
+
     /*
      * END OF OVERLOADED SORT() FUNCTION
      */
@@ -403,7 +418,7 @@ public class Sequence<E> {
      * Set the boolean flag enforceSort
      * @param value Boolean value to set the field
      */
-    public void setEnforceSort (boolean value){
+    private void setEnforceSort (boolean value){
 
         // If no comparator is set we cannot enforce a sort
         if (defaultComparator == null){
@@ -417,7 +432,7 @@ public class Sequence<E> {
      * Get the current value for the boolean flag enforceFunctionality
      * @return The value of enforceFunctionality
      */
-    public boolean getEnforceSort(){
+    private boolean getEnforceSort(){
         return enforceSort;
     }
 

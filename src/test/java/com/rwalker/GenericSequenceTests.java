@@ -94,11 +94,11 @@ public class GenericSequenceTests {
         Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
 
         // Test regular sort
-        test.sort((a, b) -> a - b); // default is ascending
+        test = test.sortCopy((a, b) -> a - b); // default is ascending
         assertEquals("[3, 5, 10, 20]", test.toString());
 
         // Test descending
-        test.sort((a, b) -> b - a);
+        test = test.sortCopy((a, b) -> b - a);
         assertEquals("[20, 10, 5, 3]", test.toString());
     }
 
@@ -110,8 +110,7 @@ public class GenericSequenceTests {
         Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
 
         // Test automatic sort after enforceSort becomes true
-        test.setEnforceSort(true);
-        test.sort();
+        test.sortOnwards();
     }
 
     /**
@@ -123,8 +122,7 @@ public class GenericSequenceTests {
 
         // Test automatic sort after enforceSort becomes true
         test.setComparator((a, b) -> a - b);
-        test.setEnforceSort(true);
-        test.sort();
+        test.sortOnwards();
         assertEquals("[3, 5, 10, 20]", test.toString());
 
         // Test automatic sort on insertion
@@ -147,8 +145,7 @@ public class GenericSequenceTests {
 
         // Test automatic sort after enforceSort becomes true
         test.setComparator((a, b) -> a - b);
-        test.setEnforceSort(true);
-        test.sort();
+        test.sortOnwards();
         assertEquals("[3, 5, 10, 20]", test.toString());
 
         test.append(2); // Should insert into the first position
