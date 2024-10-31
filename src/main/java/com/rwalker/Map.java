@@ -1,5 +1,6 @@
 package com.rwalker;
 
+import java.security.KeyException;
 import java.util.Comparator;
 
 /**
@@ -58,12 +59,73 @@ public class Map <K, E> {
     }
 
     /**
+     * Remove a specific element based on the key
+     * @param key
+     */
+    public void remove (K key){
+
+        // Check if the key is in the Map
+        if (!keys.contains(key)){
+            throw new IllegalArgumentException("Key not in HashMap");
+        }
+
+        /*
+         * Is the key in a linkedList or in a bucket on its own.
+         * Track the before and after element so that we remove correctly
+         */
+        int index = generateHashIndex(key);
+        MapEntry<K, E> toRemove = bucketList[index];
+
+        if (toRemove.getKey() == key){
+            // This is our element now check there is nothing after
+
+            if (toRemove.getNext() == null){
+
+                // We can just remove
+                keys.remove(keys.firstIndexOf(key)); // Remove key
+                bucketList[index] = null; // Set the bucket to be null now
+
+            } else {
+
+                // We need to set its sucessive element to be the root of the linked list
+                // in that bucket
+                keys.remove(keys.firstIndexOf(key)); // Remove key
+                bucketList[index] = toRemove.getNext(); // Set the buckets root to be sucessor
+
+            }
+        } else {
+            // We must find the element to remove
+            MapEntry<K, E> previous = toRemove;
+            toRemove = toRemove.getNext();
+
+            // Find our element
+            while (toRemove.getKey() != key){
+                previous = toRemove; // Set previous to be current
+                toRemove = toRemove.getNext(); // Update current
+            }
+
+            // Now check if our element has a successor or not
+            if (toRemove.getNext() == null){ // We need to set the next to be null if nothing follows what to remove
+                previous.setNext(null);
+            } else { // We need to set the next to be following element
+                previous.setNext(toRemove.getNext());
+            }
+        }
+    }
+
+    /**
      * Get an item from the Map
      * @param key The key to get the value for
      * @return The value that was stored at that key
      */
     public E get(K key){
 
+        // Check if they key is in the Map
+        if (!keys.contains(key)){
+            throw new IllegalArgumentException("Key not in HashMap");
+        }
+
+        // Otherwise continue
         return internalGet(key, bucketList);
 
     }
@@ -261,6 +323,37 @@ public class Map <K, E> {
         
         return sb.toString();
 
+    }
+
+    /**
+     * Get a string representation of the linked list in a certain bucket
+     * @param index The index in the array that holds the buckets
+     * @return A string representation of the bucket
+     */
+    public String getBucket(int index){
+        StringBuilder sb = new StringBuilder();
+        MapEntry<K, E> bucket = bucketList[index];
+        
+        sb.append("[");
+
+        // Loop over all but the last item
+        while(bucket.hasNext()){
+            sb.append("{ ");
+            sb.append(bucket.getKey());
+            sb.append(" : ");
+            sb.append(bucket.getEntry());
+            sb.append("}, ");
+            bucket = bucket.getNext(); // Next item
+        }
+
+        // Just append the last item
+        sb.append("{ ");
+        sb.append(bucket.getKey());
+        sb.append(" : ");
+        sb.append(bucket.getEntry());
+        sb.append("}]");
+
+        return sb.toString();
     }
     
 }

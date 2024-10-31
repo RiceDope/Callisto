@@ -71,27 +71,33 @@ public class ManualTesting {
 
         // System.out.println(BinarySearch.findIndex(test, start, end, 14, (a, b) -> a-b));
 
-        // String inputTest = "Moron1";
-        // int hashCode = inputTest.hashCode() % 4;
-        // if (hashCode < 0){
-        //     hashCode = hashCode * -1;
-        // }
+        String inputTest = "Hello8";
+        int hashCode = inputTest.hashCode() % 4;
+        if (hashCode < 0){
+            hashCode = hashCode * -1;
+        }
+        System.out.println(hashCode);
 
-        // System.out.println(hashCode);
-        Map<String, Integer> test = new Map<>();
+        // 2 = Hello, Hello4, Hello8
+
+        Map<String, Integer> test = new Map<>(4, 2, 2);
         test.put("Hello", 100);
-        test.put("Hello1", 101);
-        test.put("Hello2", 102);
-        test.put("Hello3", 103);
+        // test.put("Hello1", 101);
+        // test.put("Hello2", 102);
+        // test.put("Hello3", 103);
         test.put("Hello4", 104);
-        test.put("Hello5", 105);
-        test.put("Hello6", 106);
-        test.put("Hello7", 107);
+        // test.put("Hello5", 105);
+        // test.put("Hello6", 106);
+        // test.put("Hello7", 107);
         test.put("Hello8", 108);
-        test.put("Hello9", 109);
-        System.out.println(test.toString());
-        System.out.println(test.keySet());
-        System.out.println(test.sortedKeySet((a, b) -> b.compareTo(a)));
+        // test.put("Hello9", 109);
+        // System.out.println(test.toString());
+        // System.out.println(test.keySet());
+        // System.out.println(test.sortedKeySet((a, b) -> b.compareTo(a)));
+
+        System.out.println(test.getBucket(2));
+        test.remove("Hello8");
+        System.out.println(test.getBucket(2));
 
         // Sequence<Integer> test1 = new Sequence<>();
         // test1.append(100);

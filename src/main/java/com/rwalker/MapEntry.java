@@ -5,7 +5,7 @@ package com.rwalker;
  * Has functionality to deal with collisions and next terms
  * 
  * Created: 28/10/2024
- * Updated: 28/10/2024
+ * Updated: 31/10/2024
  * 
  * @author Rhys Walker
  * 
@@ -43,5 +43,13 @@ public class MapEntry <K, E> {
 
     public MapEntry<K, E> getNext(){
         return nextMap;
+    }
+
+    public boolean hasNext() {
+        if (nextMap != null){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
