@@ -38,6 +38,14 @@ public class Map <K, E> {
     }
 
     /**
+     * Returns the keyset in the order they were inserted
+     * @return
+     */
+    public Sequence<K> keys(){
+        return null;
+    }
+
+    /**
      * Get an item from the Map
      * @param key The key to get the value for
      * @return The value that was stored at that key

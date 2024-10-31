@@ -308,6 +308,8 @@ public class Sequence<E> {
 
     /**
      * Sorts the array based on the field defaultComparator. Must be set
+     * This will overwrite the current array with the sorted version
+     * Use a comparator for a returnable type
      */
     public void sort(){
 
@@ -347,19 +349,13 @@ public class Sequence<E> {
     }
 
     /**
-     * Allows the user to sort based on a comparator not defined in defaultComparator
-     * 
-     * !! WARNING:
-     *          If you enforce sort and then call this with a different comparator and then try to append
-     *          the append operation will insert incorrectly. Please be mindfull as to when you specify a
-     *          comparator here. This should only be used as more of a one off sort not while enforceSort is
-     *          true.
-     *          If it is strictly crucial that the item be inserted while after a different sort then just call
-     *          .sort() after which will remedy the problem. Example in readme.md
+     * Sorts the array based on the comarator given and returns a new Copy.
+     * This method does not overwrite the current array
      * 
      * @param comparator The comparator for comparing the types
+     * @return A sorted Sequence
      */
-    public void sort(Comparator<E> comparator){
+    public Sequence<E> sort(Comparator<E> comparator){
 
         // Calculate the length of the array that contains terms
         int arrSize = endPointer - startPointer;
@@ -380,8 +376,9 @@ public class Sequence<E> {
 
         try {
             Arrays.sort(tempArr, comparator);
-            Arrays.fill(array, null); // Null out original to maintain terms
-            System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
+            Sequence<E> temp = new Sequence<>();
+            temp.setSubArray(startPointer, endPointer, tempArr);
+            return temp; // Return a sequence
         } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
             System.err.println(e);
             throw new UnknownError("Comparator either not valid or cannot be compared");
@@ -931,6 +928,26 @@ public class Sequence<E> {
      */
     public double getGrowthRate(){
         return growthRate;
+    }
+
+    /**
+     * Retrieve the sub array
+     * @return
+     */
+    public E[] getSubArray(){
+        return array;
+    }
+
+    /**
+     * Allow the setting of the sub array through passing in parameters
+     * @param startPointer
+     * @param endPointer
+     * @param array
+     */
+    public void setSubArray(int startPointer, int endPointer, E[] array){
+        this.startPointer = startPointer;
+        this.endPointer = endPointer;
+        this.array = array;
     }
 
     /*

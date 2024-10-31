@@ -78,18 +78,26 @@ public class ManualTesting {
         // }
 
         // System.out.println(hashCode);
-        Map<String, Integer> test = new Map<>();
-        test.put("Hello", 100);
-        test.put("Hello1", 101);
-        test.put("Hello2", 102);
-        test.put("Hello3", 103);
-        test.put("Hello4", 104);
-        test.put("Hello5", 105);
-        test.put("Hello6", 106);
-        test.put("Hello7", 107);
-        test.put("Hello8", 108);
-        test.put("Hello9", 109);
-        System.out.println(test.toString());
+        // Map<String, Integer> test = new Map<>();
+        // test.put("Hello", 100);
+        // test.put("Hello1", 101);
+        // test.put("Hello2", 102);
+        // test.put("Hello3", 103);
+        // test.put("Hello4", 104);
+        // test.put("Hello5", 105);
+        // test.put("Hello6", 106);
+        // test.put("Hello7", 107);
+        // test.put("Hello8", 108);
+        // test.put("Hello9", 109);
+        // System.out.println(test.toString());
+
+        Sequence<Integer> test1 = new Sequence<>();
+        test1.append(100);
+        test1.append(95);
+        test1.append(150);
+        test1.append(50);
+        System.out.println(test1.sort((a, b) -> a - b).toString());
+        System.out.println(test1.toString());
 
     }
 }
