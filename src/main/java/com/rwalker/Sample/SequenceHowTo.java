@@ -95,14 +95,13 @@ public class SequenceHowTo {
         example.append(30);
         example.append(35);
 
-        // Sort using a comparator as no default set
-        example.sort((a, b) -> a - b);
+        // Sort using a comparator as no default set this will return a Sequence
+        Sequence<Integer> temp = example.sort((a, b) -> a - b);
 
         System.out.println(example.toString());
 
         // Alternatively set the comparator and then use just sort
-        // Example now in descending
-
+        // It will sort and overwrite the current array
         example.setComparator((a, b) -> b - a);
         example.sort();
 
