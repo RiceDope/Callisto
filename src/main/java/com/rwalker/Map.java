@@ -185,6 +185,20 @@ public class Map <K, E> {
     }
 
     /**
+     * Put all terms from a map into this map
+     * @param otherMap The map to take all terms from
+     */
+    public void putAll(Map<K, E> otherMap) {
+        
+        Sequence<K> otherKeys = otherMap.keySet();
+
+        for (int i = 0; i < otherKeys.length(); i++){
+            K key = otherKeys.get(i);
+            put(key, otherMap.get(key));
+        }
+    }
+
+    /**
      * Insert a key value pair into the HashMap will override any current entry at that key
      * @param key The key to insert with
      * @param entry The entry to insert

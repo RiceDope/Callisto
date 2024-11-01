@@ -70,4 +70,22 @@ public class HashMapTest {
         assertNotEquals(50, (int) test.get("Hello2"));
     }
 
+    /**
+     * Test the putAll method
+     */
+    @Test
+    public void testPutAllMethod() {
+        Map<String, Integer> test = new Map<>();
+        Map<String, Integer> test1 = new Map<>();
+
+        test.put("list1a", 100);
+        test.put("list1b", 150);
+        test1.put("list2a", 100);
+        test1.put("list2b", 50);
+
+        test.putAll(test1);
+
+        assertEquals("[{ list1a : 100 }, { list1b : 150 }, { list2a : 100 }, { list2b : 50 }]", test.toString());
+    }
+
 }

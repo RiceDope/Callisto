@@ -100,8 +100,12 @@ public class ManualTesting {
         test.replace("Hello1", 50, 101);
         test.replace("Hello2", 50, 101);
 
+        // System.out.println(test.toString());
 
-        System.out.println(test.toString());
+        Map<String, Integer> test1 = new Map<>();
+        test1.putAll(test);
+        System.out.println(test1.toString());
+        
         // System.out.println(test.keySet());
         // System.out.println(test.sortedKeySet((a, b) -> b.compareTo(a)));
 
