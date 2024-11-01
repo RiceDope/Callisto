@@ -59,6 +59,39 @@ public class Map <K, E> {
     }
 
     /**
+     * Replace the value for a key only if it already exists
+     * @param key The key to use
+     * @param entry The value to replace current value
+     */
+    public void replace(K key, E entry) {
+        if (keys.contains(key)) {
+            put(key, entry);
+        }
+    }
+
+    /**
+     * Replace the value held at the key
+     * Only if it already exists and the entru matches current entry
+     * @param key
+     * @param entry
+     * @param currentEntry
+     */
+    public void replace(K key, E entry, E currentEntry) {
+        if (keys.contains(key) && get(key).equals(currentEntry)) {
+            put (key, entry);
+        }
+    }
+
+    /**
+     * Returns true if a key exists in the current map
+     * @param key The key to be checking
+     * @return A boolean value
+     */
+    public boolean keyExists(K key){
+        return keys.contains(key);
+    }
+
+    /**
      * Remove a specific element based on the key
      * @param key
      */
@@ -152,7 +185,7 @@ public class Map <K, E> {
     }
 
     /**
-     * Insert a key value pair into the HashMap
+     * Insert a key value pair into the HashMap will override any current entry at that key
      * @param key The key to insert with
      * @param entry The entry to insert
      */
@@ -354,6 +387,15 @@ public class Map <K, E> {
         sb.append("}]");
 
         return sb.toString();
+    }
+
+    /**
+     * Get the bucket that a specific term is located at
+     * @param key The key to check for
+     * @return The index of the bucket its contained in
+     */
+    public int getBucketForKey(K key) {
+        return generateHashIndex(key);
     }
     
 }
