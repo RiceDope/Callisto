@@ -246,6 +246,18 @@ public class Sequence<E> {
     }
 
     /**
+     * Add all terms from the given Sequence to this Sequence
+     * @param toApp The Sequence to add from
+     */
+    public void appendAll(Sequence<E> toApp) {
+
+        for (int i = 0; i < toApp.length(); i++) {
+            append(toApp.get(i));
+        }
+
+    }
+
+    /**
      * Replace a specifc item in the array
      * @param value The value to insert
      * @param index The index to insert at
