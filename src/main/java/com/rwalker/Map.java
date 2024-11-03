@@ -67,16 +67,8 @@ public class Map <K, E> {
      * @param entry The value to replace current value
      */
     public void replace(K key, E entry) {
-
-        // More efficient lookup
-        if (sortedKeys != null){
-            if (sortedKeys.contains(key)){
-                put (key, entry);
-            }
-        } else { // If not set
-            if (keys.contains(key)) {
-                put(key, entry);
-            }
+        if (keyExists(key)){
+            put (key, entry);
         }
     }
 
@@ -88,16 +80,8 @@ public class Map <K, E> {
      * @param currentEntry
      */
     public void replace(K key, E entry, E currentEntry) {
-
-        // More efficient lookup
-        if (sortedKeys != null){
-            if (sortedKeys.contains(key) && get(key).equals(currentEntry)){
-                put (key, entry);
-            }
-        } else { // If not set
-            if (keys.contains(key) && get(key).equals(currentEntry)) {
-                put(key, entry);
-            }
+        if (keyExists(key) && get(key).equals(currentEntry)){
+            put(key, entry);
         }
     }
 
@@ -152,12 +136,7 @@ public class Map <K, E> {
      */
     public void remove (K key){
 
-        // Check if the key is in the Map
-        if (sortedKeys != null) { // More efficient lookup
-            if (!sortedKeys.contains(key)){
-                throw new IllegalArgumentException("Key not in Map");
-            }
-        } else if (!keys.contains(key)){ // If not set
+        if (!keyExists(key)){
             throw new IllegalArgumentException("Key not in Map");
         }
 
@@ -212,12 +191,7 @@ public class Map <K, E> {
      */
     public E get(K key){
 
-        // Check if they key is in the Map
-        if (sortedKeys != null) { // More efficient lookup
-            if (!sortedKeys.contains(key)) {
-                throw new IllegalArgumentException("Key not in Map");
-            }
-        } else if (!keys.contains(key)){ // If not set
+        if (!keyExists(key)){
             throw new IllegalArgumentException("Key not in Map");
         }
 
