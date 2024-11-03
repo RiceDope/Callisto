@@ -20,8 +20,6 @@ public class Map <K, E> {
     private MapEntry<K, E>[] bucketList; // Essentially a bucket
     private float loadFactor = 0.75f; // The load factor to be used
     private float expansionFactor = 2.0f; // The factor to expand the number of buckets by
-    private Comparator<K> keyComp;
-    private Comparator<E> entryComp;
     private Sequence<K> keys = new Sequence<>(); // Stores a list of all keys
     private Sequence<K> sortedKeys; // Stores a list of all keys sorted
 
@@ -37,12 +35,12 @@ public class Map <K, E> {
      * @param buckets Default starting number of buckets (16)
      * @param loadFactor Default starting load factor (0.75)
      * @param expansionFactor Default starting expansion factor (2)
+     * @param keyComp Comparator for the key in the Map (Used for more efficient lookup)
      */
     public Map(int buckets, float loadFactor, float expansionFactor, Comparator<K> keyComp){
         this.buckets = buckets; // Starting number of buckets to use
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
         this.loadFactor = loadFactor; // Set the load factor
-        this.keyComp = keyComp; // Set the comparator for keys
         sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
         sortedKeys.sortOnwards();
     }
@@ -69,8 +67,16 @@ public class Map <K, E> {
      * @param entry The value to replace current value
      */
     public void replace(K key, E entry) {
-        if (keys.contains(key)) {
-            put(key, entry);
+
+        // More efficient lookup
+        if (sortedKeys != null){
+            if (sortedKeys.contains(key)){
+                put (key, entry);
+            }
+        } else { // If not set
+            if (keys.contains(key)) {
+                put(key, entry);
+            }
         }
     }
 
@@ -82,8 +88,16 @@ public class Map <K, E> {
      * @param currentEntry
      */
     public void replace(K key, E entry, E currentEntry) {
-        if (keys.contains(key) && get(key).equals(currentEntry)) {
-            put (key, entry);
+
+        // More efficient lookup
+        if (sortedKeys != null){
+            if (sortedKeys.contains(key) && get(key).equals(currentEntry)){
+                put (key, entry);
+            }
+        } else { // If not set
+            if (keys.contains(key) && get(key).equals(currentEntry)) {
+                put(key, entry);
+            }
         }
     }
 
@@ -93,6 +107,12 @@ public class Map <K, E> {
      * @return A boolean value
      */
     public boolean keyExists(K key){
+
+        // More efficient lookup
+        if (sortedKeys != null){
+            return sortedKeys.contains(key);
+        }
+
         return keys.contains(key);
     }
 
@@ -103,8 +123,12 @@ public class Map <K, E> {
     public void remove (K key){
 
         // Check if the key is in the Map
-        if (!keys.contains(key)){
-            throw new IllegalArgumentException("Key not in HashMap");
+        if (sortedKeys != null) { // More efficient lookup
+            if (!sortedKeys.contains(key)){
+                throw new IllegalArgumentException("Key not in Map");
+            }
+        } else if (!keys.contains(key)){ // If not set
+            throw new IllegalArgumentException("Key not in Map");
         }
 
         /*
@@ -159,8 +183,12 @@ public class Map <K, E> {
     public E get(K key){
 
         // Check if they key is in the Map
-        if (!keys.contains(key)){
-            throw new IllegalArgumentException("Key not in HashMap");
+        if (sortedKeys != null) { // More efficient lookup
+            if (!sortedKeys.contains(key)) {
+                throw new IllegalArgumentException("Key not in Map");
+            }
+        } else if (!keys.contains(key)){ // If not set
+            throw new IllegalArgumentException("Key not in Map");
         }
 
         // Otherwise continue
