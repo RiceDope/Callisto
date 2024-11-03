@@ -1,6 +1,5 @@
 package com.rwalker;
 
-import java.security.KeyException;
 import java.util.Comparator;
 
 /**
@@ -189,7 +188,7 @@ public class Map <K, E> {
      * @param otherMap The map to take all terms from
      */
     public void putAll(Map<K, E> otherMap) {
-        
+
         Sequence<K> otherKeys = otherMap.keySet();
 
         for (int i = 0; i < otherKeys.length(); i++){

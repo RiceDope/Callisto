@@ -20,7 +20,7 @@ public class BinarySearch {
      * @param comparator A comparator to be used when sorting
      * @return The index that is to be used
      */
-    public static <E> int findIndex(E[] array, int startPointer, int endPointer, E term, Comparator<E> comparator){
+    public static <E> int findInsertionIndex(E[] array, int startPointer, int endPointer, E term, Comparator<E> comparator){
 
         // Allows us to exit loop once term has been found
         boolean found = false;

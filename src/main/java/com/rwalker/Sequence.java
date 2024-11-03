@@ -233,7 +233,7 @@ public class Sequence<E> {
                  * Then use the insert operation to do this
                  */
 
-                int index = BinarySearch.findIndex(array, startPointer, endPointer, item, defaultComparator);
+                int index = BinarySearch.findInsertionIndex(array, startPointer, endPointer, item, defaultComparator);
                 int appendIndex = index-startPointer; // Convert from subarray index
                 insert(appendIndex, item);
 
@@ -719,13 +719,26 @@ public class Sequence<E> {
      */
     public boolean contains(E value){
 
-        for (int i = startPointer; i < endPointer; i++){
-            if (value.equals(array[i])){ // If same value then return true
+        if (!enforceSort){ // If the array is not sorted
+            for (int i = startPointer; i < endPointer; i++){
+                if (value.equals(array[i])){ // If same value then return true
+                    return true;
+                } else {
+                    continue;
+                }
+            }
+        } else if (enforceSort){ // If sorted then we can search quicker
+            //TODO: Swap out for a different form of search
+            int index = BinarySearch.findInsertionIndex(array, startPointer, endPointer, value, defaultComparator);
+
+            // Now check if the term at that position is what we are expecting (This is due to the way findInsertionIndex works)
+            if (array[index].equals(value)){
                 return true;
             } else {
-                continue;
+                return false;
             }
         }
+        
 
         // If get here then value not contained
         return false;
