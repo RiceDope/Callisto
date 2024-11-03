@@ -214,9 +214,9 @@ public class Map <K, E> {
         // Check if we must expand the sub-array
         if (loadFactorExceeded()){
             rehash();
-            internalPut(key, entry, bucketList, keys, false, buckets);
+            internalPut(key, entry, bucketList, keys, false, buckets, true);
         } else {
-            internalPut(key, entry, bucketList, keys, false, buckets);
+            internalPut(key, entry, bucketList, keys, false, buckets, true);
         }
 
     }
@@ -226,11 +226,11 @@ public class Map <K, E> {
      * @param key The key to insert with
      * @param entry The entry to insert
      * @param mapToAddTo The map to add to
-     * @param keysToAdd The list of keys to be used
+     * @param keysToAdd The list of keys to be used (Passed as reference)
      * @param newBuckets Are there new buckets being added (i.e. are we rehashing at the minute)
      * @param buckets How many buckets are there
      */
-    private void internalPut(K key, E entry, MapEntry<K, E>[] mapToAddTo, Sequence<K> keysToAdd, boolean newBuckets, int buckets){
+    private void internalPut(K key, E entry, MapEntry<K, E>[] mapToAddTo, Sequence<K> keysToAdd, boolean newBuckets, int buckets, boolean addToSorted){
         
         // Calculate the index to insert into
         int index;
@@ -262,6 +262,11 @@ public class Map <K, E> {
                 mapToAddTo[index] = new MapEntry<K, E>(key, entry);
                 keysToAdd.append(key);
 
+                // Check if we are adding to sorted
+                if (sortedKeys != null && addToSorted == true) {
+                    sortedKeys.append(key);
+                }
+
             } else {
                 // Bucket is not empty find and add to the LinkedList
                 MapEntry<K, E> temp = mapToAddTo[index];
@@ -274,6 +279,10 @@ public class Map <K, E> {
                 // When we get to the null bit set the next to be our term
                 temp.setNext(new MapEntry<K, E>(key, entry));
                 keysToAdd.append(key);
+                // Check if we are adding to sorted
+                if (sortedKeys != null && addToSorted == true) {
+                    sortedKeys.append(key);
+                }
             }
         }
     }
@@ -325,11 +334,16 @@ public class Map <K, E> {
 
         // Loop over keySet and add to the new bigger array
         for (int i = 0; i < keys.length(); i++) {
-            internalPut(keys.get(i), internalGet(keys.get(i), savedList), bucketList, keysToAdd, true, newAmountOfBuckets);
+            internalPut(keys.get(i), internalGet(keys.get(i), savedList), bucketList, keysToAdd, true, newAmountOfBuckets, false);
         }
 
         buckets = newAmountOfBuckets;
         keys = keysToAdd;
+        
+        // Adds all of the specified keys to the sorted list if it is set
+        if (sortedKeys != null) {
+            sortedKeys.appendAll(keysToAdd);
+        }
 
     }
 
