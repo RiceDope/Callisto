@@ -31,6 +31,16 @@ public class Map <K, E> {
     }
 
     /**
+     * Allows for specification of the comparator for sorted keys
+     * @param keyComp The comparator for sortedKeys
+     */
+    public Map(Comparator<K> keyComp) {
+        bucketList = new MapEntry[buckets];
+        sortedKeys = new Sequence<>(keyComp);
+        sortedKeys.sortOnwards();
+    }
+
+    /**
      * Constructor used if number of buckets and load factor are passed
      * @param buckets Default starting number of buckets (16)
      * @param loadFactor Default starting load factor (0.75)
@@ -116,6 +126,20 @@ public class Map <K, E> {
     }
 
     /**
+     * Does the value held match given value
+     * @param key Ket to use
+     * @param entry Entry to compare
+     * @return boolean true if same / false if not
+     */
+    public boolean is(K key, E entry){
+        if (get(key).equals(entry)){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns true if a key exists in the current map
      * @param key The key to be checking
      * @return A boolean value
@@ -128,6 +152,17 @@ public class Map <K, E> {
         }
 
         return keys.contains(key);
+    }
+
+    /**
+     * Removes the given key if it's current value matches entry
+     * @param key Key to remove
+     * @param entry Entry to compare
+     */
+    public void remove(K key, E entry) {
+        if (is(key, entry)) {
+            remove(key);
+        }
     }
 
     /**
@@ -154,6 +189,9 @@ public class Map <K, E> {
 
                 // We can just remove
                 keys.remove(keys.firstIndexOf(key)); // Remove key
+                if (sortedKeys != null) {
+                    sortedKeys.remove(sortedKeys.firstIndexOf(key));
+                }
                 bucketList[index] = null; // Set the bucket to be null now
 
             } else {
@@ -161,6 +199,9 @@ public class Map <K, E> {
                 // We need to set its sucessive element to be the root of the linked list
                 // in that bucket
                 keys.remove(keys.firstIndexOf(key)); // Remove key
+                if (sortedKeys != null) {
+                    sortedKeys.remove(sortedKeys.firstIndexOf(key));
+                }
                 bucketList[index] = toRemove.getNext(); // Set the buckets root to be sucessor
 
             }
@@ -180,6 +221,11 @@ public class Map <K, E> {
                 previous.setNext(null);
             } else { // We need to set the next to be following element
                 previous.setNext(toRemove.getNext());
+            }
+
+            keys.remove(keys.firstIndexOf(key));
+            if (sortedKeys != null) {
+                sortedKeys.remove(sortedKeys.firstIndexOf(key));
             }
         }
     }

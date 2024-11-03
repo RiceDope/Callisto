@@ -80,7 +80,7 @@ public class ManualTesting {
 
         // 2 = Hello, Hello4, Hello8
 
-        Map<String, Integer> test = new Map<>();
+        Map<String, Integer> test = new Map<>((a, b) -> a.compareTo(b));
         test.put("Hello", 100);
         test.put("Hello1", 101);
         test.put("Hello2", 102);
@@ -91,8 +91,9 @@ public class ManualTesting {
         test.put("Hello7", 107);
         test.put("Hello8", 108);
         test.put("Hello9", 109);
-        System.out.println(test.putIfAbsent("Hello9", 100));
-        System.out.println(test.get("Hello9"));
+        test.remove("Hello9", 109);
+        System.out.println(test.keySet().toString());
+        System.out.println(test.sortedKeySet().toString());
 
         // System.out.println(test.toString());
 
