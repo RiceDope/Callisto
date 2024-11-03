@@ -119,7 +119,7 @@ public class ManualTesting {
         test1.append(150);
         test1.append(50);
         test1.sortOnwards();
-        System.out.println(test1.contains(95));
+        System.out.println(test1.contains(101));
 
     }
 }

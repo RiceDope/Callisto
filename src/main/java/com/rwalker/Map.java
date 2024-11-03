@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 /**
  * Class that implements HashMaps, LinkedHashMaps
- * As standard keys are kept in the order they are inserted
+ * As standard keys are kept in the order they are inserted as well as a sorted order
  * 
  * Created: 28/10/2024
  * Updated: 31/10/2024
@@ -20,7 +20,10 @@ public class Map <K, E> {
     private MapEntry<K, E>[] bucketList; // Essentially a bucket
     private float loadFactor = 0.75f; // The load factor to be used
     private float expansionFactor = 2.0f; // The factor to expand the number of buckets by
+    private Comparator<K> keyComp;
+    private Comparator<E> entryComp;
     private Sequence<K> keys = new Sequence<>(); // Stores a list of all keys
+    private Sequence<K> sortedKeys; // Stores a list of all keys sorted
 
     /**
      * Constructor used if no parameters are passed
@@ -31,13 +34,17 @@ public class Map <K, E> {
 
     /**
      * Constructor used if number of buckets and load factor are passed
-     * @param buckets Default starting number of buckets
-     * @param loadFactor Default starting load factor
+     * @param buckets Default starting number of buckets (16)
+     * @param loadFactor Default starting load factor (0.75)
+     * @param expansionFactor Default starting expansion factor (2)
      */
-    public Map(int buckets, float loadFactor, float expansionFactor){
+    public Map(int buckets, float loadFactor, float expansionFactor, Comparator<K> keyComp){
         this.buckets = buckets; // Starting number of buckets to use
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
         this.loadFactor = loadFactor; // Set the load factor
+        this.keyComp = keyComp; // Set the comparator for keys
+        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        sortedKeys.sortOnwards();
     }
 
     /**
