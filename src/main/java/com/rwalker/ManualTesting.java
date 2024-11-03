@@ -91,7 +91,8 @@ public class ManualTesting {
         test.put("Hello7", 107);
         test.put("Hello8", 108);
         test.put("Hello9", 109);
-        System.out.println(test.keySet().toString());
+        System.out.println(test.putIfAbsent("Hello9", 100));
+        System.out.println(test.get("Hello9"));
 
         // System.out.println(test.toString());
 

@@ -102,6 +102,36 @@ public class Map <K, E> {
     }
 
     /**
+     * Puts the entry in the map if it is not already present or is mapped to null
+     * Otherwise it will return the current value
+     * @param key The key to use
+     * @param entry The entry to use
+     * @return null if put is successfull / value if already exists
+     */
+    public E putIfAbsent(K key, E entry) {
+        if (!keyExists(key) || mappedToNull(key)) {
+            put(key, entry);
+            return null;
+        } else {
+            return get(key);
+        }
+    }
+
+    /**
+     * Is the key currently mapped to be null
+     * @param key The key to check
+     * @return true if null / false if value
+     */
+    public boolean mappedToNull(K key){
+        E temp = get(key);
+        if (temp == null){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Returns true if a key exists in the current map
      * @param key The key to be checking
      * @return A boolean value
