@@ -228,17 +228,21 @@ public class Sequence<E> {
         } else if (enforceSort){
             // Sorted append operation
             if (item != null){
-                /*
-                 * First calculate the index for the term to be inserted into (Binary search)
-                 * Then use the insert operation to do this
-                 */
+                if (length() == 0){ // No point sorting on the first insert
+                    addToEnd(item);
+                } else {
+                    /*
+                    * First calculate the index for the term to be inserted into (Binary search)
+                    * Then use the insert operation to do this
+                    */
 
-                int index = BinarySearch.findInsertionIndex(array, startPointer, endPointer, item, defaultComparator);
-                int appendIndex = index-startPointer; // Convert from subarray index
-                insert(appendIndex, item);
+                    int index = BinarySearch.findInsertionIndex(array, startPointer, endPointer, item, defaultComparator);
+                    int appendIndex = index-startPointer; // Convert from subarray index
+                    insert(appendIndex, item);
 
-                // addToEnd(item);
-                // sort();
+                    // addToEnd(item);
+                    // sort();
+                }
             } else {
                 throw new IllegalArgumentException("null not allowed for append");
             }
@@ -364,7 +368,9 @@ public class Sequence<E> {
      * Sort the array and then enforce sort from then onwards
      */
     public void sortOnwards() {
-        sort();
+        if (!(length() > 0) && !(length() == 1)){ // Only sort when we have something to not nothing or 1 item
+            sort();
+        }
         setEnforceSort(true);
     }
 
@@ -695,6 +701,7 @@ public class Sequence<E> {
      */
     @Override
     public String toString(){
+
         StringBuilder sb = new StringBuilder();
 
         // Add the beginning bracket

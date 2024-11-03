@@ -35,13 +35,16 @@ public class BinarySearch {
         while(!found){
             int midPoint = ((curTop - curBottom)/2)+curBottom; // Will calculate our midpoint
 
-            // If the midpoint is 0 then it must be the same as that index or smaller
+            // If the midpoint is 0 then it must be the same as that index or one on either side
             if (midPoint == 0){
                 if (comparator.compare(array[midPoint], term) == 0){ // if they are equal
                     return midPoint;
                 } else if(comparator.compare(term, array[midPoint]) < 0) {
                     // if we are strictly less than our point at index 0 then insert there
                     return midPoint;
+                } else if (comparator.compare(term, array[midPoint]) > 0) {
+                    // If we are strictly one above our point then insert there
+                    return midPoint++;
                 } else {
                     throw new ArrayIndexOutOfBoundsException();
                 }
