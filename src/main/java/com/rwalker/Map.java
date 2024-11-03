@@ -56,12 +56,11 @@ public class Map <K, E> {
     }
 
     /**
-     * Returns the keyset in the order specified
-     * @param comparator
-     * @return
+     * Returns the keyset in the order specified in the constructor
+     * @return The keyset in a sorted order
      */
-    public Sequence<K> sortedKeySet(Comparator<K> comparator){
-        return keys.sortCopy(comparator);
+    public Sequence<K> sortedKeySet(){
+        return sortedKeys;
     }
 
     /**
