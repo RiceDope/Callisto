@@ -131,7 +131,7 @@ public class Map <K, E> {
      * @param entry Entry to compare
      * @return boolean true if same / false if not
      */
-    public boolean is(K key, E entry){
+    public boolean isEquals(K key, E entry){
         if (get(key).equals(entry)){
             return true;
         }
@@ -160,7 +160,7 @@ public class Map <K, E> {
      * @param entry Entry to compare
      */
     public void remove(K key, E entry) {
-        if (is(key, entry)) {
+        if (isEquals(key, entry)) {
             remove(key);
         }
     }

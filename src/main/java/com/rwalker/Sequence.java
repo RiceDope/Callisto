@@ -5,7 +5,7 @@
  * GitHub: https://github.com/RiceDope/COMP6200-Modern-Collections-Library
  * 
  * Created: 30/09/2024
- * Last Updated 23/10/2024
+ * Last Updated 03/11/2024
  * 
  * @Author Rhys Walker
  */
@@ -162,6 +162,7 @@ public class Sequence<E> {
 
     // TODO: isFull?
     // TODO: strictEquals?
+    // TODO: Remove Dupilicates
 
     /*
      * ======================================================
@@ -498,15 +499,14 @@ public class Sequence<E> {
     /**
      * Enqueue an item at the end of the queue
      * Functionaly the same as append. There is no difference
-     * 
-     * !! Not intended for use with enforceSort = true / Will work but will not automatically sort
+     * This means that when sortOnwards then it will insert into place
      * 
      * @param item The item to enqueue
      */
     public void enqueue(E item){
 
         if (item != null){
-            addToEnd(item);
+            append(item);
         } else {
             throw new IllegalArgumentException("null not allowed for append");
         }
@@ -527,15 +527,15 @@ public class Sequence<E> {
 
     /**
      * Push an item onto the stack
-     * 
-     * !! Not intended for use with enforceSort = true / Will work but will not automatically sort
+     * Functionally the same as append. Will push into place if
+     * sortOnwards is set
      * 
      * @param item The item to be pushed
      */
     public void push (E item) {
         
         if (item != null){
-            addToEnd(item);
+            append(item);
         } else {
             throw new IllegalArgumentException("null not allowed for append");
         }
