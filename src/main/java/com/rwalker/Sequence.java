@@ -15,6 +15,7 @@ package com.rwalker;
 import java.lang.StringBuilder;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
 public class Sequence<E> {
@@ -1002,6 +1003,28 @@ public class Sequence<E> {
      *          END OF EXPERT USER FUNCTIONS
      * ================================================
      */
+
+    public Iterator<E> iterator() {
+        return new SequenceIterator();
+    }
+
+    class SequenceIterator implements Iterator<E> {
+            
+            private int index = startPointer;
+    
+            @Override
+            public boolean hasNext() {
+                return index < endPointer;
+            }
+    
+            @Override
+            public E next() {
+                if (!hasNext()) {
+                    throw new IndexOutOfBoundsException("No more elements to iterate over");
+                }
+                return array[index++];
+            }
+    }
 
     // Enum to allow the user to specify functionality
     public enum HowToFunction {
