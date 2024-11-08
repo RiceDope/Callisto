@@ -56,6 +56,14 @@ public class Map <K, E> {
     }
 
     /**
+     * How many mappings exist in the current context
+     * @return Number of mappings
+     */
+    public int size() {
+        return keys.length();
+    }
+
+    /**
      * Returns the keyset in the order they were inserted
      * @return
      */
