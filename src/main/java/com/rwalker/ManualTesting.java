@@ -122,10 +122,22 @@ public class ManualTesting {
         test1.append(95);
         test1.append(150);
         test1.append(50);
-        Iterator<Integer> it = test1.iterator();
-        while(it.hasNext()){
-            System.out.println(it.next().toString());
+
+        for (Integer i : test1){
+            System.out.println(i);
         }
+
+        // Iterator<Integer> it = test1.iterator();
+        // while(it.hasNext()){
+        //     System.out.println(it.next().toString());
+        // }
+
+        // Sequence<Integer> test = new Sequence<>((a, b) -> a-b);
+        // test.sortOnwards();
+        // test.enqueue(100);
+        // test.enqueue(99);
+        // test.enqueue(101);
+        // System.out.println(test.dequeue());
 
     }
 }

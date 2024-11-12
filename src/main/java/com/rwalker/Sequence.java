@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
-public class Sequence<E> {
+public class Sequence<E> implements Iterable<E> {
 
     // Runtime variables
     private int endPointer = 0; // Track our current final index
