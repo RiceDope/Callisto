@@ -1,6 +1,0 @@
-Removed most of enums from the code and restrictions
-Overrode equals method
-allIndexOf and firstIndexOf added
-contains method added
-made class which show intended use of all features
-read paper on average array usage

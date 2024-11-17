@@ -1,6 +1,0 @@
-Draw a model of states of the Sequence.
-Change the EnforceFunctionality
-Think about comparisons
-IndexOf and FirstIndexOf
-Change comparators
-Sort can throw illegalStateException if default not set
