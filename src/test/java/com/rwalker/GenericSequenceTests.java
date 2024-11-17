@@ -114,10 +114,10 @@ public class GenericSequenceTests {
     }
 
     /**
-     * Test enforce sort
+     * Test sorting works
      */
     @Test
-    public void testEnforceSort() throws NoSuchMethodException{
+    public void testSortOnwards() throws NoSuchMethodException{
         Sequence<Integer> test = TestUtils.generateSequenceFourRandomNumbers();
 
         // Test automatic sort after enforceSort becomes true

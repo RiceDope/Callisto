@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rwalker.ArrayListTest" time="0.043" tests="17" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rwalker.HashMapTest" time="0.001" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,21 +58,8 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testGetNegative" classname="com.rwalker.ArrayListTest" time="0.007"/>
-  <testcase name="testGetOutOfBounds" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testRemoveNegative" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testOutOfBoundsInsertion" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testGet" classname="com.rwalker.ArrayListTest" time="0.001"/>
-  <testcase name="testClear" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testRemoveOutOfBounds" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testArrayExpansionWithInsert" classname="com.rwalker.ArrayListTest" time="0.001"/>
-  <testcase name="testRandomRemoval" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testReplace" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testInsertingIntoNegativePosition" classname="com.rwalker.ArrayListTest" time="0.001"/>
-  <testcase name="testInsert" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testReplaceNegativeIndex" classname="com.rwalker.ArrayListTest" time="0.001"/>
-  <testcase name="testPopulation" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testReplaceOutOdBounds" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testInsertingIntoZeroEmptyArray" classname="com.rwalker.ArrayListTest" time="0"/>
-  <testcase name="testRemove" classname="com.rwalker.ArrayListTest" time="0"/>
+  <testcase name="testPutAllMethod" classname="com.rwalker.HashMapTest" time="0"/>
+  <testcase name="testHashOneItem" classname="com.rwalker.HashMapTest" time="0"/>
+  <testcase name="testReplaceFunctions" classname="com.rwalker.HashMapTest" time="0"/>
+  <testcase name="testHashTenItems" classname="com.rwalker.HashMapTest" time="0"/>
 </testsuite>

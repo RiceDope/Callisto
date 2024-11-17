@@ -370,7 +370,7 @@ public class Sequence<E> implements Iterable<E> {
      * Sort the array and then enforce sort from then onwards
      */
     public void sortOnwards() {
-        if (!(length() > 0) && !(length() == 1)){ // Only sort when we have something to not nothing or 1 item
+        if (!(length() < 0) && !(length() == 1)){ // Only sort when we have something to not nothing or 1 item
             sort();
         }
         setEnforceSort(true);
