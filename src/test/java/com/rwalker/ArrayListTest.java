@@ -204,4 +204,21 @@ public class ArrayListTest {
         testing.append(20);
         testing.remove(10);
     }
+
+    /**
+     * Test the append all method
+     */
+    @Test
+    public void testAppendAll() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.append(10);
+        testing.append(20);
+        testing.append(30);
+        Sequence<Integer> toAdd = new Sequence<>();
+        toAdd.append(40);
+        toAdd.append(50);
+        toAdd.append(60);
+        testing.appendAll(toAdd);
+        assertEquals("[10, 20, 30, 40, 50, 60]", testing.toString());
+    }
 }

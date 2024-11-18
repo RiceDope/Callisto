@@ -4,6 +4,10 @@ package com.rwalker;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Iterator;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
@@ -20,8 +24,44 @@ public class GenericSequenceTests {
      */
     @Test
     public void testCreation() {
-        assertNotNull(TestUtils.generateEmptySequence());
+        assertNotNull(new Sequence<Integer>());
     }
+
+    @Test
+    public void testCreationSize() {
+        assertNotNull(new Sequence<Integer>(10));
+    }
+
+    @Test
+    public void testCreationComparator() {
+        assertNotNull(new Sequence<Integer>((a, b) -> a - b));
+    }
+
+    @Test
+    public void testCreationCustomGrowth() {
+        assertNotNull(new Sequence<Integer>(2.0));
+    }
+
+    @Test
+    public void testCreationSizeComparator() {
+        assertNotNull(new Sequence<Integer>(10, (a, b) -> a - b));
+    }
+
+    @Test 
+    public void testCreationSizeCustomGrowth() {
+        assertNotNull(new Sequence<Integer>(10, 2.0));
+    }
+
+    @Test
+    public void testCreationCustomGrowthComparator() {
+        assertNotNull(new Sequence<Integer>(2.0, (a, b) -> a - b));
+    }
+
+    @Test
+    public void testCreationSizeCustomGrowthComparator() {
+        assertNotNull(new Sequence<Integer>(10, 2.0, (a, b) -> a - b));
+    }
+
 
     /**
      * Test the expansion of the base array as we add terms
@@ -203,5 +243,178 @@ public class GenericSequenceTests {
 
         assertEquals(1, (int) test.firstIndexOf(20));
         assertNull(test.firstIndexOf(50));
+    }
+
+    /**
+     * Test that stop sorting stops sorting the method
+     */
+    @Test
+    public void testStopSorting() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        test.setComparator((a, b) -> a - b);
+        test.sortOnwards();
+        assertEquals("[10, 15, 20, 20, 30, 45]", test.toString());
+
+        test.stopSorting();
+        test.append(5);
+        assertEquals("[10, 15, 20, 20, 30, 45, 5]", test.toString());
+    }
+
+    /**
+     * Test that the enqueue and push methods work with sorting
+     */
+    @Test
+    public void testSortingEnqueuePush() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        test.setComparator((a, b) -> a - b);
+        test.sortOnwards();
+        assertEquals("[10, 15, 20, 20, 30, 45]", test.toString());
+
+        test.enqueue(5);
+        assertEquals("[5, 10, 15, 20, 20, 30, 45]", test.toString());
+
+        test.push(25);
+        assertEquals("[5, 10, 15, 20, 20, 25, 30, 45]", test.toString());
+    }
+
+    /**
+     * Test that we get all indexes of a value
+     */
+    @Test
+    public void testallIndexOf() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        int[] testArry = new int[2];
+        testArry[0] = 1;
+        testArry[1] = 5;
+
+        assertArrayEquals(testArry, test.allIndexesOf(20));
+        assertEquals(null, test.allIndexesOf(50));
+    }
+
+    /**
+     * Test the raw string method (Prints nulls)
+     */
+    @Test
+    public void testRawString() {
+        Sequence<Integer> test = new Sequence<>(10);
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        assertEquals("[10, 20, 15, 30, 45, 20, null, null, null, null]", test.rawString());
+    }
+
+    /**
+     * Test that we can get the custom growth rate
+     */
+    @Test
+    public void testGetGrowthRate() {
+        Sequence<Integer> test = new Sequence<>();
+        assertEquals(1.5, test.getGrowthRate(), 0.001);
+    }
+
+    /**
+     * Test getting the sub array from the sequence
+     */
+    @Test
+    public void testGetSubArray() {
+        Sequence<Integer> test = new Sequence<>(7);
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        Integer[] subArray = new Integer[7];
+        subArray[0] = 10;
+        subArray[1] = 20;
+        subArray[2] = 15;
+        subArray[3] = 30;
+        subArray[4] = 45;
+        subArray[5] = 20;
+        assertArrayEquals(subArray, test.getSubArray());
+    }
+
+    /**
+     * Test that we can iterate using a forEach loop
+     */
+    @Test
+    public void testIteratorForEach() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        Integer[] arr = new Integer[6];
+        arr[0] = 10;
+        arr[1] = 20;
+        arr[2] = 15;
+        arr[3] = 30;
+        arr[4] = 45;
+        arr[5] = 20;
+
+        int i = 0;
+        for (Integer val : test) {
+            assertEquals(arr[i], val);
+            i++;
+        }
+    }
+
+    /**
+     * Test iterator with hasNext method
+     */
+    @Test
+    public void testIteratorHasNext() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        Integer[] arr = new Integer[6];
+        arr[0] = 10;
+        arr[1] = 20;
+        arr[2] = 15;
+        arr[3] = 30;
+        arr[4] = 45;
+        arr[5] = 20;
+
+        Iterator<Integer> iter = test.iterator();
+
+        int i = 0;
+        while (iter.hasNext()) {
+            assertEquals(arr[i], iter.next());
+            i++;
+        }
     }
 }
