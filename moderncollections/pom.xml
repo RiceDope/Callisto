@@ -6,7 +6,7 @@
 
   <groupId>com.rwalker</groupId>
   <artifactId>moderncollections</artifactId>
-  <version>COMP6200-Modern-Collections-Library</version>
+  <version>moderncollections</version>
 
   <name>moderncollections</name>
   <!-- FIXME change it to the project's website -->
@@ -32,13 +32,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->

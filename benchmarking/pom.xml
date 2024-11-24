@@ -64,10 +64,10 @@ THE POSSIBILITY OF SUCH DAMAGE.
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.RiceDope</groupId>
-            <artifactId>COMP6200-Modern-Collections-Library</artifactId>
-            <version>main-SNAPSHOT</version>
-          </dependency>
+            <groupId>com.rwalker</groupId>
+            <artifactId>moderncollections</artifactId>
+            <version>moderncollections</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -88,13 +88,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
           -->
         <uberjar.name>benchmarks</uberjar.name>
     </properties>
-
-    <repositories>
-        <repository>
-          <id>jitpack.io</id>
-          <url>https://jitpack.io</url>
-        </repository>
-      </repositories>
 
     <build>
         <plugins>
