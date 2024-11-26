@@ -85,4 +85,24 @@ public class QueueTest {
         testing.enqueue(10);
         assertFalse(testing.isEmpty());
     }
+
+    /**
+     * Test enqueue null
+     */
+    @Test
+    public void testEnqueueNull() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.enqueue(null);
+        assertEquals("[null]", testing.toString());
+    }
+
+    /**
+     * Test dequeue null
+     */
+    @Test
+    public void testDequeueNull() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.enqueue(null);
+        assertEquals(null, testing.dequeue());
+    }
 }

@@ -417,4 +417,108 @@ public class GenericSequenceTests {
             i++;
         }
     }
+
+    /**
+     * Check we expand correctly with UserNulls in the array
+     */
+    @Test
+    public void testExpandingUserNulls() {
+        Sequence<Integer> test = new Sequence<>(4, 1.5);
+        test.append(10);
+        test.append(20);
+        test.append(null);
+        test.append(30);
+
+        assertEquals(4, test.rawLength());
+
+        test.append(45);
+        test.append(20);
+
+        assertEquals(6, test.rawLength());
+        assertEquals("[10, 20, null, 30, 45, 20]", test.toString());
+    }
+
+    /**
+     * Test that we can check contains when looking for null
+     */
+    @Test
+    public void testContainsNull() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(null);
+        test.append(30);
+
+        assertTrue(test.contains(null));
+    }
+
+    /**
+     * Test that we can find firstIndex of null
+     */
+    @Test
+    public void testFindFirstIndexNull() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(null);
+        test.append(30);
+
+        assertEquals(2, (int) test.firstIndexOf(null));
+    }
+
+    /**
+     * Test we can find all indexes of null
+     */
+    @Test
+    public void testFindAllIndexesOf() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(null);
+        test.append(30);
+        test.append(null);
+        test.append(20);
+
+        int[] testArry = new int[2];
+        testArry[0] = 2;
+        testArry[1] = 4;
+
+        assertArrayEquals(testArry, test.allIndexesOf(null));
+    }
+
+    @Test
+    public void testAppendNullWhileSorting() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        test.setComparator((a, b) -> a - b);
+        test.sortOnwards();
+        assertEquals("[10, 15, 20, 20, 30, 45]", test.toString());
+
+        test.append(null);
+        assertEquals("[10, 15, 20, 20, 30, 45, null]", test.toString());
+    }
+
+    @Test
+    public void testContainsWhileSorting() {
+        Sequence<Integer> test = new Sequence<>();
+        test.append(10);
+        test.append(20);
+        test.append(15);
+        test.append(30);
+        test.append(45);
+        test.append(20);
+
+        test.setComparator((a, b) -> a - b);
+        test.sortOnwards();
+        assertEquals("[10, 15, 20, 20, 30, 45]", test.toString());
+
+        test.append(null);
+        assertTrue(test.contains(null));
+    }
 }
