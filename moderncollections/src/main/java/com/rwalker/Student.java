@@ -6,11 +6,12 @@ package com.rwalker;
  * 
  * @author Rhys Walker
  * Created: 14/10/24
- * Updated: 23/10/24
+ * Updated: 26/11/24
  */
 
 import java.util.Comparator;
 
+@SuppressWarnings("unused")
 public class Student {
 
     private String name;

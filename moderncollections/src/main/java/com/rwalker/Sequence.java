@@ -5,7 +5,7 @@
  * GitHub: https://github.com/RiceDope/COMP6200-Modern-Collections-Library
  * 
  * Created: 30/09/2024
- * Last Updated 03/11/2024
+ * Last Updated 26/11/2024
  * 
  * @Author Rhys Walker
  */
@@ -421,14 +421,6 @@ public class Sequence<E> implements Iterable<E> {
         }
 
         enforceSort = value;
-    }
-
-    /**
-     * Get the current value for the boolean flag enforceFunctionality
-     * @return The value of enforceFunctionality
-     */
-    private boolean getEnforceSort(){
-        return enforceSort;
     }
 
     /*
@@ -905,30 +897,6 @@ public class Sequence<E> implements Iterable<E> {
         endPointer = length(); // Set to current length after expansion
         startPointer = 0;
         removed = 0; // No items have been removed from list currently
-    }
-
-    /**
-     * Replace all UserNulls with nulls
-     * @param array The array to replace in
-     * @return The array with nulls in place of UserNulls
-     */
-    private Object[] replaceUserNulls(Object[] array){
-        for (int i = startPointer; i < endPointer; i++){
-            if (array[i] instanceof UserNull){
-                array[i] = null;
-            }
-        }
-        return array;
-    }
-
-    private E[] replaceWithUserNulls(E[] array){
-        Object[] newArray = new Object[array.length];
-        for (int i = startPointer; i < endPointer; i++){
-            if (array[i] == null){
-                newArray[i] = new UserNull<E>();
-            }
-        }
-        return array;
     }
 
     /*
