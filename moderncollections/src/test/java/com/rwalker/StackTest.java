@@ -86,4 +86,24 @@ public class StackTest {
         test.size();
         assertEquals(2, test.size());
     }
+
+    /**
+     * Test pushing null
+     */
+    @Test
+    public void testPushNull() {
+        Sequence<Integer> test = new Sequence<Integer>();
+        test.push(null);
+        assertEquals("[null]", test.toString());
+    }
+
+    /**
+     * Test that popping a null value returns a null not a UserNull
+     */
+    @Test
+    public void testPopNull() {
+        Sequence<Integer> test = new Sequence<Integer>();
+        test.push(null);
+        assertEquals(null, test.pop());
+    }
 }

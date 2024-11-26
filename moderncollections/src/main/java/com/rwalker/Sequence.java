@@ -27,7 +27,7 @@ public class Sequence<E> implements Iterable<E> {
 
     // Subject to change in constructor
     private int initialSize = 100;
-    private E[] array = (E[]) new Object[initialSize]; // Default size of array if one is not chosen
+    private Object[] array =  new Object[initialSize]; // Default size of array if one is not chosen
     private double growthRate = 1.5; // Default growth rate if one isnt chosen
 
     // Allow for the setting of functionality and general use
@@ -59,7 +59,7 @@ public class Sequence<E> implements Iterable<E> {
     public Sequence(int size){
         if (size  > 0){
             initialSize = size;
-            array = (E[]) new Object[size];
+            array =  new Object[size];
         } else {
             throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
@@ -81,7 +81,7 @@ public class Sequence<E> implements Iterable<E> {
     public Sequence(int size, Comparator<E> comparator){
         if (size  > 0){
             initialSize = size;
-            array = (E[]) new Object[size];
+            array =  new Object[size];
         } else {
             throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
@@ -122,7 +122,7 @@ public class Sequence<E> implements Iterable<E> {
     public Sequence(int size, double customGrowthRate){
         if (size  > 0){
             initialSize = size;
-            array = (E[]) new Object[size];
+            array =  new Object[size];
         } else {
             throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
@@ -143,7 +143,7 @@ public class Sequence<E> implements Iterable<E> {
 
         if (size  > 0){
             initialSize = size;
-            array = (E[]) new Object[size];
+            array =  new Object[size];
         } else {
             throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
@@ -178,6 +178,10 @@ public class Sequence<E> implements Iterable<E> {
      */
     public void insert(int index, E value){
 
+        if (value == null){
+            value = (E) new UserNull<E>();
+        }
+
         // Calculate index we want to insert at
         int insertionIndex = startPointer + index;
 
@@ -194,7 +198,7 @@ public class Sequence<E> implements Iterable<E> {
                     // Set our term to be inserted in this run
                     curTerm = nextTerm;
                     // Save the current term in that spot
-                    nextTerm = array[i];
+                    nextTerm = (E) array[i];
                     // Overwrite
                     array[i] = curTerm;
                 }
@@ -205,7 +209,7 @@ public class Sequence<E> implements Iterable<E> {
                     // Set our term to be inserted in this run
                     curTerm = nextTerm;
                     // Save the current term in that spot
-                    nextTerm = array[i];
+                    nextTerm = (E) array[i];
                     // Overwrite
                     array[i] = curTerm;
                 }
@@ -225,7 +229,7 @@ public class Sequence<E> implements Iterable<E> {
             if (item != null){
                 addToEnd(item);
             } else {
-                throw new IllegalArgumentException("null not allowed for append");
+                addToEnd((E) new UserNull<E>());
             }
         } else if (enforceSort){
             // Sorted append operation
@@ -238,7 +242,7 @@ public class Sequence<E> implements Iterable<E> {
                     * Then use the insert operation to do this
                     */
 
-                    int index = BinarySearch.findInsertionIndex(array, startPointer, endPointer, item, defaultComparator);
+                    int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, item, defaultComparator);
                     int appendIndex = index-startPointer; // Convert from subarray index
                     insert(appendIndex, item);
 
@@ -246,7 +250,13 @@ public class Sequence<E> implements Iterable<E> {
                     // sort();
                 }
             } else {
-                throw new IllegalArgumentException("null not allowed for append");
+                if (length() == 0){ // No point sorting on the first insert
+                    addToEnd((E) new UserNull<E>());
+                } else {
+                    if (item == null){
+                        addToEnd((E) new UserNull<E>());
+                    }
+                }
             }
         }
     }
@@ -270,18 +280,19 @@ public class Sequence<E> implements Iterable<E> {
      */
     public void replace(int index, E value) {
 
+        // Adjust in case 0 is not the starting point
+        int indexToAdjust = startPointer+index;
+
+        if (indexToAdjust > endPointer || index < 0){ // If in unset positions
+            throw new ArrayIndexOutOfBoundsException("Index out of bounds");
+        }
+
         // Force null check
         if (value == null){
-            throw new IllegalArgumentException("null not allowed for replace");
+            array[indexToAdjust] = new UserNull<E>();
         } else {
-            // Adjust in case 0 is not the starting point
-            int indexToAdjust = startPointer+index;
-
-            if (indexToAdjust > endPointer || index < 0){ // If in unset positions
-                throw new ArrayIndexOutOfBoundsException("Index out of bounds");
-            } else { // All good
-                array[startPointer+index] = value;
-            }
+             
+            array[indexToAdjust] = value;
         }
 
     }
@@ -315,7 +326,7 @@ public class Sequence<E> implements Iterable<E> {
         if (indexToAdjust > endPointer || index < 0){ // If in unset positions
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
         } else { // All good
-            return array[indexToAdjust];
+            return (E) array[indexToAdjust];
         }
 
     }
@@ -332,30 +343,11 @@ public class Sequence<E> implements Iterable<E> {
     public void sort(){
 
         if (defaultComparator != null){
-            // Calculate the length of the array that contains terms
-            int arrSize = endPointer - startPointer;
-
-            // Generate a temporary array of that length
-            E[] tempArr = (E[]) new Object[arrSize];
-
-            // Add all terms over skipping nulls
-            int addCount = 0;
-            for (int i = 0; i < endPointer; i++){
-                if (array[i] == null){
-                    continue;
-                } else {
-                    tempArr[addCount] = array[i];
-                    addCount++;
-                }
-            }
-
             try {
-
                 // Sort the array
-                Arrays.sort(tempArr, defaultComparator);
-
+                Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
                 Arrays.fill(array, null); // Null out original to maintain terms
-                System.arraycopy(tempArr, 0, array, 0, endPointer-startPointer); // Copy over
+                System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
 
             } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
                 System.err.println(e);
@@ -384,29 +376,12 @@ public class Sequence<E> implements Iterable<E> {
      * @return A sorted Sequence
      */
     public Sequence<E> sortCopy(Comparator<E> comparator){
-
-        // Calculate the length of the array that contains terms
-        int arrSize = endPointer - startPointer;
-
-        // Generate a temporary array of that length
-        E[] tempArr = (E[]) new Object[arrSize];
-
-        // Add all terms over skipping nulls
-        int addCount = 0;
-        for (int i = 0; i < endPointer; i++){
-            if (array[i] == null){
-                continue;
-            } else {
-                tempArr[addCount] = array[i];
-                addCount++;
-            }
-        }
-
         try {
-            Arrays.sort(tempArr, comparator);
-            Sequence<E> temp = new Sequence<>();
-            temp.setSubArray(startPointer, endPointer, tempArr);
-            return temp; // Return a sequence
+            // Sort the array
+            Object[] sortedArr = UserNullSort.sort(array, comparator, startPointer, endPointer, false);
+            Sequence<E> sortedSeq = new Sequence<E>(rawLength(), growthRate, comparator); // Instantiate sequence with same settings
+            sortedSeq.setSubArray(startPointer, endPointer, sortedArr); // Set the sub array
+            return sortedSeq;
         } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
             System.err.println(e);
             throw new UnknownError("Comparator either not valid or cannot be compared");
@@ -488,7 +463,10 @@ public class Sequence<E> implements Iterable<E> {
     public E dequeue() {
 
         if (length() > 0){
-            E temp = array[startPointer];
+            E temp = (E) array[startPointer];
+            if (temp instanceof UserNull){
+                temp = null;
+            }
             array[startPointer] = null;
             startPointer++;
             return temp;
@@ -506,11 +484,7 @@ public class Sequence<E> implements Iterable<E> {
      */
     public void enqueue(E item){
 
-        if (item != null){
-            append(item);
-        } else {
-            throw new IllegalArgumentException("null not allowed for append");
-        }
+        append(item);
 
     }
 
@@ -535,12 +509,7 @@ public class Sequence<E> implements Iterable<E> {
      */
     public void push (E item) {
         
-        if (item != null){
-            append(item);
-        } else {
-            throw new IllegalArgumentException("null not allowed for append");
-        }
-        
+        append(item);
 
     }
 
@@ -551,7 +520,10 @@ public class Sequence<E> implements Iterable<E> {
     public E pop () {
 
         if(endPointer != 0){
-            E temp = array[endPointer-1];
+            E temp = (E) array[endPointer-1];
+            if (temp instanceof UserNull){
+                temp = null;
+            }
             endPointer--;
             array[endPointer] = null;
             return temp;
@@ -584,9 +556,9 @@ public class Sequence<E> implements Iterable<E> {
         if (length() > 0){
             switch (acting){
                 case STACK:
-                    return array[endPointer-1];
+                    return (E) array[endPointer-1];
                 case QUEUE: 
-                    return array[startPointer];
+                    return (E) array[startPointer];
                 default:
                     throw new IllegalArgumentException("Not an enum allowed with peek. Choose STACK/QUEUE");
             } 
@@ -632,7 +604,7 @@ public class Sequence<E> implements Iterable<E> {
      * Clears the array. New arrays size is initialSize
      */
     public void clear(){
-        E[] newArray = (E[]) new Object[initialSize];
+        Object[] newArray =  new Object[initialSize];
         array = newArray;
         startPointer = 0;
         endPointer = 0;
@@ -739,6 +711,10 @@ public class Sequence<E> implements Iterable<E> {
      */
     public boolean contains(E value){
 
+        if (value == null){
+            value = (E) new UserNull<E>();
+        }
+
         if (!enforceSort){ // If the array is not sorted
             for (int i = startPointer; i < endPointer; i++){
                 if (value.equals(array[i])){ // If same value then return true
@@ -748,14 +724,22 @@ public class Sequence<E> implements Iterable<E> {
                 }
             }
         } else if (enforceSort){ // If sorted then we can search quicker
-            //TODO: Swap out for a different form of search
-            int index = BinarySearch.findInsertionIndex(array, startPointer, endPointer, value, defaultComparator);
 
-            // Now check if the term at that position is what we are expecting (This is due to the way findInsertionIndex works)
-            if (array[index].equals(value)){
-                return true;
+            if (!(value instanceof UserNull)){
+                int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, value, defaultComparator);
+
+                // Now check if the term at that position is what we are expecting (This is due to the way findInsertionIndex works)
+                if (array[index].equals(value)){
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                if (array[endPointer-1] instanceof UserNull){
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         
@@ -774,6 +758,10 @@ public class Sequence<E> implements Iterable<E> {
      * @return The index if item is there or null if it isnt
      */
     public Integer firstIndexOf(E value){
+
+        if (value == null){
+            value = (E) new UserNull<E>();
+        }
 
         // Search over all terms and check their equivalence to ours
         for (int i = startPointer; i < endPointer; i++){
@@ -798,6 +786,10 @@ public class Sequence<E> implements Iterable<E> {
      * @return A Integer[] containing all the indexes that the value occurs at
      */
     public int[] allIndexesOf(E value){
+
+        if (value == null){
+            value = (E) new UserNull<E>();
+        }
 
         // Create an array of length total
         int[] loopList = new int[length()];
@@ -859,7 +851,7 @@ public class Sequence<E> implements Iterable<E> {
      * Create and return a blank array of new size
      * @return Array of new size
      */
-    private E[] expand(){
+    private Object[] expand(){
         // Check for minimum growth requirement of 1
         int length = array.length;
         int newSize = (int) Math.ceil(length*growthRate);
@@ -869,7 +861,7 @@ public class Sequence<E> implements Iterable<E> {
         }
         // New array is created by expanding by growthFactor
         int newLen = (int) Math.round(newSize);
-        E[] newArray = (E[]) new Object[newLen];
+        Object[] newArray =  new Object[newLen];
         return newArray;
     }
 
@@ -880,14 +872,14 @@ public class Sequence<E> implements Iterable<E> {
      */
     private void reformat(boolean  expand){
 
-        E[] newArray;
+        Object[] newArray;
 
         if (expand == true){
             // If we choose to expand run the function expand
             newArray = expand();
         } else {
             // If we dont want to expand the array but just re-format
-            newArray = (E[]) new Object[array.length];
+            newArray =  new Object[array.length];
         }
         
 
@@ -896,7 +888,7 @@ public class Sequence<E> implements Iterable<E> {
         for (int i = startPointer; i < endPointer-removed; i++){ // This counts from index startPointer for the old array
 
             // Get current term from the array
-            E curTerm = array[i];
+            E curTerm = (E) array[i];
 
             if (curTerm == null){
                 // Skip as term not needed
@@ -913,6 +905,30 @@ public class Sequence<E> implements Iterable<E> {
         endPointer = length(); // Set to current length after expansion
         startPointer = 0;
         removed = 0; // No items have been removed from list currently
+    }
+
+    /**
+     * Replace all UserNulls with nulls
+     * @param array The array to replace in
+     * @return The array with nulls in place of UserNulls
+     */
+    private Object[] replaceUserNulls(Object[] array){
+        for (int i = startPointer; i < endPointer; i++){
+            if (array[i] instanceof UserNull){
+                array[i] = null;
+            }
+        }
+        return array;
+    }
+
+    private E[] replaceWithUserNulls(E[] array){
+        Object[] newArray = new Object[array.length];
+        for (int i = startPointer; i < endPointer; i++){
+            if (array[i] == null){
+                newArray[i] = new UserNull<E>();
+            }
+        }
+        return array;
     }
 
     /*
@@ -982,7 +998,7 @@ public class Sequence<E> implements Iterable<E> {
      * Retrieve the sub array
      * @return
      */
-    public E[] getSubArray(){
+    public Object[] getSubArray(){
         return array;
     }
 
@@ -992,7 +1008,7 @@ public class Sequence<E> implements Iterable<E> {
      * @param endPointer
      * @param array
      */
-    public void setSubArray(int startPointer, int endPointer, E[] array){
+    public void setSubArray(int startPointer, int endPointer, Object[] array){
         this.startPointer = startPointer;
         this.endPointer = endPointer;
         this.array = array;
@@ -1022,7 +1038,7 @@ public class Sequence<E> implements Iterable<E> {
                 if (!hasNext()) {
                     throw new IndexOutOfBoundsException("No more elements to iterate over");
                 }
-                return array[index++];
+                return (E) array[index++];
             }
     }
 

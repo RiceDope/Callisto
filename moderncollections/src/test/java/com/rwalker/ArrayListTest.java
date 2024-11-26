@@ -221,4 +221,71 @@ public class ArrayListTest {
         testing.appendAll(toAdd);
         assertEquals("[10, 20, 30, 40, 50, 60]", testing.toString());
     }
+
+    /**
+     * Test the append method with a UserNull object
+     */
+    @Test
+    public void testAppendUserNull() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.append(10);
+        testing.append(20);
+        testing.append(30);
+        testing.append(null);
+        assertEquals("[10, 20, 30, null]", testing.toString());
+    }
+
+    /**
+     * Test sorting with nulls when a comparator is provided
+     */
+    @Test
+    public void testSortingUserNull() {
+        Sequence<Integer> testing = new Sequence<>((a, b) -> a - b);
+        testing.append(10);
+        testing.append(20);
+        testing.append(30);
+        testing.append(null);
+        testing.sort();
+        assertEquals("[null, 10, 20, 30]", testing.toString());
+    }
+
+    /* 
+     * Test sorting with nulls when a comparator is provided (sortCopy)
+    */
+    @Test
+    public void testSortingUserNullComparator() {
+        Sequence<Integer> testing = new Sequence<>((a, b) -> a - b);
+        testing.append(10);
+        testing.append(20);
+        testing.append(30);
+        testing.append(null);
+        testing = testing.sortCopy((a, b) -> b - a);
+        assertEquals("[null, 30, 20, 10]", testing.toString());
+    }
+
+    /**
+     * Test inserting a null into the Sequence
+     */
+    @Test
+    public void testInsertNull() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.append(10);
+        testing.append(20);
+        testing.append(30);
+        testing.insert(1, null);
+        assertEquals("[10, null, 20, 30]", testing.toString());
+    }
+
+    /**
+     * Test replacing a term with a user null
+     */
+    @Test
+    public void testReplaceNull() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.append(10);
+        testing.append(20);
+        testing.append(30);
+        testing.replace(1, null);
+        assertEquals("[10, null, 30]", testing.toString());
+    }
 }
