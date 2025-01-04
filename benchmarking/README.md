@@ -14,4 +14,15 @@ Tests carried out:
 - Instantiate and append 1 item in Sequence
 - Instantiate and append 1 item in ArrayList
 
-### 
+### 241124-2330 (Carried out 4 benchmarks)
+- Insert 1000 items in ascending order into ArrayList
+- Insert 1000 items in ascending order into Sequence
+- Insert 1000 items in ascending order into ArrayList and call Collections.Sort (Mimicks a sorted array with ArrayList)
+- Insert 1000 items in ascending order into Sequence after calling sortOnwards() (Keeps sequence in sorted insertion order)
+
+### 231224-1730 (Carried out 1 benchmark)
+- Insert 1000 items in ascending order using Binary search to find location for insertion (ArrayList)
+
+### 231224-2200 (Carried out 2 benchmarks)
+- Insert 1000 items into ArrayList with a size specified of 100, 500 and 1000
+- Same as above but for Sequence

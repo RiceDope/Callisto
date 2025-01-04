@@ -4,6 +4,9 @@ This is a Collections library that is being developed as a part of my dissertati
 ## Be aware
 No current advisories
 
+## Work-Ons
+1. A system for the Sequence that after a sort has been called that all actions that do modify the array can be done in sorted order. This is undone as soon as a modifying method is called. Unless that is just a remove which will maintain the order. Any insertion or swap will violate this.
+
 ## Sequence
 
 - ArrayList:
