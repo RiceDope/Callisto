@@ -39,3 +39,43 @@ No current advisories
     - Push
     - Pop
     - Peek
+
+## Set of methods that each strategy must implement
+
+- Insert
+- Append
+- AppendAll
+- Replace
+- Remove
+- Get
+- Sort
+- SortOnwards
+- SortCopy
+- StopSorting
+- SetComparator
+- IsEmpty
+- Dequeue
+- Enqueue
+- Push
+- Pop
+- Peek
+- Size
+- Length
+- Clear
+- Empty
+- Equals
+- toString
+- Contains
+- FirstIndexOf
+- AllIndexesOf
+- SetEnforceSort
+- AddToEnd
+- Expand
+- Reformat
+- RawLength
+- RawString
+- SetGrowthRate
+- GetGrowthRate
+- GetSubArray
+- SetSubArray
+- Iterator
