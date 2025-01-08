@@ -20,4 +20,19 @@ public class SequenceContext <E> {
 
     public int minimumExpansion = 1;
 
+    public SequenceContext(){
+        // Default values are used
+    }
+
+    public SequenceContext(int startPointer, int endPointer, int initialSize, double growthRate, boolean enforceSort, Comparator<E> comparator, int minimumExpansion){
+        this.startPointer = startPointer;
+        this.endPointer = endPointer;
+        this.initialSize = initialSize;
+        this.growthRate = growthRate;
+        this.enforceSort = enforceSort;
+        this.comparator = comparator;
+        this.minimumExpansion = minimumExpansion;
+        
+    }
+
 }

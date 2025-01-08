@@ -838,6 +838,44 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         this.array = array;
     }
 
+    /**
+     * Export the array
+     * @return
+     */
+    public Object[] exportArray() {
+        return array;
+    }
+
+    /**
+     * Import an array
+     * @param array
+     */
+    public void importArray(Object[] array){
+        this.array = array;
+    }
+
+    /**
+     * Export the context
+     * @return
+     */
+    public SequenceContext<E> exportContect() {
+        return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion);
+    }
+
+    /**
+     * Import the context
+     * @param context
+     */
+    public void importContext(SequenceContext<E> context){
+        this.startPointer = context.startPointer;
+        this.endPointer = context.endPointer;
+        this.initialSize = context.initialSize;
+        this.growthRate = context.growthRate;
+        this.enforceSort = context.enforceSort;
+        this.defaultComparator = context.comparator;
+        this.minumumExpansion = context.minimumExpansion;
+    }
+
     /*
      * ================================================
      *          END OF EXPERT USER FUNCTIONS

@@ -13,11 +13,11 @@ import java.util.Iterator;
 
 public interface SequenceStrategy<E>{
 
-    // Used to receive the array when switching strategies
-    // Object[] exportArray();
-    // void importArray(Object[] array);
-    // SequenceContext<E> exportContect();
-    // void importContext(SequenceContext<E> context);
+    // Used in order to change between strategies
+    Object[] exportArray();
+    void importArray(Object[] array);
+    SequenceContext<E> exportContect();
+    void importContext(SequenceContext<E> context);
     
     void insert(int index, E element);
     void append(E item);
