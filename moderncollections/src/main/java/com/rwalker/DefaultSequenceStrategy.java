@@ -60,8 +60,8 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
                     array[i] = curTerm;
                 }
             } else {
-                // Use reformat as expand() doesnt change current array
-                reformat(true);
+                // Expand the array as we are at limit.
+                array = expandCopy();
                 for (int i = insertionIndex; i < endPointer+1; i++){
                     // Set our term to be inserted in this run
                     curTerm = nextTerm;
@@ -166,7 +166,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         } else {
 
             array[indexToAdjust] = null;
-            reformat(false);
+            closeGap(index);
         }
     }
 
@@ -696,6 +696,31 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         }
     }
 
+    /**
+     * Will expand the array whilst also copying over the existing terms
+     * @return
+     */
+    private Object[] expandCopy(){
+        // Check for minimum growth requirement of 1
+        int length = array.length;
+        int newSize = (int) Math.ceil(length*growthRate);
+
+        if (newSize <= length){
+            newSize = newSize + minumumExpansion;
+        }
+
+        // New array is created by expanding by growthFactor
+        int newLen = (int) Math.round(newSize);
+        Object[] newArray =  new Object[newLen];
+
+        // Now loop over and add all items to the larger list
+        for (int i = startPointer; i < endPointer; i++){
+            newArray[i] = array[i];
+        }
+
+        return newArray;
+    }
+
      /**
      * Create and return a blank array of new size
      * @return Array of new size
@@ -753,6 +778,16 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         array = newArray;
         endPointer = length(); // Set to current length after expansion
         startPointer = 0;
+    }
+
+    /**
+     * If a gap exists in the array close it
+     * @param gapIndex The index of the gap
+     */
+    private void closeGap(int gapIndex) {
+        for (int i = gapIndex; i < endPointer; i++){
+            array[i] = array[i+1];
+        }
     }
 
     /*
