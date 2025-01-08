@@ -52,9 +52,9 @@ public class QueueTest {
     @Test
     public void testPeek() throws NoSuchMethodException{
         Sequence<Integer> testing = TestUtils.generateEnqueueTenItems();
-        int out = testing.peek(Sequence.HowToFunction.QUEUE);
+        int out = testing.peek(HowToFunction.QUEUE);
         assertEquals(5, out);
-        out = testing.peek(Sequence.HowToFunction.QUEUE);
+        out = testing.peek(HowToFunction.QUEUE);
         assertEquals(5, out);
     }
 
@@ -64,7 +64,7 @@ public class QueueTest {
     @Test(expected = NullPointerException.class)
     public void testPeekEmpty() {
         Sequence<Integer> testing = TestUtils.generateEmptySequence();
-        testing.peek(Sequence.HowToFunction.QUEUE);
+        testing.peek(HowToFunction.QUEUE);
     }
 
     /**
