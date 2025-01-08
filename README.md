@@ -1,3 +1,17 @@
+# Project explanation
+
+## moderncollections
+The collections library being developed
+
+## contactsapplication
+A sample program using a sequence in order to store contacts
+
+## benchmarking
+Benchmarking of the collections library using JMH
+
+## benchmarkanalysis
+Python programs being used in order to produce graphs and analyse the data from the benchmarks
+
 # Plan
 
 - Conceptualise the design
