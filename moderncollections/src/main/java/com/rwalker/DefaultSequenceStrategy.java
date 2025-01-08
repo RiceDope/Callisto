@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
+@SuppressWarnings("unchecked")
 public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
     
     private int endPointer;
