@@ -96,7 +96,7 @@ public class Set<E> {
      * @param value
      * @return
      */
-    public int getHashCode(E value) {
+    private int getHashCode(E value) {
         int code = value.hashCode()%buckets;
         if (code < 0){
             code *= -1;
@@ -127,15 +127,23 @@ public class Set<E> {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
         for (SetEntry<E> entry : items){
+
+            boolean hadItemInBucket = false;
+
             while (entry != null){
                 sb.append(entry.getValue() + " ");
                 sb.append(", ");
                 entry = entry.getNext();
+                hadItemInBucket = true;
             }
-            sb.replace(sb.length()-2, sb.length(), "");
+            // Tidy up the string
+            if (hadItemInBucket){
+                sb.replace(sb.length()-2, sb.length(), "");
+            }
             sb.append("| ");
         }
-        sb.append(" ]");
+        sb.replace(sb.length()-2, sb.length(), "");
+        sb.append("]");
         return sb.toString();
     }
 
