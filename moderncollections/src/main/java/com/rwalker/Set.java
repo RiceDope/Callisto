@@ -26,7 +26,7 @@ public class Set<E> {
 
     /**
      * Add an item to the set
-     * @param value
+     * @param value Value to be added to the set
      */
     public void add(E value) {
 
@@ -45,7 +45,22 @@ public class Set<E> {
             while (current.getNext() != null){
                 current = current.getNext();
             }
-            current.setNext(new SetEntry<E>(value));
+            if (!current.getValue().equals(value)){ // Only add if item does not exist
+                current.setNext(new SetEntry<E>(value));
+            }
+        }
+    }
+
+    /**
+     * Add all items in other set to a given set
+     * @param other Other set to add items from
+     */
+    public void addAll(Set<E> other) {
+        for (SetEntry<E> entry : other.items){
+            while (entry != null){
+                add(entry.getValue());
+                entry = entry.getNext();
+            }
         }
     }
 
@@ -89,6 +104,14 @@ public class Set<E> {
             current = current.getNext();
         }
         return false;
+    }
+
+    /**
+     * Remove all items from the set
+     */
+    public void clear() {
+        items = new SetEntry[buckets];
+        totalItems = 0;
     }
 
     /**
