@@ -1,5 +1,6 @@
 package com.rwalker;
 
+@SuppressWarnings("unchecked")
 public class SetEntry<E> {
     private E value;
     private SetEntry<E> next;
