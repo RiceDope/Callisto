@@ -1,5 +1,7 @@
 package com.rwalker;
 
+import java.util.Iterator;
+
 /**
  * Implementation of a Set using hashCode to determine location of objects
  * 
@@ -8,12 +10,13 @@ package com.rwalker;
  */
 
 @SuppressWarnings("unchecked")
-public class Set<E> {
+public class Set<E> implements Iterable<E> {
     
     private SetEntry<E>[] items;
     private int buckets = 16;
     private int totalItems = 0;
     private double overloadFactor = 1.25;
+    private double expansionFactor = 1.5;
 
     public Set() {
         items = new SetEntry[buckets];
@@ -25,43 +28,92 @@ public class Set<E> {
     }
 
     /**
-     * Add an item to the set
-     * @param value Value to be added to the set
+     * Do we need to rehash the set
      */
-    public void add(E value) {
-
-        // Check how overloaded the set is
-        if (totalItems > buckets * overloadFactor){
+    private void doRehash() {
+        if (buckets * overloadFactor < totalItems) {
             rehash();
         }
+    }
 
-        totalItems++;
+    /**
+     * Add an item to the set
+     * @param value Value to be added to the set
+     * @return boolean True if the set has been modified
+     */
+    public boolean add(E value) {
+
+        // Check how overloaded the set is
+        doRehash();
+
+        if (addInternal(value)){
+            totalItems++;
+            return true;
+        }
+
+        return false;
+        
+    }
+
+    /**
+     * Add an item to the set
+     * @param value Value to be added to the set
+     * @return boolean True if the set has been modified
+     */
+    private boolean addInternal(E value){
         int index = getHashCode(value);
+
+        // If we have a completely empty bucket
         if (items[index] == null){
             items[index] = new SetEntry<E>(value);
+            return true;
         }
         else {
-            SetEntry<E> current = items[index];
-            while (current.getNext() != null){
+            SetEntry<E> current = items[index]; // Set our location in linked list
+            while (current.getNext() != null){ // Loop over until we find the next empty spot
+
+                // If we have a duplicate term
+                if (current.getValue().equals(value)){
+                    return false;
+                }
+
                 current = current.getNext();
             }
             if (!current.getValue().equals(value)){ // Only add if item does not exist
                 current.setNext(new SetEntry<E>(value));
+                return true;
             }
         }
+        
+        // Nothing was added exit with false
+        return false;
     }
 
     /**
      * Add all items in other set to a given set
      * @param other Other set to add items from
+     * @return boolean True if the set has been modified
      */
-    public void addAll(Set<E> other) {
+    public boolean addAll(Set<E> other) {
+
+        Set<Boolean> modifiedSet = new Set<Boolean>(2);
+
         for (SetEntry<E> entry : other.items){
             while (entry != null){
-                add(entry.getValue());
+                modifiedSet.add(add(entry.getValue()));
                 entry = entry.getNext();
             }
         }
+
+        if (modifiedSet.contains(true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public int size() {
+        return totalItems;
     }
 
     /**
@@ -114,6 +166,12 @@ public class Set<E> {
         totalItems = 0;
     }
 
+    // TODO: Contains all
+
+    public boolean isEmpty() {
+        return totalItems == 0;
+    }
+
     /**
      * Get the hashCode within certain bounds for object location
      * @param value
@@ -122,7 +180,7 @@ public class Set<E> {
     private int getHashCode(E value) {
         int code = value.hashCode()%buckets;
         if (code < 0){
-            code *= -1;
+            code = code * -1;
         }
         return code;
     }
@@ -132,11 +190,11 @@ public class Set<E> {
      */
     private void rehash() {
         SetEntry<E>[] oldItems = items;
-        buckets *= 2;
+        buckets = (int) Math.ceil((buckets * expansionFactor));
         items = new SetEntry[buckets];
         for (SetEntry<E> entry : oldItems){
             while (entry != null){
-                add(entry.getValue());
+                addInternal(entry.getValue());
                 entry = entry.getNext();
             }
         }
@@ -187,5 +245,44 @@ public class Set<E> {
         sb.replace(sb.length()-2, sb.length(), "");
         sb.append("]");
         return sb.toString();
+    }
+
+    public Iterator<E> iterator() {
+        return new SetIterator();
+    }
+
+    class SetIterator implements Iterator<E> {
+
+        private int index = 0;
+        private SetEntry<E> current = items[index];
+
+        @Override
+        public boolean hasNext() {
+            if (current != null){
+                return true;
+            }
+            for (int i = index+1; i < buckets; i++){
+                if (items[i] != null){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public E next() {
+            if (current == null){
+                for (int i = index+1; i < buckets; i++){
+                    if (items[i] != null){
+                        index = i;
+                        current = items[i];
+                        return current.getValue();
+                    }
+                }
+            }
+            E value = current.getValue();
+            current = current.getNext();
+            return value;
+        }
     }
 }
