@@ -1,5 +1,12 @@
 package com.rwalker;
 
+/**
+ * Entry class for the Sequence data structure. Manages swapping between all strategies of the class
+ * 
+ * @author Rhys Walker
+ * @version 13/01/2025
+ */
+
 import java.util.Comparator;
 import java.util.Iterator;
 

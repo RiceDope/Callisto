@@ -6,9 +6,8 @@ import java.util.Iterator;
 /**
  * Contract that all strategies must adhere to
  * 
- * enforceSort
- * addToEnd
- * reformat
+ * @author Rhys Walker
+ * @version 13/01/2025
  */
 
 public interface SequenceStrategy<E>{
@@ -19,6 +18,7 @@ public interface SequenceStrategy<E>{
     SequenceContext<E> exportContect();
     void importContext(SequenceContext<E> context);
     
+    // General Sequence interaction methods
     void insert(int index, E element);
     void append(E item);
     void appendAll(Sequence<E> toApp);

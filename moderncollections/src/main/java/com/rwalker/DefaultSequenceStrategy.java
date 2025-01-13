@@ -1,5 +1,16 @@
 package com.rwalker;
 
+/**
+ * The default strategy for the Sequence class.
+ * 
+ * Sub array is managed using a start and end pointer [null, null, null, 4, 7, 3, 2, null, null]
+ *                                                                       ^start      ^end
+ * There are no storage techniques used here to speed up for certain operations.
+ * 
+ * @author Rhys Walker
+ * @version 13/01/2025
+ */
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
