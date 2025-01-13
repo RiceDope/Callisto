@@ -169,7 +169,9 @@ public class Set<E> implements Iterable<E> {
         totalItems = 0;
     }
 
-    // TODO: Contains all
+    // TODO: ContainsAll
+    // TODO: RemoveAll
+    // TODO: RetainAll
 
     public boolean isEmpty() {
         return totalItems == 0;
@@ -201,6 +203,38 @@ public class Set<E> implements Iterable<E> {
                 entry = entry.getNext();
             }
         }
+    }
+
+    /**
+     * Convert the set to a sequence
+     * @return Sequence
+     */
+    public Sequence<E> toSequence() {
+        Sequence<E> sequence = new Sequence<E>();
+        for (SetEntry<E> entry : items){
+            while (entry != null){
+                sequence.append(entry.getValue());
+                entry = entry.getNext();
+            }
+        }
+        return sequence;
+    }
+
+    /**
+     * Convert the set to an array
+     * @return Array
+     */
+    public E[] toArray() {
+        E[] array = (E[]) new Object[totalItems];
+        int index = 0;
+        for (SetEntry<E> entry : items){
+            while (entry != null){
+                array[index] = entry.getValue();
+                index++;
+                entry = entry.getNext();
+            }
+        }
+        return array;
     }
 
     /**
