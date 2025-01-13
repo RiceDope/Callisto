@@ -146,9 +146,32 @@ public class SetTest {
      * Test that inserting multiple duplicated entries only adds one
      */
     @Test
-    public void testNoDuplicates(){
+    public void testNoDuplicates() {
         Set<Integer> test = new Set<Integer>();
         test.add(2);
         assertFalse(test.add(2));
-        assertEquals(1, test.size());    }
+        assertEquals(1, test.size());    
+    }
+
+    /**
+     * Test that the equals method works correctly for the set
+     */
+    @Test
+    public void testEqualsMethod() {
+        Set<Integer> test = new Set<Integer>();
+        test.add(2);
+        Set<Integer> test2 = new Set<Integer>();
+        test2.add(2);
+
+        assertTrue(test.equals(test2)); // Test with same values
+
+        Set<Boolean> test3 = new Set<Boolean>();
+        test3.add(true);
+
+        assertFalse(test.equals(test3)); // Test with different types
+
+        test.add(3);
+
+        assertFalse(test2.equals(test)); // Test with additional values
+    }
 }

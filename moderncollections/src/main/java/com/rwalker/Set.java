@@ -96,8 +96,10 @@ public class Set<E> implements Iterable<E> {
      */
     public boolean addAll(Set<E> other) {
 
+        // Used to track if we have modified on any additions
         Set<Boolean> modifiedSet = new Set<Boolean>(2);
 
+        // Loop over each item in the other set
         for (SetEntry<E> entry : other.items){
             while (entry != null){
                 modifiedSet.add(add(entry.getValue()));
@@ -105,6 +107,7 @@ public class Set<E> implements Iterable<E> {
             }
         }
 
+        // If there is 1 or more modifications the set will contain true
         if (modifiedSet.contains(true)) {
             return true;
         }
@@ -245,6 +248,32 @@ public class Set<E> implements Iterable<E> {
         sb.replace(sb.length()-2, sb.length(), "");
         sb.append("]");
         return sb.toString();
+    }
+
+    /**
+     * Overriden equals method to compare two sets
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Set<E> other = (Set<E>) obj;
+        if (other.size() != totalItems) {
+            return false;
+        }
+        for (SetEntry<E> entry : items) {
+            while (entry != null) {
+                if (!other.contains(entry.getValue())) {
+                    return false;
+                }
+                entry = entry.getNext();
+            }
+        }
+        return true;
     }
 
     public Iterator<E> iterator() {
