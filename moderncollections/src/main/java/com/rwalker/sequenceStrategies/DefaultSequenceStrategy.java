@@ -1,4 +1,4 @@
-package com.rwalker;
+package com.rwalker.sequenceStrategies;
 
 /**
  * The default strategy for the Sequence class.
@@ -14,6 +14,12 @@ package com.rwalker;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+
+import com.rwalker.BinarySearch;
+import com.rwalker.HowToFunction;
+import com.rwalker.Sequence;
+import com.rwalker.UserNull;
+import com.rwalker.UserNullSort;
 
 @SuppressWarnings("unchecked")
 public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {

@@ -10,6 +10,10 @@ package com.rwalker;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
+import com.rwalker.sequenceStrategies.SequenceContext;
+import com.rwalker.sequenceStrategies.SequenceStrategy;
+
 public class Sequence<E> implements Iterable<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>();

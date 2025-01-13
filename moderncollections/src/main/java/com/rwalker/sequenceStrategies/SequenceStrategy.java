@@ -1,7 +1,10 @@
-package com.rwalker;
+package com.rwalker.sequenceStrategies;
 
 import java.util.Comparator;
 import java.util.Iterator;
+
+import com.rwalker.HowToFunction;
+import com.rwalker.Sequence;
 
 /**
  * Contract that all strategies must adhere to

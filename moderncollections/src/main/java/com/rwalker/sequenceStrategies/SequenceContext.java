@@ -1,4 +1,4 @@
-package com.rwalker;
+package com.rwalker.sequenceStrategies;
 
 import java.util.Comparator;
 
