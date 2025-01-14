@@ -78,6 +78,10 @@ public class RingBufferSequenceStrategy<E> {
             element = (E) new UserNull<E>();
         }
 
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
+        }
+
         int realIndex = calculateIndex(index);
 
         if (realIndex == endPointer) { // Inserting at end
@@ -131,6 +135,40 @@ public class RingBufferSequenceStrategy<E> {
 
     }
 
+    /**
+     * Appends all elements from the given sequence to the array
+     * @param toApp The sequence to append
+     */
+    // TODO: Potential speed increase by finding the size of toApp and if expansion is necessary do it once
+    // Or can avoid regular append each time by pre allocating the space
+    public void appendAll(Sequence<E> toApp) {
+        for (E element : toApp) {
+            append(element);
+        }
+    }
+
+    /**
+     * Replaces the element at the given index with the given element
+     * @param index The index to replace
+     * @param element The element to replace with
+     */
+    public void replace(int index, E element){
+        if (element == null) {
+            element = (E) new UserNull<E>();
+        }
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
+        }
+        array[calculateIndex(index)] = element;
+    }
+
+
+
+    /**
+     * Gets the element at the given index
+     * @param index The index to get the element from
+     * @return The element at the given index
+     */
     public E get(int index) {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
@@ -138,6 +176,78 @@ public class RingBufferSequenceStrategy<E> {
         return (E) array[calculateIndex(index)];
     }
 
+    /**
+     * Dequeues an item from the array
+     * @return
+     */
+    public E dequeue() {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("Cannot dequeue from an empty sequence");
+        }
+        E element = (E) array[startPointer];
+        array[startPointer] = null;
+        startPointer++;
+        return element;
+    }
+
+    /**
+     * Enqueues an item to the array
+     * @param element
+     */
+    public void enqueue(E element) {
+        append(element);
+    }
+
+    /**
+     * Checks if the array is empty
+     * @return
+     */
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    /**
+     * Pushes an element to the array
+     * @param element
+     */
+    public void push(E element) {
+        append(element);
+    }
+
+    /**
+     * Pops an element from the array
+     * @return
+     */
+    public E pop() {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("Cannot pop from an empty sequence");
+        }
+        E element = (E) array[endPointer-1];
+        array[endPointer-1] = null;
+        endPointer--;
+        return element;
+    }
+
+    /**
+     * Peeks at the element at the given index
+     * @param acting
+     * @return
+     */
+    public E peek(HowToFunction acting) {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("Cannot peek from an empty sequence");
+        }
+
+        if (acting == HowToFunction.QUEUE) { // NO EXTRA CODE FOR QUEUE
+            return (E) array[startPointer];
+        } else { // INVERSION FOR STACK
+            if (endPointer > 0) {
+                return (E) array[endPointer-1];
+            } else {
+                return (E) array[array.length-1];
+            }
+        }
+    }
     /**
      * Calculates the correct index for the array based on the pointers
      * @param index

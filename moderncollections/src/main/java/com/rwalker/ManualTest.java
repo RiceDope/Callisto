@@ -27,5 +27,22 @@ public class ManualTest {
 
         System.out.println(seq.rawString());
         System.out.println(seq);
+
+        Sequence<Integer> seq2 = new Sequence<>();
+        seq2.append(1);
+        seq2.append(2);
+        seq2.append(3);
+        seq2.append(4);
+
+        seq.appendAll(seq2);
+
+        System.out.println(seq.rawString());
+        System.out.println(seq);
+
+
+        seq.push(10);
+        System.out.println(seq.pop());
+
+        System.out.println(seq.rawString());
     }
 }   
