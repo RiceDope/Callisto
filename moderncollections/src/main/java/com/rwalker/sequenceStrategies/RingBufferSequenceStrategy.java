@@ -64,8 +64,71 @@ public class RingBufferSequenceStrategy<E> {
      * Adds an element to the array
      * @param element
      */
-    public void add(E element) {
+    public void append(E element) {
         addToEnd(element);
+    }
+
+    /**
+     * Insert an item into the array at the specific index
+     * @param index The index to insert the element at
+     * @param element The element to insert
+     */
+    public void insert(int index, E element){
+        if (element == null) {
+            element = (E) new UserNull<E>();
+        }
+
+        int realIndex = calculateIndex(index);
+
+        if (realIndex == endPointer) { // Inserting at end
+            addToEnd(element);
+
+        } else if (realIndex == startPointer) { // Inserting at start
+
+            if (startPointer != 0){ // If we have space before
+
+                if (array[startPointer-1] == null) { // We can decrement startPointer
+                    startPointer--;
+                    array[startPointer] = element;
+                } else { // We must expand if no space before
+                    expandArray();
+                    shift(startPointer);
+                }
+            }
+        } else { // We are inserting into the array in a central location
+            if (length() < array.length - 1) { // We have enough space to insert
+                shift(realIndex);
+                array[realIndex] = element;
+            } else { // We must expand the array
+                expandArray();
+                shift(realIndex);
+                array[realIndex] = element;
+            }
+        }
+    }
+
+    /**
+     * Shift all terms from the indexFrom by one to the right(Ensuring there is space)
+     * @param indexFrom
+     */
+    //TODO: Potential edge case where we shift and fill the array but we don't detect the need to expand
+    private void shift(int indexFrom) {
+
+        if (!(length() < array.length - 1)) { // We have enough space to shift
+            expandArray();
+        }
+
+        int currentIndex = endPointer;
+        while (currentIndex != indexFrom) {
+            if (currentIndex == 0) {
+                currentIndex = array.length;
+            }
+            array[currentIndex] = array[currentIndex-1];
+            currentIndex--;
+        }
+
+        endPointer++;
+
     }
 
     public E get(int index) {
