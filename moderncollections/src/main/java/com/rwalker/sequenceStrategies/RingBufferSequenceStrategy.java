@@ -1,7 +1,14 @@
 package com.rwalker.sequenceStrategies;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 
+import com.rwalker.BinarySearch;
+import com.rwalker.HowToFunction;
+import com.rwalker.Sequence;
+import com.rwalker.UserNull;
+import com.rwalker.UserNullSort;
 /**
  * This is a ring buffer like strategy the difference from the default strategy
  * is that the endPointer can be smaller than the startPointer. This is optimal for
@@ -9,6 +16,7 @@ import java.util.Comparator;
  */
 
  // TODO: implements SequenceStrategy<E>
+@SuppressWarnings({"unchecked", "unused"})
 public class RingBufferSequenceStrategy<E> {
     
     private int endPointer;
@@ -32,6 +40,104 @@ public class RingBufferSequenceStrategy<E> {
         array = new Object[initialSize];
     }
 
+    /**
+     * Returns the size of the array
+     * @return The size of the array
+     */
+    public int size() {
+        if (endPointer < startPointer) { // Inversion calculation
+            return (array.length - startPointer) + endPointer;
+        } else { // Regular calculation
+            return endPointer - startPointer;
+        }
+    }
+
+    /**
+     * Alias for size
+     * @return The length of the array
+     */
+    public int length() {
+        return size();
+    }
+
+    /**
+     * Adds an element to the array
+     * @param element
+     */
+    public void add(E element) {
+        addToEnd(element);
+    }
+
+    public E get(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
+        }
+        return (E) array[calculateIndex(index)];
+    }
+
+    /**
+     * Calculates the correct index for the array based on the pointers
+     * @param index
+     * @return
+     */
+    private int calculateIndex(int index) {
+        // Are we in an inversion
+        if (endPointer < startPointer) {
+            if (index < (array.length - startPointer)) {
+                return startPointer + index;
+            } else {
+                return index - (array.length - startPointer);
+            }
+        } else {
+            return startPointer + index;
+        }
+    }
+
+    /**
+     * Removes an element from the array. Handles buffer representation
+     * @param index
+     */
+    public void remove(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
+        }
+        int realIndex = calculateIndex(index);
+        array[realIndex] = null;
+        
+        if (realIndex == startPointer) {
+            startPointer++;
+        } else if (realIndex == endPointer-1) {
+            endPointer--;
+        } else {
+            fillGap(realIndex);
+        }
+    }
+
+    /**
+     * Fill the gap that is present after removal
+     * @param realIndex
+     */
+    private void fillGap(int realIndex) {
+        // Go from realIndex to endPointer
+        // Make sure to loop around if we reach the end of the array
+        int currentIndex = realIndex;
+        while (currentIndex != endPointer) {
+            if (currentIndex == array.length) {
+                currentIndex = 0;
+            }
+            if (currentIndex == endPointer) {
+                break;
+            }
+            array[currentIndex] = array[currentIndex+1];
+            currentIndex++;
+        }
+    }
+
+    /**
+     * Adds an element to the array
+     * Correctly handles insertion in an inversion
+     * @param element
+     */
     private void addToEnd(E element) {
 
         // NORMAL:
@@ -45,8 +151,11 @@ public class RingBufferSequenceStrategy<E> {
         // OPT1 - Can we append as normal
         // OPT2 - Do we need to expand (Enter expansion, Exit Inversion)
 
+        // Edge case: When we have inverted and then fill the array endPointer is no longer less than startPointer
+        // Try catch deals with this edge case correctly. Discovers the inversion fill before it can occur.
+
         if (!(endPointer < startPointer)){ // We are working in normal space
-            if (endPointer < array.length){ // If we are smaller than the array then just add
+            if (endPointer < array.length-1){ // If we are smaller than the array then just add
                 addAtEndPointer(element);
             } else { // We are at the array limit. What can we do
                 if (startPointer > 0) { // There is space at the beginning to add the element
@@ -65,6 +174,16 @@ public class RingBufferSequenceStrategy<E> {
                 addAtEndPointer(element);
             }
         }
+
+        // Deal with expansion edge case
+        try {
+            if (endPointer == startPointer && array[startPointer-1] != null) {
+                expandArray();
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+        
     }
 
     /**
@@ -72,12 +191,79 @@ public class RingBufferSequenceStrategy<E> {
      * @param element
      */
     private void addAtEndPointer(E element) {
+        if (element == null){
+            element = (E) new UserNull<E>();
+        }
         array[endPointer] = element;
         endPointer++;
     }
 
-    // TODO: Implement
+    /**
+     * Expand the array by the given factor and refactor in order to maintain
+     */
     private void expandArray() {
-        System.out.println("EXPANDING ARRAY");
+        Object[] newArr = new Object[(int) Math.ceil(array.length*growthRate)];
+
+        int index = startPointer;
+        int newIndex = 0;
+
+        // Array is full need to save before continuing
+        if (startPointer == endPointer) {
+            newArr[newIndex] = array[index];
+            index++;
+            newIndex++;
+        }
+
+        while (index != endPointer) {
+            if (index == array.length) {
+                index = 0;
+            }
+            newArr[newIndex] = array[index];
+            index++;
+            newIndex++;
+        }
+
+        array = newArr;
+        startPointer = 0;
+        endPointer = newIndex;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+
+        if (endPointer < startPointer) {
+            // We are in an inversion
+            int currentIndex = startPointer;
+            for (int i = 0; i < size(); i++){
+                sb.append(" ");
+                sb.append(array[currentIndex]);
+                currentIndex++;
+                if (currentIndex == array.length) {
+                    currentIndex = 0;
+                }
+                sb.append(", ");
+            }
+        } else {
+            // We are in normal space
+            for (int i = startPointer; i < endPointer; i++){
+                sb.append(array[i]);
+                sb.append(", ");
+            }
+        }
+
+        sb.replace(sb.length()-2, sb.length(), ""); // Remove the last comma
+        sb.append("]");
+        return sb.toString();
+    }
+
+    public String rawString() {
+        return Arrays.toString(array);
+    }
+
+    public String getPointers() {
+        return "Start: " + startPointer + " End: " + endPointer;
     }
 }
