@@ -9,6 +9,8 @@ import static org.junit.Assert.assertFalse;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 public class SetTest {
@@ -38,7 +40,7 @@ public class SetTest {
         testing.add(8);
         testing.add(12);
         testing.add(16);
-        testing.remove(8);
+        assertTrue(testing.remove(8));
         assertTrue(!testing.contains(8));
     }
 
@@ -173,5 +175,158 @@ public class SetTest {
         test.add(3);
 
         assertFalse(test2.equals(test)); // Test with additional values
+    }
+
+    /**
+     * Test the overload of the addAll method
+     */
+    @Test
+    public void testAddAllMethod() {
+        // Testing for purely set elements
+        Set<Integer> test = new Set<Integer>();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+
+        Set<Integer> test2 = new Set<Integer>();
+        test2.add(3);
+        test2.add(4);
+        test2.add(5);
+        test2.add(6);
+
+        test.addAll(test2);
+
+        assertTrue(test.contains(1));
+        assertTrue(test.contains(2));
+        assertTrue(test.contains(3));
+        assertTrue(test.contains(4));
+        assertTrue(test.contains(5));
+        assertTrue(test.contains(6));
+
+        // Test using a Sequence
+        Sequence<Integer> seq = new Sequence<>();
+        seq.append(1);
+        seq.append(2);
+        seq.append(3);
+        seq.append(4);
+
+        test.clear();
+        test.addAll(seq);
+
+        assertTrue(test.contains(1));
+        assertTrue(test.contains(2));
+        assertTrue(test.contains(3));
+        assertTrue(test.contains(4));
+
+        // Test using an ArrayList
+        ArrayList<Integer> ar = new ArrayList<>();
+        ar.add(1);
+        ar.add(2);
+        ar.add(3);
+        ar.add(4);
+
+        test.clear();
+        test.addAll(ar);
+
+        assertTrue(test.contains(1));
+        assertTrue(test.contains(2));
+        assertTrue(test.contains(3));
+        assertTrue(test.contains(4));
+    }
+
+    /**
+     * Test the overload of the retainAll method
+     */
+    @Test
+    public void testRetainAll() {
+        // Test with ModernCollections
+        Set<Integer> test = new Set<Integer>();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+
+        Set<Integer> test2 = new Set<Integer>();
+        test2.add(3);
+        test2.add(4);
+        test2.add(5);
+        test2.add(6);
+
+        test.retainAll(test2);
+
+        assertFalse(test.contains(1));
+        assertFalse(test.contains(2));
+        assertTrue(test.contains(3));
+        assertTrue(test.contains(4));
+        assertFalse(test.contains(5));
+        assertFalse(test.contains(6));
+
+        // Test with Java Collection
+        ArrayList<Integer> ar = new ArrayList<>();
+        ar.add(3);
+        ar.add(4);
+
+        test.clear();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+
+        test.retainAll(ar);
+
+        assertFalse(test.contains(1));
+        assertFalse(test.contains(2));
+        assertTrue(test.contains(3));
+        assertTrue(test.contains(4));
+    }
+
+    /**
+     * Test the overload of the removeAll method
+     */
+    /**
+     * Test the overload of the removeAll method
+     */
+    @Test
+    public void testRemoveAll() {
+        // Test with ModernCollections
+        Set<Integer> test = new Set<Integer>();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+
+        Set<Integer> test2 = new Set<Integer>();
+        test2.add(3);
+        test2.add(4);
+        test2.add(5);
+        test2.add(6);
+
+        test.removeAll(test2);
+
+        assertTrue(test.contains(1));
+        assertTrue(test.contains(2));
+        assertFalse(test.contains(3));
+        assertFalse(test.contains(4));
+        assertFalse(test.contains(5));
+        assertFalse(test.contains(6));
+
+        // Test with Java Collection
+        ArrayList<Integer> ar = new ArrayList<>();
+        ar.add(3);
+        ar.add(4);
+
+        test.clear();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+
+        test.removeAll(ar);
+
+        assertTrue(test.contains(1));
+        assertTrue(test.contains(2));
+        assertFalse(test.contains(3));
+        assertFalse(test.contains(4));
     }
 }
