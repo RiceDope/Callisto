@@ -1,5 +1,6 @@
 package com.rwalker;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -92,8 +93,8 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
     }
 
     /**
-     * Add all items in other set to a given set
-     * @param other Other set to add items from
+     * Add all items in the other collection to the set
+     * @param other Other collections items to be added
      * @return boolean True if the set has been modified
      */
     public boolean addAll(ModernCollections<E> other) {
@@ -110,6 +111,25 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
         return modified;
     }
 
+    /**
+     * Add all of the terms in the default java collection to the set
+     * @param other The Java Collection Framework Collection to add
+     * @return
+     */
+    public boolean addAll(Collection<E> other) {
+        boolean modified = false;
+        for (E value : other){
+            if (add(value)){
+                modified = true;
+            }
+        }
+        return modified;
+    }
+
+    /**
+     * Get the size of the set
+     * @return
+     */
     public int size() {
         return totalItems;
     }

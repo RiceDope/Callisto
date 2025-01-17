@@ -1,5 +1,7 @@
 package com.rwalker;
 
+import java.util.ArrayList;
+
 // import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 
@@ -34,9 +36,15 @@ public class ManualTest {
         set.add(6);
         set.add(7);
         set.add(8);
+        ArrayList<Integer> ar = new ArrayList<>();
+        ar.add(9);
+        ar.add(10);
+        ar.add(11);
+        ar.add(12);
         Set<Integer> testSet = new Set<>();
         testSet.addAll(seq);
         testSet.addAll(set);
+        testSet.addAll(ar);
         System.out.println(testSet);
 
     }
