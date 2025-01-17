@@ -17,7 +17,7 @@ import com.rwalker.UserNullSort;
 
  // TODO: implements SequenceStrategy<E>
 @SuppressWarnings({"unchecked", "unused"})
-public class RingBufferSequenceStrategy<E> {
+public class RingBufferSequenceStrategy<E> implements Iterable<E> {
     
     private int endPointer;
     private int startPointer;
@@ -65,8 +65,42 @@ public class RingBufferSequenceStrategy<E> {
      * @param element
      */
     public void append(E element) {
-        addToEnd(element);
+        // Then we can use insert to add the element
+        if (enforceSort) {
+            if (length() == 0){
+                addAtEndPointer(element);
+            } else {
+                /*
+                 * First we must work out the correct index for it to be inserted into
+                 * Then we need to calculate its index in the array "User index"
+                 * Then it must be inserted into the array
+                 */
+
+                 // HOW TO BINARY SEARCH WHEN WE ARE IN AN INVERSION
+                 
+            }
+        } else {
+            addToEnd(element);
+        }
     }
+
+    /**
+     * Clears the array
+     */
+    public void clear() {
+        array = new Object[initialSize];
+        startPointer = 0;
+        endPointer = 0;
+    }
+
+    /**
+     * Empties the array
+     */
+    public void empty() {
+        clear();
+    }
+
+
 
     /**
      * Insert an item into the array at the specific index
@@ -248,6 +282,84 @@ public class RingBufferSequenceStrategy<E> {
             }
         }
     }
+
+    /**
+     * Sorts the array based on the field defaultComparator. Must be set
+     * This will overwrite the current array with the sorted version
+     * Use a comparator for a returnable type
+     */
+    public void sort(){
+
+        if (defaultComparator != null){
+            try {
+                // Sort the array
+                Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
+                Arrays.fill(array, null); // Null out original to maintain terms
+                System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
+
+            } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+                System.err.println(e);
+                throw new UnknownError("Comparator incorrect or not set");
+            }
+        } else {
+            throw new IllegalStateException("Default comparator must be set to use this sort");
+        }
+    }
+
+    /**
+     * Sort the array acording to the given comparator
+     */
+    public void sortOnwards() {
+        if (!(length() < 0) && !(length() == 1)){ // Only sort when we have something to not nothing or 1 item
+            sort();
+        }
+        setEnforceSort(true);
+    }
+
+    /**
+     * Sort the array and then enforce sort using the given comparator
+     * @param comp A comparator that will then become the default comparator used
+     */
+    public void sortOnwards(Comparator<E> comp) {
+        this.defaultComparator = comp;
+        sortOnwards();
+    }
+
+    /**
+     * Sorts the array based on the comarator given and returns a new Copy.
+     * This method does not overwrite the current array
+     * 
+     * @param comparator The comparator for comparing the types
+     * @return A sorted Sequence
+     */
+    public Sequence<E> sortCopy(Comparator<E> comparator){
+        try {
+            // Sort the array
+            Object[] sortedArr = UserNullSort.sort(array, comparator, startPointer, endPointer, false);
+            Sequence<E> sortedSeq = new Sequence<E>(array.length, growthRate, comparator); // Instantiate sequence with same settings
+            sortedSeq.setSubArray(startPointer, endPointer, sortedArr); // Set the sub array
+            return sortedSeq;
+        } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+            System.err.println(e);
+            throw new UnknownError("Comparator either not valid or cannot be compared");
+        }
+    }
+
+    /**
+     * Stop sorting the array automatically
+     */
+    public void stopSorting() {
+        setEnforceSort(false);
+    }
+
+    /**
+     * Set the comparator to be used
+     * @param comparator
+     */
+    public void setComparator (Comparator<E> comparator){
+        defaultComparator = comparator;
+    }
+
     /**
      * Calculates the correct index for the array based on the pointers
      * @param index
@@ -327,6 +439,8 @@ public class RingBufferSequenceStrategy<E> {
         // Edge case: When we have inverted and then fill the array endPointer is no longer less than startPointer
         // Try catch deals with this edge case correctly. Discovers the inversion fill before it can occur.
 
+        // Deal with expansion edge case
+
         if (!(endPointer < startPointer)){ // We are working in normal space
             if (endPointer < array.length-1){ // If we are smaller than the array then just add
                 addAtEndPointer(element);
@@ -348,7 +462,6 @@ public class RingBufferSequenceStrategy<E> {
             }
         }
 
-        // Deal with expansion edge case
         try {
             if (endPointer == startPointer && array[startPointer-1] != null) {
                 expandArray();
@@ -356,7 +469,6 @@ public class RingBufferSequenceStrategy<E> {
         } catch (Exception e) {
             // Do nothing
         }
-        
     }
 
     /**
@@ -432,11 +544,62 @@ public class RingBufferSequenceStrategy<E> {
         return sb.toString();
     }
 
+    private void setEnforceSort(boolean enforceSort) {
+        this.enforceSort = enforceSort;
+    }
+
+    @Override
+    public boolean equals(Object seq) {
+        if (seq instanceof Sequence) {
+            Sequence<E> sequence = (Sequence<E>) seq;
+            if (sequence.size() != size()) {
+                return false;
+            }
+            for (int i = 0; i < size(); i++) {
+                if (!sequence.get(i).equals(get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public String rawString() {
         return Arrays.toString(array);
     }
 
     public String getPointers() {
         return "Start: " + startPointer + " End: " + endPointer;
+    }
+
+    class SequenceIterator implements Iterator<E> {
+
+        private int currentIndex;
+
+        public SequenceIterator() {
+            currentIndex = startPointer;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex != endPointer;
+        }
+
+        @Override
+        public E next() {
+            E element = (E) array[currentIndex];
+            currentIndex++;
+            if (currentIndex == array.length) {
+                currentIndex = 0;
+            }
+            return element;
+        }
+
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new SequenceIterator();
     }
 }

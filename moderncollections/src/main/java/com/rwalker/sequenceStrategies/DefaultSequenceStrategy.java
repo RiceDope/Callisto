@@ -243,6 +243,15 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
     }
 
     /**
+     * Sort the array and then enforce sort using the given comparator
+     * @param comp A comparator that will then become the default comparator used
+     */
+    public void sortOnwards(Comparator<E> comp) {
+        this.defaultComparator = comp;
+        sortOnwards();
+    }
+
+    /**
      * Sorts the array based on the comarator given and returns a new Copy.
      * This method does not overwrite the current array
      * 
@@ -260,8 +269,6 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
             System.err.println(e);
             throw new UnknownError("Comparator either not valid or cannot be compared");
         }
-        
-
     }
 
     /**

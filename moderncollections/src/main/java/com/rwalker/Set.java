@@ -9,6 +9,8 @@ import java.util.Iterator;
  * @version 10-01-2025
  */
 
+ //TODO: Specialisation for small sets
+
 @SuppressWarnings("unchecked")
 public class Set<E> implements Iterable<E> {
     
@@ -98,6 +100,7 @@ public class Set<E> implements Iterable<E> {
 
         // Used to track if we have modified on any additions
         Set<Boolean> modifiedSet = new Set<Boolean>(2);
+        //TODO: Change to boolean
 
         // Loop over each item in the other set
         for (SetEntry<E> entry : other.items){
