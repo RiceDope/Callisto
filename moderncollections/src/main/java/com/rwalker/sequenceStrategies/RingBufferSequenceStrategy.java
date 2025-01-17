@@ -65,23 +65,8 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
      * @param element
      */
     public void append(E element) {
-        // Then we can use insert to add the element
-        if (enforceSort) {
-            if (length() == 0){
-                addAtEndPointer(element);
-            } else {
-                /*
-                 * First we must work out the correct index for it to be inserted into
-                 * Then we need to calculate its index in the array "User index"
-                 * Then it must be inserted into the array
-                 */
-
-                 // HOW TO BINARY SEARCH WHEN WE ARE IN AN INVERSION
-                 
-            }
-        } else {
-            addToEnd(element);
-        }
+        // TODO: Make sure to handle the sortedCase
+        addToEnd(element);
     }
 
     /**

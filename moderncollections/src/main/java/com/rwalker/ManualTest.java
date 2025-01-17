@@ -9,20 +9,17 @@ public class ManualTest {
         SequenceContext<Integer> context = new SequenceContext<>(0, 0, 5, 1.5, false, (a, b) -> a - b, 1);
         RingBufferSequenceStrategy<Integer> seq = new RingBufferSequenceStrategy<Integer>(context);
 
-        seq.append(100);
+        seq.sortOnwards();
+        seq.append(1);
         seq.append(2);
-        seq.append(7);
-        seq.append(10);
-        seq.remove(3);
-        seq.append(55);
-        seq.append(13);
-
+        seq.append(3);
+        seq.append(4);
+        seq.remove(0);
+        seq.remove(0);
+        seq.remove(0);
+        seq.append(5);
+        seq.append(6);
         
-
-        System.out.println(seq.rawString());
-        System.out.println(seq);
-
-        seq.sort();
 
         System.out.println(seq.rawString());
         System.out.println(seq);

@@ -98,20 +98,22 @@ public class Set<E> implements Iterable<E> {
      */
     public boolean addAll(Set<E> other) {
 
-        // Used to track if we have modified on any additions
-        Set<Boolean> modifiedSet = new Set<Boolean>(2);
-        //TODO: Change to boolean
+        boolean changedAnything = false;
 
         // Loop over each item in the other set
         for (SetEntry<E> entry : other.items){
             while (entry != null){
-                modifiedSet.add(add(entry.getValue()));
+                boolean result = add(entry.getValue());
                 entry = entry.getNext();
+
+                if (result == true) {
+                    changedAnything = true;
+                }
             }
         }
 
         // If there is 1 or more modifications the set will contain true
-        if (modifiedSet.contains(true)) {
+        if (changedAnything) {
             return true;
         }
 

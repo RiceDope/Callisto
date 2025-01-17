@@ -158,7 +158,15 @@ public class BinarySearch {
                 }
             }
         } else {
-            // TODO: NEEDS IMPLEMENTATION MAKE SURE THAT WE TAKE INTO ACCOUNT THE INVERSION
+            while(!found){
+
+                // Control flow for calculating index
+                int midPoint = ((curTop - curBottom)/2)+curBottom; // Will calculate our midpoint
+                if (curBottom < curTop) {
+                    
+                }
+    
+            }
         }
         
         // Unreachable code
