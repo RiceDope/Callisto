@@ -14,7 +14,7 @@ import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
 
-public class Sequence<E> implements Iterable<E> {
+public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>();
     private SequenceStrategy<E> strat;

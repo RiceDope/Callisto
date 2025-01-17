@@ -12,7 +12,7 @@ import java.util.Iterator;
  //TODO: Specialisation for small sets
 
 @SuppressWarnings("unchecked")
-public class Set<E> implements Iterable<E> {
+public class Set<E> implements Iterable<E>, ModernCollections<E> {
     
     private SetEntry<E>[] items;
     private int buckets = 16;
@@ -96,28 +96,18 @@ public class Set<E> implements Iterable<E> {
      * @param other Other set to add items from
      * @return boolean True if the set has been modified
      */
-    public boolean addAll(Set<E> other) {
+    public boolean addAll(ModernCollections<E> other) {
 
-        boolean changedAnything = false;
+        boolean modified = false;
+        Iterator<E> iterator = other.iterator();
 
-        // Loop over each item in the other set
-        for (SetEntry<E> entry : other.items){
-            while (entry != null){
-                boolean result = add(entry.getValue());
-                entry = entry.getNext();
-
-                if (result == true) {
-                    changedAnything = true;
-                }
+        while(iterator.hasNext()){
+            if (add(iterator.next())){
+                modified = true;
             }
         }
 
-        // If there is 1 or more modifications the set will contain true
-        if (changedAnything) {
-            return true;
-        }
-
-        return false;
+        return modified;
     }
 
     public int size() {
