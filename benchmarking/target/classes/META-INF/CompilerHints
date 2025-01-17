@@ -3,10 +3,6 @@ dontinline,*.*_avgt_jmhStub
 dontinline,*.*_sample_jmhStub
 dontinline,*.*_ss_jmhStub
 dontinline,*.*_thrpt_jmhStub
-inline,org/rwalker/benchmarking/BenchMarkInstantiation.testArrayListInstantiation
-inline,org/rwalker/benchmarking/BenchMarkInstantiation.testHashMapInstantiation
-inline,org/rwalker/benchmarking/BenchMarkInstantiation.testMapInstantiation
-inline,org/rwalker/benchmarking/BenchMarkInstantiation.testSequenceInstantiation
 inline,org/rwalker/benchmarking/BenchMarkSequence.setUpArrayListWIthSize
 inline,org/rwalker/benchmarking/BenchMarkSequence.setupArrayList
 inline,org/rwalker/benchmarking/BenchMarkSequence.testSequenceAppend

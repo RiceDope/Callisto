@@ -124,6 +124,79 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
             }
         }
         return modified;
+    }    
+
+    /**
+     * Remove all operation to be used with other ModernCollections
+     * @param other
+     * @return
+     */
+    public boolean removeAll(ModernCollections<E> other) {
+        boolean modified = false;
+        Iterator<E> iterator = other.iterator();
+
+        while(iterator.hasNext()){
+            if (remove(iterator.next())){
+                modified = true;
+            }
+        }
+
+        return modified;
+    }
+
+    /**
+     * Remove all operation to be used with other Java Collection Framework Collections
+     * @param other
+     * @return
+     */
+    public boolean removeAll(Collection<E> other) {
+        boolean modified = false;
+        for (E value : other){
+            if (remove(value)){
+                modified = true;
+            }
+        }
+        return modified;
+    }
+
+    /**
+     * Retain all operation to be used with other ModernCollections
+     * @param other
+     * @return
+     */
+    public boolean retainAll(ModernCollections<E> other) {
+        boolean modified = false;
+        Iterator<E> iterator = iterator();
+
+        while(iterator.hasNext()){
+            E value = iterator.next();
+            if (!other.contains(value)){
+                remove(value);
+                modified = true;
+            }
+        }
+
+        return modified;
+    }
+
+    /**
+     * Retain all operation to be used with other Java Collection Framework Collections
+     * @param other
+     * @return
+     */
+    public boolean retainAll(Collection<E> other) {
+        boolean modified = false;
+        Iterator<E> iterator = iterator();
+
+        while(iterator.hasNext()){
+            E value = iterator.next();
+            if (!other.contains(value)){
+                remove(value);
+                modified = true;
+            }
+        }
+
+        return modified;
     }
 
     /**
@@ -138,25 +211,27 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
      * Remove an item from the set
      * @param value
      */
-    public void remove(E value) {
+    public boolean remove(E value) {
         int index = getHashCode(value);
         if (items[index] == null){
-            return;
+            return false;
         }
         if (items[index].getValue().equals(value)){
             items[index] = items[index].getNext();
             totalItems--;
-            return;
+            return true;
         }
         SetEntry<E> current = items[index];
         while (current.getNext() != null){
             if (current.getNext().getValue().equals(value)){
                 current.setNext(current.getNext().getNext());
                 totalItems--;
-                return;
+                return true;
             }
             current = current.getNext();
         }
+
+        return false;
     }
 
     /**
@@ -294,7 +369,9 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
                 entry = entry.getNext();
             }
         }
-        sb.replace(sb.length()-2, sb.length(), "");
+        if (size() != 0){
+            sb.replace(sb.length()-2, sb.length(), "");
+        }
         sb.append("]");
         return sb.toString();
     }

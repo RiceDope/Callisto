@@ -32,19 +32,21 @@ public class ManualTest {
         seq.append(3);
         seq.append(4);
         Set<Integer> set = new Set<>();
-        set.add(5);
-        set.add(6);
-        set.add(7);
-        set.add(8);
+        set.add(1);
+        set.add(2);
+        set.add(3);
+        set.add(4);
         ArrayList<Integer> ar = new ArrayList<>();
-        ar.add(9);
-        ar.add(10);
-        ar.add(11);
-        ar.add(12);
+        ar.add(1);
+        ar.add(2);
         Set<Integer> testSet = new Set<>();
         testSet.addAll(seq);
+        System.out.println(testSet);
+        testSet.removeAll(seq);
+        System.out.println(testSet);
         testSet.addAll(set);
-        testSet.addAll(ar);
+        System.out.println(testSet);
+        testSet.retainAll(ar);
         System.out.println(testSet);
 
     }
