@@ -329,4 +329,22 @@ public class SetTest {
         assertFalse(test.contains(3));
         assertFalse(test.contains(4));
     }
+
+    /**
+     * Test that the iterator works in insertion order
+     */
+    @Test
+    public void testIteratorOrder() {
+        Set<Integer> test = new Set<Integer>();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+
+        int i = 1;
+        for (Integer val : test) {
+            assertEquals(i, val.intValue());
+            i++;
+        }
+    }
 }

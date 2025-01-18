@@ -16,6 +16,8 @@ import java.util.Iterator;
 public class Set<E> implements Iterable<E>, ModernCollections<E> {
     
     private SetEntry<E>[] items;
+    private SetEntry<E> firstInserted; // Beginning of the doubly linked list
+    private SetEntry<E> lastInserted; // Most recently inserted item
     private int buckets = 16;
     private int totalItems = 0;
     private double overloadFactor = 1.25;
@@ -69,6 +71,7 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
         // If we have a completely empty bucket
         if (items[index] == null){
             items[index] = new SetEntry<E>(value);
+            addInsetionOrder(items[index]);
             return true;
         }
         else {
@@ -84,6 +87,7 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
             }
             if (!current.getValue().equals(value)){ // Only add if item does not exist
                 current.setNext(new SetEntry<E>(value));
+                addInsetionOrder(current.getNext());
                 return true;
             }
         }
@@ -217,6 +221,7 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
             return false;
         }
         if (items[index].getValue().equals(value)){
+            removeInsertionOrder(items[index]);
             items[index] = items[index].getNext();
             totalItems--;
             return true;
@@ -224,6 +229,7 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
         SetEntry<E> current = items[index];
         while (current.getNext() != null){
             if (current.getNext().getValue().equals(value)){
+                removeInsertionOrder(items[index]);
                 current.setNext(current.getNext().getNext());
                 totalItems--;
                 return true;
@@ -265,6 +271,34 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
 
     public boolean isEmpty() {
         return totalItems == 0;
+    }
+
+    private boolean addInsetionOrder(SetEntry<E> entry) {
+        if (firstInserted == null) {
+            firstInserted = entry;
+            lastInserted = firstInserted;
+            return true;
+        }
+        lastInserted.setNextInsertion(entry);
+        entry.setPreviousInsertion(lastInserted);
+        lastInserted = entry;
+        return true;
+    }
+
+    private boolean removeInsertionOrder(SetEntry<E> entry) {
+        if (entry == firstInserted){
+            firstInserted = entry.getNextInsertion();
+        }
+        if (entry == lastInserted){
+            lastInserted = entry.getPreviousInsertion();
+        }
+        if (entry.getPreviousInsertion() != null){
+            entry.getPreviousInsertion().setNextInsertion(entry.getNextInsertion());
+        }
+        if (entry.getNextInsertion() != null){
+            entry.getNextInsertion().setPreviousInsertion(entry.getPreviousInsertion());
+        }
+        return true;
     }
 
     /**
@@ -317,12 +351,10 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
     public E[] toArray() {
         E[] array = (E[]) new Object[totalItems];
         int index = 0;
-        for (SetEntry<E> entry : items){
-            while (entry != null){
-                array[index] = entry.getValue();
-                index++;
-                entry = entry.getNext();
-            }
+        Iterator<E> it = iterator();
+        while (it.hasNext()){
+            array[index] = it.next();
+            index++;
         }
         return array;
     }
@@ -362,12 +394,10 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (SetEntry<E> entry : items){
-            while (entry != null){
-                sb.append(entry.getValue());
-                sb.append(", ");
-                entry = entry.getNext();
-            }
+        Iterator<E> it = iterator();
+        while (it.hasNext()){
+            sb.append(it.next());
+            sb.append(", ");
         }
         if (size() != 0){
             sb.replace(sb.length()-2, sb.length(), "");
@@ -409,17 +439,12 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
     class SetIterator implements Iterator<E> {
 
         private int index = 0;
-        private SetEntry<E> current = items[index];
+        private SetEntry<E> current = firstInserted;
 
         @Override
         public boolean hasNext() {
-            if (current != null){
+            if (current != null) {
                 return true;
-            }
-            for (int i = index+1; i < buckets; i++){
-                if (items[i] != null){
-                    return true;
-                }
             }
             return false;
         }
@@ -436,7 +461,7 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
                 }
             }
             E value = current.getValue();
-            current = current.getNext();
+            current = current.getNextInsertion();
             return value;
         }
     }
