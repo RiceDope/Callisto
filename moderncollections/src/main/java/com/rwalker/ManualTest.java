@@ -44,11 +44,12 @@ public class ManualTest {
         seq.append(6);
         System.out.println(seq.rawString());
         System.out.println(seq);
-        System.out.println(seq.getPointers());
         seq.append(12);
         seq.append(3);
         System.out.println(seq.rawString());
         System.out.println(seq);
+        seq.stopSorting();
+        System.out.println(seq.contains(3));
 
         // System.out.println(seq);
 

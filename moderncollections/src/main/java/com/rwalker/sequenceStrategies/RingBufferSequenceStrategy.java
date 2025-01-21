@@ -15,9 +15,8 @@ import com.rwalker.UserNullSort;
  * a queue/stack.
  */
 
- // TODO: implements SequenceStrategy<E>
-@SuppressWarnings({"unchecked", "unused"})
-public class RingBufferSequenceStrategy<E> implements Iterable<E> {
+@SuppressWarnings({"unchecked"})
+public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrategy<E> {
     
     private int endPointer;
     private int startPointer;
@@ -76,6 +75,10 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
             insertionIndex = convertPureArrToBuffer(insertionIndex);
             insert(insertionIndex, element);
         }
+    }
+
+    public int rawLength() {
+        return array.length;
     }
 
     /**
@@ -380,6 +383,115 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
     }
 
     /**
+     * Does the Sequence contain the term given
+     * @return
+     */
+    public boolean contains(E element) {
+        if (!enforceSort) { // Normal search
+            for (int i = startPointer; i != endPointer; i++) {
+                if (i == array.length) {
+                    i = 0;
+                }
+                if (array[i].equals(element)) {
+                    return true;
+                }
+            }
+        } else { // Binary search
+            int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
+            if (index < endPointer && array[index].equals(element)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the first index of the given element
+     * @param element
+     * @return
+     */
+    public Integer firstIndexOf(E element) {
+        if (!enforceSort) { // Normal search
+            for (int i = startPointer; i != endPointer; i++) {
+                if (i == array.length) {
+                    i = 0;
+                }
+                if (array[i].equals(element)) {
+                    return i;
+                }
+            }
+        } else { // Binary search
+            int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
+            if (index < endPointer && array[index].equals(element)) {
+                return index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns all indexes of the given element
+     * @param element
+     * @return
+     */
+    public int[] allIndexesOf(E element) {
+        int[] indexes = new int[size()];
+        int index = 0;
+        for (int i = startPointer; i != endPointer; i++) {
+            if (i == array.length) {
+                i = 0;
+            }
+            if (array[i].equals(element)) {
+                indexes[index] = i;
+                index++;
+            }
+        }
+        return indexes;
+    }
+
+    /**
+     * Get the growth rate Sequence is using
+     * @return Double growth rate
+     */
+    public double getGrowthRate(){
+        return growthRate;
+    }
+
+    /**
+     * Set a custom growth rate for the array
+     * @param newRate The new growth rate
+     */
+    public void setGrowthRate(double newRate){
+        if (newRate >  1.0){
+            this.growthRate = newRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+    }
+
+    /**
+     * Retrieve the sub array
+     * @return
+     */
+    public Object[] getSubArray(){
+        return array;
+    }
+
+    /**
+     * Allow the setting of the sub array through passing in parameters
+     * @param startPointer
+     * @param endPointer
+     * @param array
+     */
+    public void setSubArray(int startPointer, int endPointer, Object[] array){
+        this.startPointer = startPointer;
+        this.endPointer = endPointer;
+        this.array = array;
+    }
+
+    /**
      * Calculates the correct index for the array based on the pointers
      * @param index
      * @return
@@ -415,6 +527,50 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
         } else {
             fillGap(realIndex);
         }
+    }
+
+    /**
+     * Exports the array in a common format
+     * @return The Object array
+     */
+    public Object[] exportArray() {
+        Object[] arr = new Object[size()];
+        int index = 0;
+        for (Object obj : array) {
+            arr[index] = obj;
+        }
+
+        return arr;
+    }
+
+    /**
+     * Imports the array into the sequence
+     * @param array
+     */
+    public void importArray(Object[] array) {
+        this.array = array;
+    }
+
+    /**
+     * Exports the context of the sequence
+     * @return The context of the sequence
+     */
+    public SequenceContext<E> exportContect() {
+        return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion);
+    }
+
+    /**
+     * Imports the context of the sequence
+     * @param context
+     */
+    public void importContext(SequenceContext<E> context) {
+        this.startPointer = context.startPointer;
+        this.endPointer = context.endPointer;
+        this.initialSize = context.initialSize;
+        this.growthRate = context.growthRate;
+        this.enforceSort = context.enforceSort;
+        this.defaultComparator = context.comparator;
+        this.minumumExpansion = context.minimumExpansion;
     }
 
     /**
@@ -586,10 +742,6 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
 
     public String rawString() {
         return Arrays.toString(array);
-    }
-
-    public String getPointers() {
-        return "Start: " + startPointer + " End: " + endPointer;
     }
 
     class SequenceIterator implements Iterator<E> {
