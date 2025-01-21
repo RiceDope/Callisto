@@ -116,7 +116,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
                     * Then use the insert operation to do this
                     */
 
-                    int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, item, defaultComparator);
+                    int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, item, defaultComparator, size());
                     int appendIndex = index-startPointer; // Convert from subarray index
                     insert(appendIndex, item);
 
@@ -468,7 +468,6 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * @return Int length of sequence
      */
     public int length(){
-    
         // Length can be worked out via the difference between the startIndex and endIndex with removed taken off to track non existant terms.
         return endPointer - startPointer;
     }
@@ -599,7 +598,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         } else if (enforceSort){ // If sorted then we can search quicker
 
             if (!(value instanceof UserNull)){
-                int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, value, defaultComparator);
+                int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, value, defaultComparator, size());
 
                 // Now check if the term at that position is what we are expecting (This is due to the way findInsertionIndex works)
                 if (array[index].equals(value)){
@@ -812,6 +811,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         for (int i = gapIndex; i < endPointer; i++){
             array[i] = array[i+1];
         }
+        --endPointer; // TODO: Make an exception for when we are shifting all from startPointer to endPointer
     }
 
     /*

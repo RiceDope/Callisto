@@ -65,19 +65,15 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
      * @param element
      */
     public void append(E element) {
-        // TODO: Make sure to handle the sortedCase
         if (!enforceSort) {
             addToEnd(element);
         } else if (endPointer > startPointer) { // We are just a regular array
-            System.out.println("DOING BINARY SEARCH");
-            int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator);
+            int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
             int appendIndex = index-startPointer; // Convert from subarray index
             insert(appendIndex, element);
         } else { // We are using a ringBuffer
-            System.out.println("DOING LINEAR SEARCH");
             int insertionIndex = BinarySearch.findInsertionIndexBufferLinearSearch((E[]) array, startPointer, endPointer, element, defaultComparator, size());
             insertionIndex = convertPureArrToBuffer(insertionIndex);
-            System.out.println("Insertion Index: " + insertionIndex);
             insert(insertionIndex, element);
         }
     }
@@ -146,6 +142,9 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
                 if (array[startPointer-1] == null) { // We can decrement startPointer
                     startPointer--;
                     array[startPointer] = element;
+                    if (endPointer == startPointer) { // We have decremented with space but not have no space left
+                        expandArray();
+                    }
                 } else { // We must expand if no space before
                     expandArray();
                     shift(startPointer);
@@ -185,6 +184,8 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
                 currentIndex--;
             }  
         }
+
+        endPointer++;
     }
 
     /**

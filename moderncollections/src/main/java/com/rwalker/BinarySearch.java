@@ -6,7 +6,7 @@ import java.util.Comparator;
 /**
  * A modified form of binary search for use with my custom Sequence data type
  * @author Rhys Walker
- * @since 21/10/2024
+ * @version 21/01/2025
  */
 
 public class BinarySearch {
@@ -21,7 +21,15 @@ public class BinarySearch {
      * @param comparator A comparator to be used when sorting
      * @return The index that is to be used
      */
-    public static <E> int findInsertionIndex(E[] array, int startPointer, int endPointer, E term, Comparator<E> comparator){
+    public static <E> int findInsertionIndex(E[] array, int startPointer, int endPointer, E term, Comparator<E> comparator, int size){
+
+        if (size == 1) { // We either insert at 0 or 1
+            if (comparator.compare(array[startPointer], term) < 0) {
+                return endPointer;
+            } else {
+                return startPointer;
+            }
+        }
 
         // Allows us to exit loop once term has been found
         boolean found = false;
@@ -87,14 +95,14 @@ public class BinarySearch {
     }
 
     /**
-     * Return the correct index to insert a term into
+     * Return the correct index to insert a term into (For use with a ring buffer) It converts into a pure array (Sequential) and then returns that
      * @param <E>
      * @param array The array that is to be searched through
      * @param startPointer The start pointer of the array
      * @param endPointer The end pointer of the array
      * @param term The term that we want to find the correct position of
      * @param comparator A comparator to be used when sorting
-     * @return The index that is to be used
+     * @return The index that is to be used (In subArray form)
      */
     public static <E> int findInsertionIndexBufferLinearSearch(E[] array, int startPointer, int endPointer, E term, Comparator<E> comparator, int size){
 
