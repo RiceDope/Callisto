@@ -200,7 +200,11 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         if (indexToAdjust > endPointer || index < 0){ // If in unset positions
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
         } else { // All good
-            return (E) array[indexToAdjust];
+            E term = (E) array[indexToAdjust];
+            if (term instanceof UserNull) {
+                term = null;
+            }
+            return term;
         }
 
     }
