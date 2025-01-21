@@ -1,5 +1,6 @@
 package com.rwalker;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -44,7 +45,7 @@ public class BinarySearch {
                     return midPoint;
                 } else if (comparator.compare(term, array[midPoint]) > 0) {
                     // If we are strictly one above our point then insert there
-                    return midPoint++;
+                    return ++midPoint;
                 } else {
                     throw new ArrayIndexOutOfBoundsException();
                 }
@@ -83,5 +84,65 @@ public class BinarySearch {
         // Unreachable code
         return 0;
 
+    }
+
+    /**
+     * Return the correct index to insert a term into
+     * @param <E>
+     * @param array The array that is to be searched through
+     * @param startPointer The start pointer of the array
+     * @param endPointer The end pointer of the array
+     * @param term The term that we want to find the correct position of
+     * @param comparator A comparator to be used when sorting
+     * @return The index that is to be used
+     */
+    public static <E> int findInsertionIndexBufferLinearSearch(E[] array, int startPointer, int endPointer, E term, Comparator<E> comparator, int size){
+
+        // Allows us to exit loop once term has been foun
+
+        if (startPointer == endPointer) {
+            // Must be our first element just insert at startPointer
+            return startPointer;
+        } // else if (size == 1) {
+        //     if (comparator.compare(array[startPointer], term) < 0) {
+        //         return endPointer;
+        //     } else {
+        //         return startPointer;
+        //     }
+        // }
+
+        int count = startPointer;
+        for (int i = 0; i != size+1; i++) {
+            if (count == array.length) {
+                count = 0;
+            }
+            if (count == endPointer) { // We have reached end with no insertion so just return and insert at end
+                return count;
+            }
+
+            // Now perform checks at our current position
+            System.out.println(array[count]);
+            if (comparator.compare(array[count], term )== 0){
+                return count; // We are equal so just insert there
+            } else if (comparator.compare(array[count], term) > 0) {
+                // TODO: Potential bug here where count == 0 so doing -- does not wrap around but gives an incorrect index
+                return count; // We are less than so insert before
+            }
+
+            count++;
+
+        }
+
+        // Unreachable code
+        return 0;
+
+    }
+
+    private static int convertToBuffer(int index, int size, int sp, int ep, int rawLen) {
+        if (index > size-sp) { // We are in the buffer segment
+            return index - (rawLen-(sp-1));
+        } else {
+            return index + sp;
+        }
     }
 }

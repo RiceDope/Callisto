@@ -66,7 +66,40 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
      */
     public void append(E element) {
         // TODO: Make sure to handle the sortedCase
-        addToEnd(element);
+        if (!enforceSort) {
+            addToEnd(element);
+        } else if (endPointer > startPointer) { // We are just a regular array
+            System.out.println("DOING BINARY SEARCH");
+            int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator);
+            int appendIndex = index-startPointer; // Convert from subarray index
+            insert(appendIndex, element);
+        } else { // We are using a ringBuffer
+            System.out.println("DOING LINEAR SEARCH");
+            int insertionIndex = BinarySearch.findInsertionIndexBufferLinearSearch((E[]) array, startPointer, endPointer, element, defaultComparator, size());
+            insertionIndex = convertPureArrToBuffer(insertionIndex);
+            System.out.println("Insertion Index: " + insertionIndex);
+            insert(insertionIndex, element);
+        }
+    }
+
+    /**
+     * Convert an index from a regular sequential array into a ringBuffer implementation
+     * @param index
+     * @return
+     */
+    private int convertPureArrToBuffer(int index) {
+        if (endPointer < startPointer) { // Inversion
+            if (index > startPointer && index > endPointer) { // We are in the regular part of the array
+                return index-startPointer;
+            } else if (index < startPointer && index <= endPointer) {
+                return (array.length-startPointer)+index;
+            }
+        } else {
+            return index-startPointer;
+        }
+        
+        // Unreachable code
+        return 0;
     }
 
     /**
@@ -142,16 +175,16 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E> {
         }
 
         int currentIndex = endPointer;
-        while (currentIndex != indexFrom) {
-            if (currentIndex == 0) {
-                currentIndex = array.length;
-            }
-            array[currentIndex] = array[currentIndex-1];
-            currentIndex--;
+
+        while(currentIndex != indexFrom) {
+            if (currentIndex == 0){
+                array[currentIndex] = array[array.length-1];
+                currentIndex = array.length-1;
+            } else {
+                array[currentIndex] = array[currentIndex-1];
+                currentIndex--;
+            }  
         }
-
-        endPointer++;
-
     }
 
     /**
