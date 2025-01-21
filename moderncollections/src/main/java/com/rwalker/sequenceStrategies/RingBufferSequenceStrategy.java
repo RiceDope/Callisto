@@ -66,14 +66,20 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
     public void append(E element) {
         if (!enforceSort) {
             addToEnd(element);
-        } else if (endPointer > startPointer) { // We are just a regular array
-            int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
-            int appendIndex = index-startPointer; // Convert from subarray index
-            insert(appendIndex, element);
-        } else { // We are using a ringBuffer
-            int insertionIndex = BinarySearch.findInsertionIndexBufferLinearSearch((E[]) array, startPointer, endPointer, element, defaultComparator, size());
-            insertionIndex = convertPureArrToBuffer(insertionIndex);
-            insert(insertionIndex, element);
+        } else if (element != null) {
+            if (endPointer > startPointer) { // We are just a regular array
+                int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
+                int appendIndex = index-startPointer; // Convert from subarray index
+                insert(appendIndex, element);
+            } else { // We are using a ringBuffer
+                int insertionIndex = BinarySearch.findInsertionIndexBufferLinearSearch((E[]) array, startPointer, endPointer, element, defaultComparator, size());
+                insertionIndex = convertPureArrToBuffer(insertionIndex);
+                insert(insertionIndex, element);
+            }
+        }
+        else {
+            element = (E) new UserNull<E>();
+            addToEnd(element);
         }
     }
 
@@ -141,7 +147,6 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
         } else if (realIndex == startPointer) { // Inserting at start
 
             if (startPointer != 0){ // If we have space before
-
                 if (array[startPointer-1] == null) { // We can decrement startPointer
                     startPointer--;
                     array[startPointer] = element;
@@ -151,6 +156,15 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
                 } else { // We must expand if no space before
                     expandArray();
                     shift(startPointer);
+                }
+            } else { // Becomes just a normal insert
+                if (length() < array.length - 1) { // We have enough space to insert
+                    shift(realIndex);
+                    array[realIndex] = element;
+                } else { // We must expand the array
+                    expandArray();
+                    shift(realIndex);
+                    array[realIndex] = element;
                 }
             }
         } else { // We are inserting into the array in a central location
@@ -213,7 +227,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
             element = (E) new UserNull<E>();
         }
         if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
         }
         array[calculateIndex(index)] = element;
     }
@@ -227,9 +241,13 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      */
     public E get(int index) {
         if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
         }
-        return (E) array[calculateIndex(index)];
+        E term = (E) array[calculateIndex(index)];
+        if (term instanceof UserNull) {
+            term = null;
+        }
+        return term;
     }
 
     /**
@@ -238,9 +256,12 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      */
     public E dequeue() {
         if (isEmpty()) {
-            throw new IndexOutOfBoundsException("Cannot dequeue from an empty sequence");
+            throw new NullPointerException("Cannot dequeue from an empty sequence");
         }
         E element = (E) array[startPointer];
+        if (element instanceof UserNull) {
+            element = null;
+        }
         array[startPointer] = null;
         startPointer++;
         return element;
@@ -279,6 +300,9 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
             throw new IndexOutOfBoundsException("Cannot pop from an empty sequence");
         }
         E element = (E) array[endPointer-1];
+        if (element instanceof UserNull) {
+            element = null;
+        }
         array[endPointer-1] = null;
         endPointer--;
         return element;
@@ -291,7 +315,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      */
     public E peek(HowToFunction acting) {
         if (isEmpty()) {
-            throw new IndexOutOfBoundsException("Cannot peek from an empty sequence");
+            throw new NullPointerException("Cannot peek from an empty sequence");
         }
 
         if (acting == HowToFunction.QUEUE) { // NO EXTRA CODE FOR QUEUE
@@ -387,6 +411,11 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      * @return
      */
     public boolean contains(E element) {
+
+        if (element == null) {
+            element = (E) new UserNull<E>();
+        }
+
         if (!enforceSort) { // Normal search
             for (int i = startPointer; i != endPointer; i++) {
                 if (i == array.length) {
@@ -396,10 +425,16 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
                     return true;
                 }
             }
-        } else { // Binary search
+        } else if (enforceSort && !(element instanceof UserNull)){ // Binary search as long as not null
             int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
             if (index < endPointer && array[index].equals(element)) {
                 return true;
+            }
+        } else { // Nulls are appended to the end of a sorted sequence
+            if (array[endPointer-1] instanceof UserNull){
+                return true;
+            } else {
+                return false;
             }
         }
 
@@ -448,7 +483,15 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
                 index++;
             }
         }
-        return indexes;
+
+        // Now we must make a new array the size of what we have found
+        if (index > 0) {
+            int[] newIndexes = new int[index];
+            System.arraycopy(indexes, 0, newIndexes, 0, index);
+            return newIndexes;
+        }
+        
+        return null;
     }
 
     /**
@@ -515,7 +558,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      */
     public void remove(int index) {
         if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " is out of bounds for size " + size());
         }
         int realIndex = calculateIndex(index);
         array[realIndex] = null;
@@ -591,6 +634,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
             array[currentIndex] = array[currentIndex+1];
             currentIndex++;
         }
+        endPointer--;
     }
 
     /**
@@ -691,6 +735,10 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
     @Override
     public String toString() {
 
+        if (length() == 0) {
+            return "[]";
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("[");
 
@@ -698,7 +746,6 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
             // We are in an inversion
             int currentIndex = startPointer;
             for (int i = 0; i < size(); i++){
-                sb.append(" ");
                 sb.append(array[currentIndex]);
                 currentIndex++;
                 if (currentIndex == array.length) {

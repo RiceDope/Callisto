@@ -25,6 +25,7 @@ Python programs being used in order to produce graphs and analyse the data from 
 - An interface that all Collections implement which exposes the iterator. For addAll methods and such
 - List out what needs to be completed by the deadline and the direction that I want to focus on for writeup.
 - Give Sets a guarantee of ordering whilst keeping the buckets system the same as currently are. "Linked List"
+- Issue with RingBuffer where it expands with one slot remaining. Default does not do this (fails test)
 
 # Ideas
 

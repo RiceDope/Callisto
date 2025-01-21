@@ -113,11 +113,13 @@ public class ArrayListTest {
     @Test
     public void testArrayExpansionWithInsert() throws NoSuchMethodException {
         Sequence<Integer> testing = new Sequence<Integer>(4);
+        assertEquals(4, testing.rawLength());
         testing.append(5);
         testing.append(10);
         testing.append(15);
+        // RingBuffer would expand here
         testing.append(20);
-        assertEquals(4, testing.rawLength());
+        // Default would expand here
         testing.insert(2, 100);
         assertEquals(6, testing.rawLength());
         assertEquals("[5, 10, 100, 15, 20]", testing.toString());
@@ -287,5 +289,18 @@ public class ArrayListTest {
         testing.append(30);
         testing.replace(1, null);
         assertEquals("[10, null, 30]", testing.toString());
+    }
+
+    /**
+     * Test using get for a null
+     */
+    @Test
+    public void testGetNull() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.append(10);
+        testing.append(20);
+        testing.append(30);
+        testing.append(null);
+        assertEquals(null, testing.get(3));
     }
 }

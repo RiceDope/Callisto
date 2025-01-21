@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
+import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
 

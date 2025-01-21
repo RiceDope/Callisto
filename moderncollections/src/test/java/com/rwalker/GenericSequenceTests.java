@@ -71,9 +71,7 @@ public class GenericSequenceTests {
         // Generate a small sequence for testing
         Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
 
-        assertEquals(4, testing.rawLength());
-
-        // Expansion occurs here (size 6 rate x1.5 default)
+        // Expansion occurs here (size 6 rate x1.5 default) (RingBuffer expansion occurs before this)
         testing.append(5); 
         assertEquals(6, testing.rawLength());
     }
@@ -98,8 +96,14 @@ public class GenericSequenceTests {
      */
     @Test
     public void testCustomGrowthRate() throws NoSuchMethodException{
-        Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
+        Sequence<Integer> testing = new Sequence<>(4);
         testing.setGrowthRate(2.0);
+        testing.append(1);
+        testing.append(2);
+        testing.append(3);
+        // RingBuffer expands here
+        testing.append(4);
+        // Default expands here
         testing.append(10);
         assertEquals(8, testing.rawLength());
     }
@@ -427,15 +431,13 @@ public class GenericSequenceTests {
         test.append(10);
         test.append(20);
         test.append(null);
+        assertEquals(4, test.rawLength()); // RingBuffer expands here
         test.append(30);
-
-        assertEquals(4, test.rawLength());
-
+        // Default expands here
         test.append(45);
-        test.append(20);
 
         assertEquals(6, test.rawLength());
-        assertEquals("[10, 20, null, 30, 45, 20]", test.toString());
+        assertEquals("[10, 20, null, 30, 45]", test.toString());
     }
 
     /**
