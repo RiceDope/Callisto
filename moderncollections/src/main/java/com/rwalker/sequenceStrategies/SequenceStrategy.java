@@ -29,7 +29,10 @@ public interface SequenceStrategy<E>{
     void remove(int index);
     E get (int index);
     void sort();
+    void sort(Comparator<E> comparator);
     void sortOnwards();
+    void sortOnwards(Comparator<E> comp);
+    Sequence<E> sortCopy();
     Sequence<E> sortCopy(Comparator<E> comparator);
     void stopSorting();
     void setComparator(Comparator<E> comparator);

@@ -237,6 +237,25 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
     }
 
     /**
+     * Replaces the default comparator and then sorts the array
+     * @param comparator
+     */
+    public void sort(Comparator<E> comparator){
+
+        defaultComparator = comparator;
+        try {
+            // Sort the array
+            Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
+            Arrays.fill(array, null); // Null out original to maintain terms
+            System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
+
+        } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+            System.err.println(e);
+            throw new UnknownError("Comparator incorrect or not set");
+        }
+    }
+
+    /**
      * Sort the array and then enforce sort from then onwards
      */
     public void sortOnwards() {
@@ -253,6 +272,24 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
     public void sortOnwards(Comparator<E> comp) {
         this.defaultComparator = comp;
         sortOnwards();
+    }
+
+    public Sequence<E> sortCopy(){
+
+        if (defaultComparator != null) {
+            try {
+                // Sort the array
+                Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
+                Sequence<E> sortedSeq = new Sequence<E>(rawLength(), growthRate, defaultComparator); // Instantiate sequence with same settings
+                sortedSeq.setSubArray(startPointer, endPointer, sortedArr); // Set the sub array
+                return sortedSeq;
+            } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+                System.err.println(e);
+                throw new UnknownError("Comparator either not valid or cannot be compared");
+            }
+        } else {
+            throw new IllegalStateException("Default comparator must be set to use this sort");
+        }
     }
 
     /**

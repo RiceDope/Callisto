@@ -1,5 +1,7 @@
 package com.rwalker;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Entry class for the Sequence data structure. Manages swapping between all strategies of the class
  * 
@@ -8,6 +10,7 @@ package com.rwalker;
  */
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
@@ -15,6 +18,7 @@ import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
 
+@SuppressWarnings("unchecked")
 public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>();
@@ -27,7 +31,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         
         // Default values are used
 
-        postConstructor();
+        setupStrategies();
 
     }
 
@@ -42,7 +46,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
             throw new NegativeArraySizeException("Cannot use size of 0 or less");
         }
 
-        postConstructor();
+        setupStrategies();
     }
 
     /**
@@ -52,7 +56,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     public Sequence(Comparator<E> comparator){
         seqCon.comparator = comparator;
 
-        postConstructor();
+        setupStrategies();
     }
 
     /**
@@ -68,7 +72,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         }
         seqCon.comparator = comparator;
 
-        postConstructor();
+        setupStrategies();
     }
 
     /**
@@ -82,7 +86,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
             throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
 
-        postConstructor();
+        setupStrategies();
     }
 
     /**
@@ -98,7 +102,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         }
         seqCon.comparator = comparator;
 
-        postConstructor();
+        setupStrategies();
     }
 
     /**
@@ -118,7 +122,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
             throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
         }
 
-        postConstructor();
+        setupStrategies();
     }
 
     /**
@@ -141,16 +145,34 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         }
         seqCon.comparator = comparator;
 
-        postConstructor();
+        setupStrategies();
     }
 
 
     // method signatures
 
-    private void postConstructor(){
-        strat = new DefaultSequenceStrategy<>(seqCon);
+    private HashMap<SequenceStrategies, Class<? extends SequenceStrategy<?>>> strategies = new HashMap<>();
+
+    private void setupStrategies(){
+
+        // Put all of the strategies into the map
+        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<?>>) DefaultSequenceStrategy.class);
+        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategy<?>>) RingBufferSequenceStrategy.class);
+
+        // Get the default strategy for now
+        try {
+            strat = (SequenceStrategy<E>) strategies.get(SequenceStrategies.DEFAULT).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize strategy", e);
+        }
     }
 
+    /**
+     * Insert an item into the sequence at a given position
+     * @param index The position to insert into
+     * @param element The element to insert
+     */
     public void insert(int index, E element){
         strat.insert(index, element);
     }
@@ -179,8 +201,16 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         strat.sort();
     }
 
+    public void sort(Comparator<E> comparator){
+        strat.sort(comparator);
+    }
+
     public void sortOnwards(){
         strat.sortOnwards();
+    }
+
+    public void sortOnwards(Comparator<E> comparator){
+        strat.sortOnwards(comparator);
     }
 
     public Sequence<E> sortCopy(Comparator<E> comparator){
@@ -282,6 +312,4 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     public Iterator<E> iterator(){
         return strat.iterator();
     }
-
-    // TODO: IMPLEMENT ITERATOR IN THIS CLASS
 }

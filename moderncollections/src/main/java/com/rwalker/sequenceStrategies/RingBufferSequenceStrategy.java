@@ -15,6 +15,8 @@ import com.rwalker.UserNullSort;
  * a queue/stack.
  */
 
+// TODO: when startPointer == array.length
+
 @SuppressWarnings({"unchecked"})
 public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrategy<E> {
     
@@ -352,10 +354,24 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
         }
     }
 
+    public void sort(Comparator<E> comparator) {
+        defaultComparator = comparator;
+        try {
+            // Sort the array
+            Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
+            Arrays.fill(array, null); // Null out original to maintain terms
+            System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
+
+        } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+            System.err.println(e);
+            throw new UnknownError("Comparator incorrect or not set");
+        }
+    }
+
     /**
      * Sort the array acording to the given comparator
      */
-    public void sortOnwards() {
+    public void sortOnwards() { //TODO: Add check for defaultComp being set
         if (!(length() < 0) && !(length() == 1)){ // Only sort when we have something to not nothing or 1 item
             sort();
         }
@@ -369,6 +385,30 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
     public void sortOnwards(Comparator<E> comp) {
         this.defaultComparator = comp;
         sortOnwards();
+    }
+
+    /**
+     * Sorts the array based on the comarator given and returns a new Copy.
+     * This method does not overwrite the current array
+     * 
+     * @param comparator The comparator for comparing the types
+     * @return A sorted Sequence
+     */
+    public Sequence<E> sortCopy(){
+        if (defaultComparator != null){
+            try {
+                // Sort the array
+                Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
+                Sequence<E> sortedSeq = new Sequence<E>(array.length, growthRate, defaultComparator); // Instantiate sequence with same settings
+                sortedSeq.setSubArray(startPointer, endPointer, sortedArr); // Set the sub array
+                return sortedSeq;
+            } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
+                System.err.println(e);
+                throw new UnknownError("Comparator either not valid or cannot be compared");
+            }
+        } else {
+            throw new IllegalStateException("Default comparator must be set to use this sort");
+        }
     }
 
     /**

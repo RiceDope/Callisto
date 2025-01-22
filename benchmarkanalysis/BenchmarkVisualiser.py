@@ -76,6 +76,7 @@ def visualiseSelects(json_data):
 
     # Give the graph a name of the comparisons being benchmarked
     plt.legend()
+    plt.ylim(bottom=0)
     plt.xlabel("Run number")
     plt.ylabel("Ops/ms")
     if len(benchmarks) + len(os.path.abspath(os.getcwd())+"/benchmarks") > 260:
@@ -139,6 +140,7 @@ def visualiseTogether(json_data):
         plt.plot(list(range(1, len(collectedList)+1)), collectedList, label=benchmarkName)
 
     plt.legend(bbox_to_anchor=(1, 1))
+    plt.ylim(bottom=0)
     plt.xlabel("Run number")
     plt.ylabel("Ops/ms")
     plt.tight_layout()

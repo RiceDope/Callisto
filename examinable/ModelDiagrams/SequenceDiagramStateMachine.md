@@ -22,3 +22,20 @@ flowchart
     SARR --> |StopSorting| ARR
     SARR --> |Push / Pop| PS
     SARR --> |Enqueue / Dequeue| PQ
+
+# Strategies
+
+flowchart
+    Sequence --> |HasAsField| CurrentStrategy
+    Heuristics --> |Decides| CurrentStrategy
+    Heuristics --> |BasedOn| Sequence
+    SequenceStrategy --> |Implements| DefaultStrategy
+    SequenceStrategy --> |Implements| RingBufferStrategy
+    Sequence --> |Creates| SequenceContext
+    SequenceContext --> |Provided To| DefaultStrategy
+    SequenceContext --> |Provided To| RingBufferStrategy
+    CurrentStrategy --> |Contains| DefaultStrategy
+    CurrentStrategy --> |Contains| RingBufferStrategy
+
+
+    
