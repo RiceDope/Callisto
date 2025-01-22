@@ -16,6 +16,7 @@ import java.util.Iterator;
 import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
 import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
+import com.rwalker.sequenceStrategies.SequenceStrategies;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
 
 @SuppressWarnings("unchecked")
@@ -23,6 +24,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>();
     private SequenceStrategy<E> strat;
+    private SequenceStrategies currentStrat;
 
     /**
      * Default constructor using default growth rate and size values
@@ -148,11 +150,149 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         setupStrategies();
     }
 
+    // FROM HERE
+
+    /**
+     * Default constructor using default growth rate and size values with a selected strategy
+     */
+    public Sequence(SequenceStrategies strategy){
+        
+        // Default values are used
+        currentStrat = strategy;
+
+        setupStrategies();
+
+    }
+
+    /**
+     * Allows for specification of just the initial size of the array
+     * @param size Int initial size of the array
+     */
+    public Sequence(int size, SequenceStrategies strategy){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        currentStrat = strategy;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for the specification of a comparator
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(Comparator<E> comparator, SequenceStrategies strategy){
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of initial array size and a comparator
+     * @param size Int initial size of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, Comparator<E> comparator, SequenceStrategies strategy){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of just the growth rate
+     * @param growthRate Double initial growth rate of the array
+     * @param strategy The strategy to use
+     */
+    public Sequence(double customGrowthRate, SequenceStrategies strategy){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        currentStrat = strategy;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of growth rate and default comparator
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(double customGrowthRate, Comparator<E> comparator, SequenceStrategies strategy){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of both starting size and growth rate
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, double customGrowthRate, SequenceStrategies strategy){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        currentStrat = strategy;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of starting size, growth rate and a comparator
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, double customGrowthRate, Comparator<E> comparator, SequenceStrategies strategy){
+
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        setupStrategies();
+    }
+
 
     // method signatures
 
     private HashMap<SequenceStrategies, Class<? extends SequenceStrategy<?>>> strategies = new HashMap<>();
 
+    /**
+     * Sets up the strategies for the sequence
+     * 
+     * The starting strategy is based on what the user specifies in the constructor or the default strategy
+     */
     private void setupStrategies(){
 
         // Put all of the strategies into the map
@@ -161,11 +301,31 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
 
         // Get the default strategy for now
         try {
-            strat = (SequenceStrategy<E>) strategies.get(SequenceStrategies.DEFAULT).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
+            strat = (SequenceStrategy<E>) strategies.get(currentStrat).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
+            currentStrat = SequenceStrategies.DEFAULT;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize strategy", e);
         }
+    }
+
+    /**
+     * Allows for the swapping of strategies
+     * @param newStrat
+     */
+    public void swapStrategies(SequenceStrategies newStrat){
+        Object[] array = strat.exportArray();
+        SequenceContext<E> context = strat.exportContext();
+        try {
+            strat = (SequenceStrategy<E>) strategies.get(newStrat).getDeclaredConstructor(SequenceContext.class).newInstance(context);
+            strat.importArray(array);
+            strat.importContext(context);
+            currentStrat = newStrat;
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize strategy", e);
+        }
+
     }
 
     /**
@@ -175,6 +335,10 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
      */
     public void insert(int index, E element){
         strat.insert(index, element);
+    }
+
+    public SequenceStrategies getname(){
+        return strat.getname();
     }
 
     public void append(E item){

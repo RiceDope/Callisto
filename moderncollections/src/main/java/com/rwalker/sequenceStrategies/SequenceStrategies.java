@@ -1,4 +1,4 @@
-package com.rwalker;
+package com.rwalker.sequenceStrategies;
 
 /**
  * Enum for different strategies that can be used by the sequence class
@@ -7,7 +7,7 @@ package com.rwalker;
  * @since 22/01/2025
  */
 
-enum SequenceStrategies {
+public enum SequenceStrategies {
     DEFAULT, 
     RINGBUFFER
 }

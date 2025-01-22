@@ -18,8 +18,9 @@ public interface SequenceStrategy<E>{
     // Used in order to change between strategies
     Object[] exportArray();
     void importArray(Object[] array);
-    SequenceContext<E> exportContect();
+    SequenceContext<E> exportContext();
     void importContext(SequenceContext<E> context);
+    SequenceStrategies getname();
     
     // General Sequence interaction methods
     void insert(int index, E element);

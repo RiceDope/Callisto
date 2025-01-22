@@ -28,6 +28,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
     private boolean enforceSort;
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
+    private com.rwalker.sequenceStrategies.SequenceStrategies name = SequenceStrategies.RINGBUFFER;
     
     public RingBufferSequenceStrategy(SequenceContext<E> context) {
         this.endPointer = context.endPointer;
@@ -39,6 +40,10 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
         this.minumumExpansion = context.minimumExpansion;
 
         array = new Object[initialSize];
+    }
+
+    public SequenceStrategies getname() {
+        return name;
     }
 
     /**
@@ -617,10 +622,13 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      * @return The Object array
      */
     public Object[] exportArray() {
-        Object[] arr = new Object[size()];
+        Object[] arr = new Object[size()+1];
         int index = 0;
         for (Object obj : array) {
-            arr[index] = obj;
+            if (obj != null) {
+                arr[index] = obj;
+                index++;
+            } 
         }
 
         return arr;
@@ -638,8 +646,11 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      * Exports the context of the sequence
      * @return The context of the sequence
      */
-    public SequenceContext<E> exportContect() {
-        return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion);
+    public SequenceContext<E> exportContext() {
+        // Adjusts the pointers to be in the correct positions
+        int returnableEndPointer = size();
+        int startPointer = 0;
+        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion);
     }
 
     /**

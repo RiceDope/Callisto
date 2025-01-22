@@ -32,6 +32,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
     private boolean enforceSort;
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
+    private SequenceStrategies name = SequenceStrategies.DEFAULT;
 
     public DefaultSequenceStrategy(SequenceContext<E> context){
         this.endPointer = context.endPointer;
@@ -43,6 +44,10 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         this.minumumExpansion = context.minimumExpansion;
 
         array = new Object[initialSize];
+    }
+
+    public SequenceStrategies getname(){
+        return name;
     }
 
     /**
@@ -958,7 +963,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * Export the context
      * @return
      */
-    public SequenceContext<E> exportContect() {
+    public SequenceContext<E> exportContext() {
         return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion);
     }
 
