@@ -297,13 +297,12 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     private void setupStrategies(){
 
         // Put all of the strategies into the map
-        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<E>>) DefaultSequenceStrategy.class);
-        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategy<E>>) RingBufferSequenceStrategy.class);
+        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<E>>) (Class<?>) DefaultSequenceStrategy.class);
+        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategy<E>>) (Class<?>) RingBufferSequenceStrategy.class);
 
         // Get the default strategy for now
         try {
             strat = (SequenceStrategy<E>) strategies.get(currentStrat).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
-            currentStrat = SequenceStrategies.DEFAULT;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize strategy", e);
