@@ -16,6 +16,7 @@ import java.util.Iterator;
 import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
 import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
+import com.rwalker.sequenceStrategies.SequenceHeuristic;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
 
@@ -24,7 +25,9 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>();
     private SequenceStrategy<E> strat;
-    private SequenceStrategies currentStrat;
+    private SequenceStrategies currentStrat = SequenceStrategies.DEFAULT;
+    private HashMap<SequenceStrategies, Class<? extends SequenceStrategy<?>>> strategies = new HashMap<>();
+    private SequenceHeuristic heuristic = new SequenceHeuristic();
 
     /**
      * Default constructor using default growth rate and size values
@@ -286,8 +289,6 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
 
     // method signatures
 
-    private HashMap<SequenceStrategies, Class<? extends SequenceStrategy<?>>> strategies = new HashMap<>();
-
     /**
      * Sets up the strategies for the sequence
      * 
@@ -313,7 +314,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
      * Allows for the swapping of strategies
      * @param newStrat
      */
-    public void swapStrategies(SequenceStrategies newStrat){
+    private void swapStrategies(SequenceStrategies newStrat){
         Object[] array = strat.exportArray();
         SequenceContext<E> context = strat.exportContext();
         try {
@@ -329,11 +330,24 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     }
 
     /**
+     * Force the sequence to check if it is optimal to swap
+     * @return boolean True if we have swapped, false if we have not
+     */
+    public boolean checkSwap() {
+        if (heuristic.getBestStrategy() != currentStrat){
+            swapStrategies(heuristic.getBestStrategy());
+            return true; // We have swapped so return true
+        }
+        return false; // We have not swapped so return false
+    }
+
+    /**
      * Insert an item into the sequence at a given position
      * @param index The position to insert into
      * @param element The element to insert
      */
     public void insert(int index, E element){
+        heuristic.incrementArrayOps();
         strat.insert(index, element);
     }
 
@@ -342,22 +356,27 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     }
 
     public void append(E item){
+        heuristic.incrementArrayOps();
         strat.append(item);
     }
 
     public void appendAll(Sequence<E> toApp){
+        heuristic.incrementArrayOps();
         strat.appendAll(toApp);
     }
 
     public void replace(int index, E element){
+        heuristic.incrementArrayOps();
         strat.replace(index, element);
     }
 
     public void remove(int index){
+        heuristic.incrementArrayOps();
         strat.remove(index);
     }
 
     public E get(int index){
+        heuristic.incrementArrayOps();
         return strat.get(index);
     }
 
@@ -390,26 +409,36 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     }
 
     public boolean isEmpty(){
+        heuristic.incrementQueueOps();
         return strat.isEmpty();
     }
 
     public E dequeue(){
+        heuristic.incrementQueueOps();
         return strat.dequeue();
     }
 
     public void enqueue(E element){
+        heuristic.incrementQueueOps();
         strat.enqueue(element);
     }
 
     public void push(E element){
+        heuristic.incrementStackOps();
         strat.push(element);
     }
 
     public E pop(){
+        heuristic.incrementStackOps();
         return strat.pop();
     }
 
     public E peek(HowToFunction acting){
+        if (acting == HowToFunction.QUEUE){
+            heuristic.incrementQueueOps();
+        } else if (acting == HowToFunction.STACK){
+            heuristic.incrementStackOps();
+        }
         return strat.peek(acting);
     }
 

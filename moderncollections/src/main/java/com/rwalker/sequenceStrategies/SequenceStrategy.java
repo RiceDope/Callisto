@@ -1,9 +1,11 @@
 package com.rwalker.sequenceStrategies;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
 import com.rwalker.HowToFunction;
+import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
 
 /**
@@ -25,7 +27,8 @@ public interface SequenceStrategy<E>{
     // General Sequence interaction methods
     void insert(int index, E element);
     void append(E item);
-    void appendAll(Sequence<E> toApp);
+    void appendAll(ModernCollections<E> toApp);
+    void appendAll(Collection<E> toApp);
     void replace(int index, E element);
     void remove(int index);
     E get (int index);

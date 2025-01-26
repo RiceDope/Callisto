@@ -12,11 +12,13 @@ package com.rwalker.sequenceStrategies;
  */
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
 import com.rwalker.BinarySearch;
 import com.rwalker.HowToFunction;
+import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
 import com.rwalker.UserNull;
 import com.rwalker.UserNullSort;
@@ -144,10 +146,24 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * Add all terms from the given Sequence to this Sequence
      * @param toApp The Sequence to add from
      */
-    public void appendAll(Sequence<E> toApp) {
+    public void appendAll(ModernCollections<E> toApp) {
 
-        for (int i = 0; i < toApp.length(); i++) {
-            append(toApp.get(i));
+        Iterator<E> it = toApp.iterator();
+        while (it.hasNext()){
+            append(it.next());
+        }
+
+    }
+
+    /**
+     * Add all terms from the given Collection to this Sequence
+     * @param toApp The Collection to add from
+     */
+    public void appendAll(Collection<E> toApp) {
+
+        Iterator<E> it = toApp.iterator();
+        while (it.hasNext()){
+            append(it.next());
         }
 
     }

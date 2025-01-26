@@ -1,11 +1,13 @@
 package com.rwalker.sequenceStrategies;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
 import com.rwalker.BinarySearch;
 import com.rwalker.HowToFunction;
+import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
 import com.rwalker.UserNull;
 import com.rwalker.UserNullSort;
@@ -218,7 +220,18 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      */
     // TODO: Potential speed increase by finding the size of toApp and if expansion is necessary do it once
     // Or can avoid regular append each time by pre allocating the space
-    public void appendAll(Sequence<E> toApp) {
+    public void appendAll(ModernCollections<E> toApp) {
+        Iterator<E> iter = toApp.iterator();
+        while (iter.hasNext()) {
+            append(iter.next());
+        }
+    }
+
+    /**
+     * Appends all elements from the given collection to the array
+     * @param toApp The collection to append
+     */
+    public void appendAll(Collection<E> toApp) {
         for (E element : toApp) {
             append(element);
         }
