@@ -1,10 +1,7 @@
-com\rwalker\Sequence.class
-com\rwalker\Sequence$HowToFunction.class
-com\rwalker\BinarySearch.class
-com\rwalker\App.class
-com\rwalker\Map.class
-com\rwalker\SortByName.class
+com\rwalker\HowToFunction.class
+com\rwalker\SetEntry.class
+com\rwalker\Set$SetIterator.class
+com\rwalker\ModernCollections.class
 com\rwalker\MapEntry.class
-com\rwalker\Sequence$SequenceIterator.class
-com\rwalker\SortByAge.class
-com\rwalker\Student.class
+com\rwalker\Set.class
+com\rwalker\sequenceStrategies\SequenceStrategies.class

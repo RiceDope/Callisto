@@ -26,7 +26,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     private SequenceContext<E> seqCon = new SequenceContext<E>();
     private SequenceStrategy<E> strat;
     private SequenceStrategies currentStrat = SequenceStrategies.DEFAULT;
-    private HashMap<SequenceStrategies, Class<? extends SequenceStrategy<?>>> strategies = new HashMap<>();
+    private HashMap<SequenceStrategies, Class<? extends SequenceStrategy<E>>> strategies = new HashMap<>();
     private SequenceHeuristic heuristic = new SequenceHeuristic();
 
     /**
@@ -297,8 +297,8 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     private void setupStrategies(){
 
         // Put all of the strategies into the map
-        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<?>>) DefaultSequenceStrategy.class);
-        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategy<?>>) RingBufferSequenceStrategy.class);
+        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<E>>) DefaultSequenceStrategy.class);
+        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategy<E>>) RingBufferSequenceStrategy.class);
 
         // Get the default strategy for now
         try {

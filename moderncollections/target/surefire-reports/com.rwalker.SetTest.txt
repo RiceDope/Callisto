@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.rwalker.AppTest
+Test set: com.rwalker.SetTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec - in com.rwalker.AppTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in com.rwalker.SetTest

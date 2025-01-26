@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rwalker.HashMapTest" time="0.003" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rwalker.SetTest" time="0.003" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,8 +58,17 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testPutAllMethod" classname="com.rwalker.HashMapTest" time="0"/>
-  <testcase name="testHashOneItem" classname="com.rwalker.HashMapTest" time="0"/>
-  <testcase name="testReplaceFunctions" classname="com.rwalker.HashMapTest" time="0"/>
-  <testcase name="testHashTenItems" classname="com.rwalker.HashMapTest" time="0"/>
+  <testcase name="testAddAllOverlap" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testAdd" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testRawString" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testRetainAll" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testEqualsMethod" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testAddAllEmpty" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testAddAllMethod" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testNoDuplicates" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testIteratorOrder" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testAddAll" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testRemove" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testIterator" classname="com.rwalker.SetTest" time="0"/>
+  <testcase name="testRemoveAll" classname="com.rwalker.SetTest" time="0"/>
 </testsuite>
