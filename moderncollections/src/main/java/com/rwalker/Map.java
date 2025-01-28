@@ -20,7 +20,7 @@ public class Map <K, E> {
     private MapEntry<K, E>[] bucketList; // Essentially a bucket
     private float loadFactor = 0.75f; // The load factor to be used
     private float expansionFactor = 2.0f; // The factor to expand the number of buckets by
-    private Sequence<K> keys = new Sequence<>(); // Stores a list of all keys
+    private Set<K> keys = new Set<>(); // Stores a list of all keys
     private Sequence<K> sortedKeys; // Stores a list of all keys sorted
 
     /**
@@ -60,14 +60,14 @@ public class Map <K, E> {
      * @return Number of mappings
      */
     public int size() {
-        return keys.length();
+        return keys.size();
     }
 
     /**
      * Returns the keyset in the order they were inserted
      * @return
      */
-    public Sequence<K> keySet(){
+    public Set<K> keySet(){
         return keys;
     }
 
@@ -196,7 +196,7 @@ public class Map <K, E> {
             if (toRemove.getNext() == null){
 
                 // We can just remove
-                keys.remove(keys.firstIndexOf(key)); // Remove key
+                keys.remove(key); // Remove key
                 if (sortedKeys != null) {
                     sortedKeys.remove(sortedKeys.firstIndexOf(key));
                 }
@@ -206,7 +206,7 @@ public class Map <K, E> {
 
                 // We need to set its sucessive element to be the root of the linked list
                 // in that bucket
-                keys.remove(keys.firstIndexOf(key)); // Remove key
+                keys.remove(key); // Remove key
                 if (sortedKeys != null) {
                     sortedKeys.remove(sortedKeys.firstIndexOf(key));
                 }
@@ -231,7 +231,7 @@ public class Map <K, E> {
                 previous.setNext(toRemove.getNext());
             }
 
-            keys.remove(keys.firstIndexOf(key));
+            keys.remove(key);
             if (sortedKeys != null) {
                 sortedKeys.remove(sortedKeys.firstIndexOf(key));
             }
@@ -281,10 +281,9 @@ public class Map <K, E> {
      */
     public void putAll(Map<K, E> otherMap) {
 
-        Sequence<K> otherKeys = otherMap.keySet();
+        Set<K> otherKeys = otherMap.keySet();
 
-        for (int i = 0; i < otherKeys.length(); i++){
-            K key = otherKeys.get(i);
+        for (K key : otherKeys){
             put(key, otherMap.get(key));
         }
     }
@@ -315,7 +314,7 @@ public class Map <K, E> {
      * @param newBuckets Are there new buckets being added (i.e. are we rehashing at the minute)
      * @param buckets How many buckets are there
      */
-    private void internalPut(K key, E entry, MapEntry<K, E>[] mapToAddTo, Sequence<K> keysToAdd, boolean newBuckets, int buckets, boolean addToSorted){
+    private void internalPut(K key, E entry, MapEntry<K, E>[] mapToAddTo, Set<K> keysToAdd, boolean newBuckets, int buckets, boolean addToSorted){
         
         // Calculate the index to insert into
         int index;
@@ -345,7 +344,7 @@ public class Map <K, E> {
             if (mapToAddTo[index] == null){
                 // Bucket is empty add a new entry
                 mapToAddTo[index] = new MapEntry<K, E>(key, entry);
-                keysToAdd.append(key);
+                keysToAdd.add(key);
 
                 // Check if we are adding to sorted
                 if (sortedKeys != null && addToSorted == true) {
@@ -363,7 +362,7 @@ public class Map <K, E> {
 
                 // When we get to the null bit set the next to be our term
                 temp.setNext(new MapEntry<K, E>(key, entry));
-                keysToAdd.append(key);
+                keysToAdd.add(key);
                 // Check if we are adding to sorted
                 if (sortedKeys != null && addToSorted == true) {
                     sortedKeys.append(key);
@@ -415,11 +414,11 @@ public class Map <K, E> {
         bucketList = new MapEntry[newAmountOfBuckets]; // create the new larger array
 
         // As we are creating a new Map to expand new keys are needed
-        Sequence<K> keysToAdd = new Sequence<>(keys.length());
+        Set<K> keysToAdd = new Set<>(keys.size());
 
         // Loop over keySet and add to the new bigger array
-        for (int i = 0; i < keys.length(); i++) {
-            internalPut(keys.get(i), internalGet(keys.get(i), savedList), bucketList, keysToAdd, true, newAmountOfBuckets, false);
+        for (K key : keys) {
+            internalPut(key, internalGet(key, savedList), bucketList, keysToAdd, true, newAmountOfBuckets, false);
         }
 
         buckets = newAmountOfBuckets;
@@ -438,7 +437,7 @@ public class Map <K, E> {
      */
     private boolean loadFactorExceeded() {
 
-        if (keys.length() >= buckets*loadFactor){
+        if (keys.size() >= buckets*loadFactor){
             return true;
         } else {
             return false;
@@ -458,11 +457,11 @@ public class Map <K, E> {
         sb.append("[");
 
         // Loop over and add all terms
-        for (int i = 0; i < keys.length(); i++){
+        for (K key : keys){
             sb.append("{ ");
-            sb.append(keys.get(i));
+            sb.append(key);
             sb.append(" : ");
-            sb.append(get(keys.get(i)));
+            sb.append(get(key));
             sb.append(" }, ");
         }
 

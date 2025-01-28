@@ -1,6 +1,7 @@
 package com.rwalker;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 /**
  * Entry class for the Sequence data structure. Manages swapping between all strategies of the class
@@ -26,7 +27,7 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
     private SequenceContext<E> seqCon = new SequenceContext<E>();
     private SequenceStrategy<E> strat;
     private SequenceStrategies currentStrat = SequenceStrategies.DEFAULT;
-    private HashMap<SequenceStrategies, Class<? extends SequenceStrategy<E>>> strategies = new HashMap<>();
+    private Map<SequenceStrategies, Class<? extends SequenceStrategy<E>>> strategies = new Map<>();
     private SequenceHeuristic heuristic = new SequenceHeuristic();
 
     /**
@@ -359,7 +360,12 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         strat.append(item);
     }
 
-    public void appendAll(Sequence<E> toApp){
+    public void appendAll(ModernCollections<E> toApp){
+        heuristic.incrementArrayOps();
+        strat.appendAll(toApp);
+    }
+
+    public void appendAll(Collection<E> toApp){
         heuristic.incrementArrayOps();
         strat.appendAll(toApp);
     }

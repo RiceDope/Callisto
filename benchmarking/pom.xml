@@ -66,7 +66,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <dependency>
             <groupId>com.rwalker</groupId>
             <artifactId>moderncollections</artifactId>
-            <version>moderncollections</version>
+            <version>BETA-0.1</version>
         </dependency>
     </dependencies>
 
