@@ -66,6 +66,9 @@ public class BinarySearch {
                 } else if(comparator.compare(term, array[midPoint]) > 0) {
                     // if we are strictly more than our point at index max then insert infront of there
                     return midPoint+1;
+                } else if (comparator.compare(term, array[midPoint]) < 0) {
+                    // If we are strictly one below our point then insert there
+                    return --midPoint;
                 } else {
                     throw new ArrayIndexOutOfBoundsException();
                 }
