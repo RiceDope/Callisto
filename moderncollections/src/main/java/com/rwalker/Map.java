@@ -158,7 +158,7 @@ public class Map <K, E> {
         if (sortedKeys != null){
             return sortedKeys.contains(key);
         }
-
+        //TODO: Now we are using a set do we need to use sorted. Is it acctually faster.
         return keys.contains(key);
     }
 
