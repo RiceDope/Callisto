@@ -21,6 +21,18 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Extract Current Version
+      id: version
+      run: |
+        CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        BASE_VERSION=$(echo $CURRENT_VERSION | grep -oP 'BETA-\K[0-9]+\.[0-9]+')
+        NEW_VERSION=$(awk -F. '{print $1 "." sprintf("%02d", $2 + 1)}' <<< "$BASE_VERSION")
+        FULL_VERSION="moderncollections-BETA-${NEW_VERSION}"
+        echo "NEW_VERSION=$FULL_VERSION" >> $GITHUB_ENV
+
+    - name: Update Version in pom.xml
+      run: mvn versions:set -DnewVersion=${{ env.NEW_VERSION }} -DgenerateBackupPoms=false
+
     - name: Build Specific Module with Maven
       run: mvn -B package -pl moderncollections -am --file pom.xml
 
@@ -31,3 +43,10 @@ jobs:
       run: mvn -pl moderncollections clean deploy --settings .github/maven-settings.xml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Commit and Push Version Change
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git commit -am "Bump version to ${{ env.NEW_VERSION }}"
+        git push
