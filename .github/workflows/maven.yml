@@ -21,17 +21,25 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Extract Current Version
-      id: version
+    - name: Extract and Increment Version
       run: |
-        CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        BASE_VERSION=$(echo $CURRENT_VERSION | grep -oP 'BETA-\K[0-9]+\.[0-9]+')
+        CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout || echo "0.01")
+        echo "Current version: $CURRENT_VERSION"
+    
+        BASE_VERSION=$(echo $CURRENT_VERSION | sed -n 's/\([0-9]\+\)\.\([0-9]\+\)/\1.\2/p')
+        if [[ -z "$BASE_VERSION" ]]; then
+          BASE_VERSION="0.01"
+        fi
+        echo "Base version: $BASE_VERSION"
+    
         NEW_VERSION=$(awk -F. '{print $1 "." sprintf("%02d", $2 + 1)}' <<< "$BASE_VERSION")
-        FULL_VERSION="moderncollections-BETA-${NEW_VERSION}"
+        FULL_VERSION="${NEW_VERSION}"
+        echo "New version: $FULL_VERSION"
+    
+        # Update version in pom.xml
+        mvn versions:set -DnewVersion=$FULL_VERSION -DgenerateBackupPoms=false
+    
         echo "NEW_VERSION=$FULL_VERSION" >> $GITHUB_ENV
-
-    - name: Update Version in pom.xml
-      run: mvn versions:set -DnewVersion=${{ env.NEW_VERSION }} -DgenerateBackupPoms=false
 
     - name: Build Specific Module with Maven
       run: mvn -B package -pl moderncollections -am --file pom.xml
