@@ -7,19 +7,27 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+
     - name: Build Specific Module with Maven
       run: mvn -B package -pl moderncollections -am --file pom.xml
+
     - name: Test Specific Module with Maven
       run: mvn test -pl moderncollections --file pom.xml
+
+    - name: Deploy to GitHub Packages
+      run: mvn -pl moderncollections clean deploy --settings .github/maven-settings.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
