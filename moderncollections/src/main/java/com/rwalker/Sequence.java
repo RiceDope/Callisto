@@ -351,6 +351,10 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         strat.insert(index, element);
     }
 
+    /**
+     * Get the name of the strategy from SequenceStrategies
+     * @return Enum of the current strategies name
+     */
     public SequenceStrategies getname(){
         return strat.getname();
     }
