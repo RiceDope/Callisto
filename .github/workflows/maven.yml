@@ -25,36 +25,39 @@ jobs:
       run: |
         CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout || echo "0.01")
         echo "Current version: $CURRENT_VERSION"
-    
+
         BASE_VERSION=$(echo $CURRENT_VERSION | sed -n 's/\([0-9]\+\)\.\([0-9]\+\)/\1.\2/p')
         if [[ -z "$BASE_VERSION" ]]; then
           BASE_VERSION="0.01"
         fi
         echo "Base version: $BASE_VERSION"
-    
+
         NEW_VERSION=$(awk -F. '{print $1 "." sprintf("%02d", $2 + 1)}' <<< "$BASE_VERSION")
-        FULL_VERSION="${NEW_VERSION}"
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        FULL_VERSION="${NEW_VERSION}-${{ github.run_id }}"
+
         echo "New version: $FULL_VERSION"
-    
-        # Update version in pom.xml
+        
         mvn versions:set -DnewVersion=$FULL_VERSION -DgenerateBackupPoms=false
-    
+
         echo "NEW_VERSION=$FULL_VERSION" >> $GITHUB_ENV
 
-    - name: Build Specific Module with Maven
-      run: mvn -B package -pl moderncollections -am --file pom.xml
+    - name: Update Version in pom.xml
+      run: mvn versions:set -DnewVersion=${{ env.NEW_VERSION }} -DgenerateBackupPoms=false
 
-    - name: Test Specific Module with Maven
-      run: mvn test -pl moderncollections --file pom.xml
+    - name: Build and Test Module with Maven
+      run: |
+        mvn -B package -pl moderncollections -am --file pom.xml
+        mvn test -pl moderncollections --file pom.xml
 
     - name: Deploy to GitHub Packages
-      run: mvn -pl moderncollections clean deploy --settings .github/maven-settings.xml
+      run: mvn -B -pl moderncollections clean deploy --settings .github/maven-settings.xml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Commit and Push Version Change
+    - name: Commit and Push Updated Version
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
         git commit -am "Bump version to ${{ env.NEW_VERSION }}"
-        git push
+        git push || echo "No changes to commit"
