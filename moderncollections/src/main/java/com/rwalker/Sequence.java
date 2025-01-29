@@ -355,19 +355,20 @@ public class Sequence<E> implements Iterable<E>, ModernCollections<E> {
         return strat.getname();
     }
 
-    public void append(E item){
+    public boolean add(E item){
         heuristic.incrementArrayOps();
-        strat.append(item);
+        strat.add(item);
+        return true;
     }
 
-    public void appendAll(ModernCollections<E> toApp){
+    public void addAll(ModernCollections<E> toApp){
         heuristic.incrementArrayOps();
-        strat.appendAll(toApp);
+        strat.addAll(toApp);
     }
 
-    public void appendAll(Collection<E> toApp){
+    public void addAll(Collection<E> toApp){
         heuristic.incrementArrayOps();
-        strat.appendAll(toApp);
+        strat.addAll(toApp);
     }
 
     public void replace(int index, E element){

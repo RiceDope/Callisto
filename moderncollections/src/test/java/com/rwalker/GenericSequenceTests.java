@@ -72,7 +72,7 @@ public class GenericSequenceTests {
         Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
 
         // Expansion occurs here (size 6 rate x1.5 default) (RingBuffer expansion occurs before this)
-        testing.append(5); 
+        testing.add(5); 
         assertEquals(6, testing.rawLength());
     }
 
@@ -84,7 +84,7 @@ public class GenericSequenceTests {
 
         Sequence<Integer> testing = TestUtils.generateFullSmallSequence();
         // Expansion occurs here (size 6 rate x1.5 default)
-        testing.append(5);
+        testing.add(5);
         assertEquals(6, testing.rawLength());
         // Test contraction back to 4 after clear
         testing.clear();
@@ -98,13 +98,13 @@ public class GenericSequenceTests {
     public void testCustomGrowthRate() throws NoSuchMethodException{
         Sequence<Integer> testing = new Sequence<>(4);
         testing.setGrowthRate(2.0);
-        testing.append(1);
-        testing.append(2);
-        testing.append(3);
+        testing.add(1);
+        testing.add(2);
+        testing.add(3);
         // RingBuffer expands here
-        testing.append(4);
+        testing.add(4);
         // Default expands here
-        testing.append(10);
+        testing.add(10);
         assertEquals(8, testing.rawLength());
     }
 
@@ -170,13 +170,13 @@ public class GenericSequenceTests {
         assertEquals("[3, 5, 10, 20]", test.toString());
 
         // Test automatic sort on insertion
-        test.append(4);
+        test.add(4);
         assertEquals("[3, 4, 5, 10, 20]", test.toString());
 
         // Test automatic sort in descending mode
         test.setComparator((a, b) -> b - a);
         test.sort();
-        test.append(15);
+        test.add(15);
         assertEquals("[20, 15, 10, 5, 4, 3]", test.toString());
     }
 
@@ -192,10 +192,10 @@ public class GenericSequenceTests {
         test.sortOnwards();
         assertEquals("[3, 5, 10, 20]", test.toString());
 
-        test.append(2); // Should insert into the first position
+        test.add(2); // Should insert into the first position
         assertEquals("[2, 3, 5, 10, 20]", test.toString());
 
-        test.append(25); // Should insert into the last position
+        test.add(25); // Should insert into the last position
         assertEquals("[2, 3, 5, 10, 20, 25]", test.toString());
     }
 
@@ -206,15 +206,15 @@ public class GenericSequenceTests {
     public void testEquals(){
         // Create two identical sequences
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
+        test.add(10);
         Sequence<Integer> test1 = new Sequence<>();
-        test1.append(10);
+        test1.add(10);
 
         // Test they are the same
         assertTrue(test.equals(test1));
 
         // Make one not identical
-        test1.append(20);
+        test1.add(20);
 
         // Test they are not the same
         assertFalse(test.equals(test1));
@@ -226,7 +226,7 @@ public class GenericSequenceTests {
     @Test
     public void testContains() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
+        test.add(10);
 
         assertTrue(test.contains(10));
         assertFalse(test.contains(20));
@@ -238,12 +238,12 @@ public class GenericSequenceTests {
     @Test
     public void testFirstIndex() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         assertEquals(1, (int) test.firstIndexOf(20));
         assertNull(test.firstIndexOf(50));
@@ -255,19 +255,19 @@ public class GenericSequenceTests {
     @Test
     public void testStopSorting() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         test.setComparator((a, b) -> a - b);
         test.sortOnwards();
         assertEquals("[10, 15, 20, 20, 30, 45]", test.toString());
 
         test.stopSorting();
-        test.append(5);
+        test.add(5);
         assertEquals("[10, 15, 20, 20, 30, 45, 5]", test.toString());
     }
 
@@ -277,12 +277,12 @@ public class GenericSequenceTests {
     @Test
     public void testSortingEnqueuePush() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         test.setComparator((a, b) -> a - b);
         test.sortOnwards();
@@ -301,12 +301,12 @@ public class GenericSequenceTests {
     @Test
     public void testallIndexOf() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         int[] testArry = new int[2];
         testArry[0] = 1;
@@ -322,12 +322,12 @@ public class GenericSequenceTests {
     @Test
     public void testRawString() {
         Sequence<Integer> test = new Sequence<>(10);
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         assertEquals("[10, 20, 15, 30, 45, 20, null, null, null, null]", test.rawString());
     }
@@ -347,12 +347,12 @@ public class GenericSequenceTests {
     @Test
     public void testGetSubArray() {
         Sequence<Integer> test = new Sequence<>(7);
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         Integer[] subArray = new Integer[7];
         subArray[0] = 10;
@@ -370,12 +370,12 @@ public class GenericSequenceTests {
     @Test
     public void testIteratorForEach() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         Integer[] arr = new Integer[6];
         arr[0] = 10;
@@ -398,12 +398,12 @@ public class GenericSequenceTests {
     @Test
     public void testIteratorHasNext() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         Integer[] arr = new Integer[6];
         arr[0] = 10;
@@ -428,13 +428,13 @@ public class GenericSequenceTests {
     @Test
     public void testExpandingUserNulls() {
         Sequence<Integer> test = new Sequence<>(4, 1.5);
-        test.append(10);
-        test.append(20);
-        test.append(null);
+        test.add(10);
+        test.add(20);
+        test.add(null);
         assertEquals(4, test.rawLength()); // RingBuffer expands here
-        test.append(30);
+        test.add(30);
         // Default expands here
-        test.append(45);
+        test.add(45);
 
         assertEquals(6, test.rawLength());
         assertEquals("[10, 20, null, 30, 45]", test.toString());
@@ -446,10 +446,10 @@ public class GenericSequenceTests {
     @Test
     public void testContainsNull() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(null);
-        test.append(30);
+        test.add(10);
+        test.add(20);
+        test.add(null);
+        test.add(30);
 
         assertTrue(test.contains(null));
     }
@@ -460,10 +460,10 @@ public class GenericSequenceTests {
     @Test
     public void testFindFirstIndexNull() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(null);
-        test.append(30);
+        test.add(10);
+        test.add(20);
+        test.add(null);
+        test.add(30);
 
         assertEquals(2, (int) test.firstIndexOf(null));
     }
@@ -474,12 +474,12 @@ public class GenericSequenceTests {
     @Test
     public void testFindAllIndexesOf() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(null);
-        test.append(30);
-        test.append(null);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(null);
+        test.add(30);
+        test.add(null);
+        test.add(20);
 
         int[] testArry = new int[2];
         testArry[0] = 2;
@@ -491,36 +491,36 @@ public class GenericSequenceTests {
     @Test
     public void testAppendNullWhileSorting() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         test.setComparator((a, b) -> a - b);
         test.sortOnwards();
         assertEquals("[10, 15, 20, 20, 30, 45]", test.toString());
 
-        test.append(null);
+        test.add(null);
         assertEquals("[10, 15, 20, 20, 30, 45, null]", test.toString());
     }
 
     @Test
     public void testContainsWhileSorting() {
         Sequence<Integer> test = new Sequence<>();
-        test.append(10);
-        test.append(20);
-        test.append(15);
-        test.append(30);
-        test.append(45);
-        test.append(20);
+        test.add(10);
+        test.add(20);
+        test.add(15);
+        test.add(30);
+        test.add(45);
+        test.add(20);
 
         test.setComparator((a, b) -> a - b);
         test.sortOnwards();
         assertEquals("[10, 15, 20, 20, 30, 45]", test.toString());
 
-        test.append(null);
+        test.add(null);
         assertTrue(test.contains(null));
     }
 }

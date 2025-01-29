@@ -337,7 +337,7 @@ public class Set<E> implements Iterable<E>, ModernCollections<E> {
         Sequence<E> sequence = new Sequence<E>();
         for (SetEntry<E> entry : items){
             while (entry != null){
-                sequence.append(entry.getValue());
+                sequence.add(entry.getValue());
                 entry = entry.getNext();
             }
         }

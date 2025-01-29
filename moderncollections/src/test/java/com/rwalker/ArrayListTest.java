@@ -80,10 +80,10 @@ public class ArrayListTest {
     @Test
     public void testInsert() throws NoSuchMethodException{
         Sequence<Integer> testing = new Sequence<Integer>();
-        testing.append(5);
-        testing.append(10);
-        testing.append(15);
-        testing.append(20);
+        testing.add(5);
+        testing.add(10);
+        testing.add(15);
+        testing.add(20);
         testing.insert(0, 100);
         assertEquals("[100, 5, 10, 15, 20]", testing.toString());
         testing.insert(2, 50);
@@ -99,10 +99,10 @@ public class ArrayListTest {
     @Test(expected = IndexOutOfBoundsException.class)
     public void testOutOfBoundsInsertion() throws NoSuchMethodException{
         Sequence<Integer> testing = new Sequence<Integer>();
-        testing.append(5);
-        testing.append(10);
-        testing.append(15);
-        testing.append(20);
+        testing.add(5);
+        testing.add(10);
+        testing.add(15);
+        testing.add(20);
         testing.insert(10, 100);
     }
 
@@ -114,11 +114,11 @@ public class ArrayListTest {
     public void testArrayExpansionWithInsert() throws NoSuchMethodException {
         Sequence<Integer> testing = new Sequence<Integer>(4);
         assertEquals(4, testing.rawLength());
-        testing.append(5);
-        testing.append(10);
-        testing.append(15);
+        testing.add(5);
+        testing.add(10);
+        testing.add(15);
         // RingBuffer would expand here
-        testing.append(20);
+        testing.add(20);
         // Default would expand here
         testing.insert(2, 100);
         assertEquals(6, testing.rawLength());
@@ -150,8 +150,8 @@ public class ArrayListTest {
     @Test
     public void testReplace(){
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
+        testing.add(10);
+        testing.add(20);
         testing.replace(0, 50);
         assertEquals("[50, 20]", testing.toString());
     }
@@ -180,8 +180,8 @@ public class ArrayListTest {
     @Test
     public void testRemove(){
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
+        testing.add(10);
+        testing.add(20);
         testing.remove(0);
     }
 
@@ -191,8 +191,8 @@ public class ArrayListTest {
     @Test(expected=ArrayIndexOutOfBoundsException.class)
     public void testRemoveNegative(){
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
+        testing.add(10);
+        testing.add(20);
         testing.remove(-1);
     }
 
@@ -202,8 +202,8 @@ public class ArrayListTest {
     @Test(expected=ArrayIndexOutOfBoundsException.class)
     public void testRemoveOutOfBounds(){
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
+        testing.add(10);
+        testing.add(20);
         testing.remove(10);
     }
 
@@ -213,14 +213,14 @@ public class ArrayListTest {
     @Test
     public void testAppendAll() {
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
-        testing.append(30);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
         Sequence<Integer> toAdd = new Sequence<>();
-        toAdd.append(40);
-        toAdd.append(50);
-        toAdd.append(60);
-        testing.appendAll(toAdd);
+        toAdd.add(40);
+        toAdd.add(50);
+        toAdd.add(60);
+        testing.addAll(toAdd);
         assertEquals("[10, 20, 30, 40, 50, 60]", testing.toString());
     }
 
@@ -230,10 +230,10 @@ public class ArrayListTest {
     @Test
     public void testAppendUserNull() {
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
-        testing.append(30);
-        testing.append(null);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
+        testing.add(null);
         assertEquals("[10, 20, 30, null]", testing.toString());
     }
 
@@ -243,10 +243,10 @@ public class ArrayListTest {
     @Test
     public void testSortingUserNull() {
         Sequence<Integer> testing = new Sequence<>((a, b) -> a - b);
-        testing.append(10);
-        testing.append(20);
-        testing.append(30);
-        testing.append(null);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
+        testing.add(null);
         testing.sort();
         assertEquals("[null, 10, 20, 30]", testing.toString());
     }
@@ -257,10 +257,10 @@ public class ArrayListTest {
     @Test
     public void testSortingUserNullComparator() {
         Sequence<Integer> testing = new Sequence<>((a, b) -> a - b);
-        testing.append(10);
-        testing.append(20);
-        testing.append(30);
-        testing.append(null);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
+        testing.add(null);
         testing = testing.sortCopy((a, b) -> b - a);
         assertEquals("[null, 30, 20, 10]", testing.toString());
     }
@@ -271,9 +271,9 @@ public class ArrayListTest {
     @Test
     public void testInsertNull() {
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
-        testing.append(30);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
         testing.insert(1, null);
         assertEquals("[10, null, 20, 30]", testing.toString());
     }
@@ -284,9 +284,9 @@ public class ArrayListTest {
     @Test
     public void testReplaceNull() {
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
-        testing.append(30);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
         testing.replace(1, null);
         assertEquals("[10, null, 30]", testing.toString());
     }
@@ -297,10 +297,10 @@ public class ArrayListTest {
     @Test
     public void testGetNull() {
         Sequence<Integer> testing = new Sequence<>();
-        testing.append(10);
-        testing.append(20);
-        testing.append(30);
-        testing.append(null);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
+        testing.add(null);
         assertEquals(null, testing.get(3));
     }
 }

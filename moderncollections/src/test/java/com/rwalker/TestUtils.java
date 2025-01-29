@@ -28,16 +28,16 @@ public class TestUtils {
      */
     public static Sequence<Integer> addTenInts(Sequence<Integer> mySeq) {
 
-        mySeq.append(100);
-        mySeq.append(52);
-        mySeq.append(250);
-        mySeq.append(5);
-        mySeq.append(112);
-        mySeq.append(1052);
-        mySeq.append(9);
-        mySeq.append(100);
-        mySeq.append(3);
-        mySeq.append(52);
+        mySeq.add(100);
+        mySeq.add(52);
+        mySeq.add(250);
+        mySeq.add(5);
+        mySeq.add(112);
+        mySeq.add(1052);
+        mySeq.add(9);
+        mySeq.add(100);
+        mySeq.add(3);
+        mySeq.add(52);
 
         return mySeq;
     }
@@ -52,10 +52,10 @@ public class TestUtils {
 
         Sequence<Integer> testing = new Sequence<Integer>(4);
 
-        testing.append(1);
-        testing.append(2);
-        testing.append(3);
-        testing.append(4);
+        testing.add(1);
+        testing.add(2);
+        testing.add(3);
+        testing.add(4);
 
         return testing;
     }
@@ -89,10 +89,10 @@ public class TestUtils {
      */
     public static Sequence<Integer> generateSequenceFourRandomNumbers(){
         Sequence<Integer> test = TestUtils.generateEmptySequence();
-        test.append(5);
-        test.append(3);
-        test.append(10);
-        test.append(20);
+        test.add(5);
+        test.add(3);
+        test.add(10);
+        test.add(20);
         return test;
     }
 }

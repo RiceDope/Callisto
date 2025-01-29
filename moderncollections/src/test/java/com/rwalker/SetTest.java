@@ -206,10 +206,10 @@ public class SetTest {
 
         // Test using a Sequence
         Sequence<Integer> seq = new Sequence<>();
-        seq.append(1);
-        seq.append(2);
-        seq.append(3);
-        seq.append(4);
+        seq.add(1);
+        seq.add(2);
+        seq.add(3);
+        seq.add(4);
 
         test.clear();
         test.addAll(seq);

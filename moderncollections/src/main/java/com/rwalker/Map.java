@@ -1,6 +1,7 @@
 package com.rwalker;
 
 import java.util.Comparator;
+import java.util.Iterator;
 
 /**
  * Class that implements HashMaps, LinkedHashMaps
@@ -14,7 +15,7 @@ import java.util.Comparator;
  */
 
 @SuppressWarnings("unchecked")
-public class Map <K, E> {
+public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<MapEntry<K, E>>{
 
     private int buckets = 16; // The default number of buckets to be used
     private MapEntry<K, E>[] bucketList; // Essentially a bucket
@@ -22,6 +23,7 @@ public class Map <K, E> {
     private float expansionFactor = 2.0f; // The factor to expand the number of buckets by
     private Set<K> keys = new Set<>(); // Stores a list of all keys
     private Sequence<K> sortedKeys; // Stores a list of all keys sorted
+    private Comparator<K> keyComp;
 
     /**
      * Constructor used if no parameters are passed
@@ -37,6 +39,7 @@ public class Map <K, E> {
     public Map(Comparator<K> keyComp) {
         bucketList = new MapEntry[buckets];
         sortedKeys = new Sequence<>(keyComp);
+        this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
 
@@ -52,6 +55,7 @@ public class Map <K, E> {
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
         this.loadFactor = loadFactor; // Set the load factor
         sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
 
@@ -77,6 +81,14 @@ public class Map <K, E> {
      */
     public Sequence<K> sortedKeySet(){
         return sortedKeys;
+    }
+
+    public void clear() {
+        bucketList = new MapEntry[16]; // Initial amount of buckets is reset on clear
+        keys = new Set<>();
+        if (sortedKeys != null) {
+            sortedKeys = new Sequence<>(keyComp);
+        }
     }
 
     /**
@@ -160,6 +172,15 @@ public class Map <K, E> {
         }
         //TODO: Now we are using a set do we need to use sorted. Is it acctually faster.
         return keys.contains(key);
+    }
+
+    /**
+     * Returns true if the specific entry exists in the map. This is to say a full MapEntry Key and Value
+     * @param e The MapEntry object to check if exists
+     * @return boolean true if exists / false if not
+     */
+    public boolean contains(MapEntry<K, E> e) {
+        return keyExists(e.getKey()) && get(e.getKey()).equals(e.getEntry());
     }
 
     /**
@@ -276,6 +297,30 @@ public class Map <K, E> {
     }
 
     /**
+     * Get the MapEntry for a specific key
+     * @param key The key to get the entry for
+     * @return The MapEntry for the key
+     */
+    private MapEntry<K, E> getMapEntry(K key) {
+
+        if (!keyExists(key)){
+            throw new IllegalArgumentException("Key not in Map");
+        }
+
+        int index = generateHashIndex(key);
+        MapEntry<K, E> temp = bucketList[index];
+
+        while (temp != null) {
+            if (temp.getKey().equals(key)) {
+                return temp;
+            }
+            temp = temp.getNext();
+        }
+
+        return null;
+    }
+
+    /**
      * Put all terms from a map into this map
      * @param otherMap The map to take all terms from
      */
@@ -286,6 +331,14 @@ public class Map <K, E> {
         for (K key : otherKeys){
             put(key, otherMap.get(key));
         }
+    }
+
+    /**
+     * Is the map empty
+     * @return boolean true if empty / false if not
+     */
+    public boolean isEmpty() {
+        return keys.isEmpty();
     }
 
     /**
@@ -348,7 +401,7 @@ public class Map <K, E> {
 
                 // Check if we are adding to sorted
                 if (sortedKeys != null && addToSorted == true) {
-                    sortedKeys.append(key);
+                    sortedKeys.add(key);
                 }
 
             } else {
@@ -365,7 +418,7 @@ public class Map <K, E> {
                 keysToAdd.add(key);
                 // Check if we are adding to sorted
                 if (sortedKeys != null && addToSorted == true) {
-                    sortedKeys.append(key);
+                    sortedKeys.add(key);
                 }
             }
         }
@@ -426,7 +479,7 @@ public class Map <K, E> {
         
         // Adds all of the specified keys to the sorted list if it is set
         if (sortedKeys != null) {
-            sortedKeys.appendAll(keysToAdd);
+            sortedKeys.addAll(keysToAdd);
         }
 
     }
@@ -515,5 +568,24 @@ public class Map <K, E> {
     public int getBucketForKey(K key) {
         return generateHashIndex(key);
     }
+
+    public Iterator<MapEntry<K, E>> iterator() {
+        return new MapIterator();
+    }
+
+        private class MapIterator implements Iterator<MapEntry<K, E>> {
+            private Iterator<K> keyIterator = keys.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return keyIterator.hasNext();
+            }
+
+            @Override
+            public MapEntry<K, E> next() {
+                K key = keyIterator.next();
+                return getMapEntry(key);
+            }
+        }
     
 }

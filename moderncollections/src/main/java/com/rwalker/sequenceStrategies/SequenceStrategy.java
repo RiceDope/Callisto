@@ -26,9 +26,9 @@ public interface SequenceStrategy<E>{
     
     // General Sequence interaction methods
     void insert(int index, E element);
-    void append(E item);
-    void appendAll(ModernCollections<E> toApp);
-    void appendAll(Collection<E> toApp);
+    void add(E item);
+    void addAll(ModernCollections<E> toApp);
+    void addAll(Collection<E> toApp);
     void replace(int index, E element);
     void remove(int index);
     E get (int index);

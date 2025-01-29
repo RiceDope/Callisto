@@ -103,7 +103,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * Add an item to the array. Automatically deals with expansion of the array
      * @param item The item to add
      */
-    public void append(E item){
+    public void add(E item){
 
         if (!enforceSort){
             // Just regular append operation when enforcing
@@ -146,11 +146,11 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * Add all terms from the given Sequence to this Sequence
      * @param toApp The Sequence to add from
      */
-    public void appendAll(ModernCollections<E> toApp) {
+    public void addAll(ModernCollections<E> toApp) {
 
         Iterator<E> it = toApp.iterator();
         while (it.hasNext()){
-            append(it.next());
+            add(it.next());
         }
 
     }
@@ -159,11 +159,11 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * Add all terms from the given Collection to this Sequence
      * @param toApp The Collection to add from
      */
-    public void appendAll(Collection<E> toApp) {
+    public void addAll(Collection<E> toApp) {
 
         Iterator<E> it = toApp.iterator();
         while (it.hasNext()){
-            append(it.next());
+            add(it.next());
         }
 
     }
@@ -419,7 +419,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      */
     public void enqueue(E item){
 
-        append(item);
+        add(item);
 
     }
 
@@ -444,7 +444,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      */
     public void push (E item) {
         
-        append(item);
+        add(item);
 
     }
 

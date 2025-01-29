@@ -1,11 +1,12 @@
 package com.rwalker;
 
 /**
- * Each collection in the library must use this so they can all be used in methods such as addAll
- * As well as other methods that each collection should have
+ * Interface for all the ModernCollections classes.
+ * 
+ * Set and Sequence have another interface they both implement as well as this.
  * 
  * @author Rhys Walker
- * @since 28/01/2025
+ * @since 17/01/2025
  */
 
 import java.util.Iterator;
@@ -14,12 +15,8 @@ public interface ModernCollections <E> {
     
     Iterator<E> iterator();
     boolean contains(E e);
-    // isEmpty
-    // addAll
-    // removeAll
-    // removeIf
-    // retainAll
-    // clear
-    // size
+    boolean isEmpty();
+    void clear();
+    int size();
 
 }

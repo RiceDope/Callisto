@@ -34,4 +34,4 @@ Should I add a sorted section to my Set
 Should my Map just use set access rather than a sorted Sequence
 
 # Sample project Ideas
-- Student grades system (Will demonstrate usefulness of consumers)
+- Student grades system (Will demonstrate usefulness of consumers) Side by side with JCF

@@ -72,7 +72,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      * Adds an element to the array
      * @param element
      */
-    public void append(E element) {
+    public void add(E element) {
         if (!enforceSort) {
             addToEnd(element);
         } else if (element != null) {
@@ -220,10 +220,10 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      */
     // TODO: Potential speed increase by finding the size of toApp and if expansion is necessary do it once
     // Or can avoid regular append each time by pre allocating the space
-    public void appendAll(ModernCollections<E> toApp) {
+    public void addAll(ModernCollections<E> toApp) {
         Iterator<E> iter = toApp.iterator();
         while (iter.hasNext()) {
-            append(iter.next());
+            add(iter.next());
         }
     }
 
@@ -231,9 +231,9 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      * Appends all elements from the given collection to the array
      * @param toApp The collection to append
      */
-    public void appendAll(Collection<E> toApp) {
+    public void addAll(Collection<E> toApp) {
         for (E element : toApp) {
-            append(element);
+            add(element);
         }
     }
 
@@ -292,7 +292,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      * @param element
      */
     public void enqueue(E element) {
-        append(element);
+        add(element);
     }
 
     /**
@@ -308,7 +308,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
      * @param element
      */
     public void push(E element) {
-        append(element);
+        add(element);
     }
 
     /**
