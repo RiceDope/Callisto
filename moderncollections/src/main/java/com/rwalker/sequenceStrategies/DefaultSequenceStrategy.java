@@ -36,6 +36,8 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
     private int minumumExpansion;
     private SequenceStrategies name = SequenceStrategies.DEFAULT;
 
+    private int expansionAdjustmentValue = 1; // Adjustment for when to expand. Number of indexes before .length to expand (Brings in line with RingBuffer at 1)
+
     public DefaultSequenceStrategy(SequenceContext<E> context){
         this.endPointer = context.endPointer;
         this.startPointer = context.startPointer;
@@ -74,7 +76,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         } else {
             E curTerm;
             E nextTerm = value; // first value to insert is value
-            if (rawLength() > endPointer+1){
+            if (rawLength() > endPointer+1-expansionAdjustmentValue){
                 for (int i = insertionIndex; i < endPointer+1; i++){
                     // Set our term to be inserted in this run
                     curTerm = nextTerm;
@@ -767,7 +769,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * @param item
      */
     private void addToEnd(E item){
-        if (endPointer == array.length){ // We must expand the array
+        if (endPointer == array.length - expansionAdjustmentValue){ // We must expand the array
             // Expand the array
             reformat(true);
 
