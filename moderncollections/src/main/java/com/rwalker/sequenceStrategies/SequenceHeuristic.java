@@ -5,7 +5,7 @@ package com.rwalker.sequenceStrategies;
  * The rule is change late. Be sure as to what we are doing when we change.
  * 
  * @author Rhys Walker
- * @version 13/01/2025
+ * @version 26/01/2025
  */
 
 public class SequenceHeuristic {
@@ -77,7 +77,7 @@ public class SequenceHeuristic {
      * 
      * If we are heavily queue or stack based then we will switch to a ringBuffer (80% of 100 or more operations)
      * 
-     * @return
+     * @return SequenceStrategies for the best implementation to use
      */
     public SequenceStrategies getBestStrategy() {
         if ((queueOps + stackOps)/totalOps > 0.8 && totalOps >= 100){

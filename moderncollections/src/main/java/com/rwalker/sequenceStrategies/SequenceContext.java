@@ -3,15 +3,15 @@ package com.rwalker.sequenceStrategies;
 import java.util.Comparator;
 
 /**
- * This class contains useful information about the array the user has declared
- * It will be passed between strategies upon switching
+ * This class wraps all information that is required to setup and swap between strategies of the Sequence class.
  * 
  * @author Rhys Walker
- * @since 22/01/2025
+ * @since 06/01/2025
  */
 
 public class SequenceContext <E> {
     
+    // Default values are left public for ease
     public int endPointer = 0;
     public int startPointer = 0;
     public int initialSize = 100;

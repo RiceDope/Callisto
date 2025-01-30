@@ -836,6 +836,11 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
 
     @Override
     public boolean equals(Object seq) {
+
+        if (seq == this) { // If memory addresses are the same then it is equal
+            return true;
+        }
+
         if (seq instanceof Sequence) {
             Sequence<E> sequence = (Sequence<E>) seq;
             if (sequence.size() != size()) {
