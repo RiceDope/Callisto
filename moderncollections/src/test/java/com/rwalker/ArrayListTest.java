@@ -9,6 +9,7 @@ package com.rwalker;
 // Junit tings
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Unit test for ArrayList functionality of Sequence
@@ -20,7 +21,8 @@ public class ArrayListTest {
      */
     @Test
     public void testPopulation() throws NoSuchMethodException{
-        Sequence<Integer> testing = TestUtils.addTenInts(TestUtils.generateEmptySequence());
+        Sequence<Integer> testing = new Sequence<>();
+        testing = TestUtils.addTenInts(testing);
         assertEquals(10, testing.length());
     }
 

@@ -14,8 +14,8 @@ public class SequenceContext <E> {
     // Default values are left public for ease
     public int endPointer = 0;
     public int startPointer = 0;
-    public int initialSize = 100;
-    public double growthRate = 1.5;
+    public int initialSize = 100; // Average declared array is TODO: INSERT (Little difference in benchmarks between 100, 500 only benefit was at perfect information)
+    public double growthRate = 1.5; // Because same as ArrayList
     public boolean enforceSort = false;
     public Comparator<E> comparator;
     public int minimumExpansion = 1;

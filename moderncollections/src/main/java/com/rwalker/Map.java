@@ -44,7 +44,19 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
     }
 
     /**
-     * Constructor used if number of buckets and load factor are passed
+     * Constructor used if number of buckets, load factor and expansion factor are passed
+     * @param buckets Default starting number of buckets (16)
+     * @param loadFactor Default starting load factor (0.75)
+     * @param expansionFactor Default starting expansion factor (2)
+     */
+    public Map(int buckets, float loadFactor, float expansionFactor){
+        this.buckets = buckets; // Starting number of buckets to use
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        this.loadFactor = loadFactor; // Set the load factor
+    }
+
+    /**
+     * Constructor used if number of buckets, load factor, expansion factor and Comparator are passed
      * @param buckets Default starting number of buckets (16)
      * @param loadFactor Default starting load factor (0.75)
      * @param expansionFactor Default starting expansion factor (2)
