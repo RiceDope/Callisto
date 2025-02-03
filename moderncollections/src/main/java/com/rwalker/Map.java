@@ -43,6 +43,90 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         sortedKeys.sortOnwards();
     }
 
+    public Map(int buckets) {
+        this.buckets = buckets; // Starting number of buckets to use
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+    }
+
+    public Map(int buckets, Comparator<K> keyComp) {
+        this.buckets = buckets; // Starting number of buckets to use
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        sortedKeys = new Sequence<>(keyComp);
+        this.keyComp = keyComp;
+        sortedKeys.sortOnwards();
+    }
+
+    public Map(float loadFactor) {
+        this.loadFactor = loadFactor; // Set the load factor
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+    }
+
+    public Map(float loadFactor, Comparator<K> keyComp) {
+        this.loadFactor = loadFactor; // Set the load factor
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        sortedKeys = new Sequence<>(keyComp);
+        this.keyComp = keyComp;
+        sortedKeys.sortOnwards();
+    }
+
+    public Map(Float expansionFactor) {
+        this.expansionFactor = expansionFactor; // Set the expansion factor
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+    }
+
+    public Map(Float expansionFactor, Comparator<K> keyComp) {
+        this.expansionFactor = (float) expansionFactor; // Set the expansion factor
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        sortedKeys = new Sequence<>(keyComp);
+        this.keyComp = keyComp;
+        sortedKeys.sortOnwards();
+    }
+
+    public Map(int buckets, float loadFactor) {
+        this.buckets = buckets; // Starting number of buckets to use
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        this.loadFactor = loadFactor; // Set the load factor
+    }
+
+    public Map(int buckets, Float expansionFactor) {
+        this.buckets = buckets; // Starting number of buckets to use
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        this.expansionFactor = expansionFactor; // Set the expansion factor
+    }
+
+    public Map(float loadFactor, Float expansionFactor) {
+        this.loadFactor = loadFactor; // Set the load factor
+        this.expansionFactor = expansionFactor; // Set the expansion factor
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+    }
+
+    public Map(int buckets, float loadFactor, Comparator<K> keyComp) {
+        this.buckets = buckets; // Starting number of buckets to use
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        this.loadFactor = loadFactor; // Set the load factor
+        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        this.keyComp = keyComp;
+        sortedKeys.sortOnwards();
+    }
+
+    public Map(int buckets, Float expansionFactor, Comparator<K> keyComp) {
+        this.buckets = buckets; // Starting number of buckets to use
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        this.expansionFactor = expansionFactor; // Set the expansion factor
+        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        this.keyComp = keyComp;
+        sortedKeys.sortOnwards();
+    }
+
+    public Map(float loadFactor, Float expansionFactor, Comparator<K> keyComp) {
+        this.loadFactor = loadFactor; // Set the load factor
+        this.expansionFactor = expansionFactor; // Set the expansion factor
+        bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
+        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        this.keyComp = keyComp;
+        sortedKeys.sortOnwards();
+    }
+
     /**
      * Constructor used if number of buckets, load factor and expansion factor are passed
      * @param buckets Default starting number of buckets (16)

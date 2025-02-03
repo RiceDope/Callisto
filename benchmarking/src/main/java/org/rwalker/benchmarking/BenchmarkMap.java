@@ -23,6 +23,6 @@ public class BenchmarkMap {
 
     @Setup(Level.Invocation)
     public void setupMap() {
-        Map<Integer, Integer> map = new Map<>(buckets, loadFactor, expansionFactor);
+        Map<Integer, Integer> map = new Map<>();
     }
 }
