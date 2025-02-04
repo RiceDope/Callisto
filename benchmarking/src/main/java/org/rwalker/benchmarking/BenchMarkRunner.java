@@ -2,6 +2,7 @@ package org.rwalker.benchmarking;
 
 /**
  * All benchmarks can be run from here
+ * https://jmh.morethan.io/
  */
 
 import org.openjdk.jmh.results.format.ResultFormatType;
@@ -16,10 +17,11 @@ public class BenchMarkRunner {
      */
     public static void main(String[] args) throws Exception {
         Options opt = new OptionsBuilder()
-                .include("BenchMarkSequence.testSequenceAppend1000Size")
-                .include("BenchMarkArrayList.testArrayListAppend1000WithSize")
+                .include("BenchmarkMap.testComparatorSpeedUp")
+                .include("BenchmarkMap.testDefaultNoSpeedUp")
+                .include("BenchmarkMap.testNoSetComparatorSpeedUp")
                 .resultFormat(ResultFormatType.JSON)
-                .result("231224-2200.json")
+                .result("030225-1740.json")
                 .build();
 
         new Runner(opt).run();

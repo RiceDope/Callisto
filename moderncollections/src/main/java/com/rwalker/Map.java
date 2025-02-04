@@ -3,6 +3,8 @@ package com.rwalker;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.rwalker.sequenceStrategies.SequenceStrategies;
+
 /**
  * Class that implements HashMaps, LinkedHashMaps
  * As standard keys are kept in the order they are inserted as well as a sorted order
@@ -17,13 +19,14 @@ import java.util.Iterator;
 @SuppressWarnings("unchecked")
 public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<MapEntry<K, E>>{
 
-    private int buckets = 16; // The default number of buckets to be used
-    private MapEntry<K, E>[] bucketList; // Essentially a bucket
-    private float loadFactor = 0.75f; // The load factor to be used
-    private float expansionFactor = 2.0f; // The factor to expand the number of buckets by
-    private Set<K> keys = new Set<>(); // Stores a list of all keys
-    private Sequence<K> sortedKeys; // Stores a list of all keys sorted
-    private Comparator<K> keyComp;
+    // Default values benchmarked simply in results 030225-1430
+    private int buckets = 256;
+    private MapEntry<K, E>[] bucketList;
+    private float loadFactor = 1.0f; 
+    private float expansionFactor = 2.0f;
+    private Set<K> keys = new Set<>();
+    private Sequence<K> sortedKeys;
+    private Comparator<K> keyComp; // Comparator for sorted keys
 
     /**
      * Constructor used if no parameters are passed
@@ -38,7 +41,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
      */
     public Map(Comparator<K> keyComp) {
         bucketList = new MapEntry[buckets];
-        sortedKeys = new Sequence<>(keyComp);
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT);
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
@@ -51,7 +54,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
     public Map(int buckets, Comparator<K> keyComp) {
         this.buckets = buckets; // Starting number of buckets to use
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
-        sortedKeys = new Sequence<>(keyComp);
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT);
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
@@ -64,7 +67,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
     public Map(float loadFactor, Comparator<K> keyComp) {
         this.loadFactor = loadFactor; // Set the load factor
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
-        sortedKeys = new Sequence<>(keyComp);
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT);
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
@@ -77,7 +80,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
     public Map(Float expansionFactor, Comparator<K> keyComp) {
         this.expansionFactor = (float) expansionFactor; // Set the expansion factor
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
-        sortedKeys = new Sequence<>(keyComp);
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT);
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
@@ -104,7 +107,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         this.buckets = buckets; // Starting number of buckets to use
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
         this.loadFactor = loadFactor; // Set the load factor
-        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT); // Set the sorted keys list to use the comparator specified
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
@@ -113,7 +116,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         this.buckets = buckets; // Starting number of buckets to use
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
         this.expansionFactor = expansionFactor; // Set the expansion factor
-        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT); // Set the sorted keys list to use the comparator specified
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
@@ -122,7 +125,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         this.loadFactor = loadFactor; // Set the load factor
         this.expansionFactor = expansionFactor; // Set the expansion factor
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
-        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT); // Set the sorted keys list to use the comparator specified
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }
@@ -150,7 +153,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         this.buckets = buckets; // Starting number of buckets to use
         bucketList = new MapEntry[buckets]; // Declare a sub-array for storage
         this.loadFactor = loadFactor; // Set the load factor
-        sortedKeys = new Sequence<>(keyComp); // Set the sorted keys list to use the comparator specified
+        sortedKeys = new Sequence<>(keyComp, SequenceStrategies.DEFAULT); // Set the sorted keys list to use the comparator specified
         this.keyComp = keyComp;
         sortedKeys.sortOnwards();
     }

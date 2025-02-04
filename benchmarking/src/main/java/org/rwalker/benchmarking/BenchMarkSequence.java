@@ -51,7 +51,7 @@ public class BenchMarkSequence {
     @Warmup(iterations = 3)
     public void testSequenceAppend(Blackhole blackhole) {
         for (int i = 0; i < appendIterations; i++) {
-            sequence.append(i);
+            sequence.add(i);
         }
         blackhole.consume(sequence);
     }
@@ -67,7 +67,7 @@ public class BenchMarkSequence {
     public void testSequenceSorted(Blackhole blackhole) {
         sequence.sortOnwards();
         for (int i = 0; i < appendIterations; i++) {
-            sequence.append(i);
+            sequence.add(i);
         }
         blackhole.consume(sequence);
     }
@@ -83,7 +83,7 @@ public class BenchMarkSequence {
     @Warmup(iterations = 3)
     public void testSequenceAppend1000Size(Blackhole blackhole) {
         for (int i = 0; i < appendIterations; i++) {
-            sequenceSize.append(i);
+            sequenceSize.add(i);
         }
         blackhole.consume(sequenceSize);
     }

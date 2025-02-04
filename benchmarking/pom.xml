@@ -38,7 +38,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>JMH benchmark sample: Java</name>
+    <name>moderncollections benchmark</name>
 
     <parent>
         <groupId>com.rwalker</groupId>
@@ -66,7 +66,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
         <dependency>
             <groupId>com.rwalker</groupId>
             <artifactId>moderncollections</artifactId>
-            <version>BETA-0.1</version>
+            <version>BETA-0.22</version>
         </dependency>
     </dependencies>
 

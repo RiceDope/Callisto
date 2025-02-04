@@ -26,3 +26,29 @@ Tests carried out:
 ### 231224-2200 (Carried out 2 benchmarks)
 - Insert 1000 items into ArrayList with a size specified of 100, 500 and 1000
 - Same as above but for Sequence
+
+### 030225-1430 (Carried out 1 benchmark)
+- Put 1000 items into Map
+- Different parameters given 64 benchmarks ran in total
+- 1 iteration for each measurement
+- different starting buckets (16, 32, 128, 256)
+- differne expansion factors (1.5, 2.0, 2.5, 3.0)
+- different load factors (0.5, 0.75, 0.9, 1.0)
+
+### 030225-1530 (Carried out 2 benchmark)
+- Put 1000 items in the Map<Integer, Integer> done in Setup
+- Testing whether adding a Comparator sped things up
+- This was tested on the keyExists function
+- keyExists is used all over in order to get these "speed boosts"
+
+LATER ADDITION:
+- Test from 030225-1730 this is a test of performance with just a linear Sequence for the KeyExists method (Data no longer exists inside of that file)
+
+### 030225-1730 (Carried out 3 benchmark)
+- Overwritten from the previous mentioned instance of this ID
+- Exact same benchmark just ran at the same time. Gave a much more reasonable OPS/ms that when ran alone
+
+### 030225-1740 (Carried out 3 benchmark)
+- Same concept as above benchmarks but the Map class changed back to default.
+- The final benchmark that used the unsorted sequence was changed back to use a sorted sequence
+- This was to see if the constructors made a huge difference
