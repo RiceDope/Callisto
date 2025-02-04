@@ -52,3 +52,14 @@ LATER ADDITION:
 - Same concept as above benchmarks but the Map class changed back to default.
 - The final benchmark that used the unsorted sequence was changed back to use a sorted sequence
 - This was to see if the constructors made a huge difference
+
+### 040225-1030 (Carried out 2 benchmark)
+- Directly testing the methods used within the Map class to store keys
+- Sequence contains method tested
+- Set contains method tested
+- Both had 1000 terms in ascending order. They are aware of nothing of its order
+- Contains method is ran 1000 times in each benchmark
+
+### 040225-1040 (carried out 3 benchmark)
+- Same as above with 1 extra
+- Sequence was sorted initially when the contains method was run 1000 times

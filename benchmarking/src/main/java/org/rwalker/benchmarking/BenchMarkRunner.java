@@ -17,11 +17,11 @@ public class BenchMarkRunner {
      */
     public static void main(String[] args) throws Exception {
         Options opt = new OptionsBuilder()
-                .include("BenchmarkMap.testComparatorSpeedUp")
-                .include("BenchmarkMap.testDefaultNoSpeedUp")
-                .include("BenchmarkMap.testNoSetComparatorSpeedUp")
+                .include("SetSequenceComparison.benchmarkSequence")
+                .include("SetSequenceComparison.benchmarkSet")
+                .include("SetSequenceComparison.benchmarkSequenceComparator")
                 .resultFormat(ResultFormatType.JSON)
-                .result("030225-1740.json")
+                .result("040225-1040.json")
                 .build();
 
         new Runner(opt).run();
