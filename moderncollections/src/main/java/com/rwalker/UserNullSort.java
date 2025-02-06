@@ -24,11 +24,13 @@ public class UserNullSort {
         // Track the amount of userNulls
         int userNulls = 0;
         Object[] sortingArray = new Object[endPointer-startPointer];
+        int count = 0;
         for (int i = startPointer; i < endPointer; i++){
             if (array[i] instanceof UserNull){
                 userNulls++;
             } else {
-                sortingArray[i-userNulls] = array[i];
+                sortingArray[count] = array[i];
+                count++;
             }
         }
 
@@ -41,7 +43,9 @@ public class UserNullSort {
 
         Object[] finalArray = new Object[array.length];
         if (nullTail){ // Are nulls due to be at the end
-            finalArray = Arrays.copyOfRange(tempArr, 0, tempArr.length);
+            for (int i = 0; i < tempArr.length; i++) {
+                finalArray[i] = tempArr[i];
+            }
             for (int i = 0; i < userNulls; i++){
                 finalArray[tempArr.length+i] = new UserNull<E>();
             }

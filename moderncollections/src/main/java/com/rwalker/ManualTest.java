@@ -52,5 +52,9 @@ public class ManualTest {
         System.out.println(sortedDefaultSequence.rawString());
         System.out.println(sortedDefaultSequence);
 
+        sortedDefaultSequence.sort((a, b) -> b - a);
+        System.out.println(sortedDefaultSequence);
+
+
     }
 }   

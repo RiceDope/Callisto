@@ -1,10 +1,14 @@
 package com.rwalker.sequenceStrategies;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import com.rwalker.BinarySearch;
+import com.rwalker.ModernCollections;
 import com.rwalker.UserNull;
+import com.rwalker.UserNullSort;
 
 /**
  * The same as the default strategy but exclusively for sorted Sequence.
@@ -49,6 +53,17 @@ public class SortedDefaultSequence<E> {
     }
 
     /**
+     * Method to insert an element into the array (Unsupported when sorting)
+     * @param index The index to insert into
+     * @param value The value to insert
+     */
+    public void insert(int index, E value) {
+
+        throw new UnsupportedOperationException("Insert not supported for this strategy");
+
+    }
+
+    /**
      * Adds an element into the array
      * @param element
      */
@@ -69,6 +84,7 @@ public class SortedDefaultSequence<E> {
             return;
         }
 
+        // Adjusted so that we don't search the null space pointlessly
         int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer-nullsInserted, element, defaultComparator, endPointer-startPointer-nullsInserted);
         System.out.println(index);
         // int appendIndex = index-startPointer; // Convert from subarray index
@@ -77,6 +93,67 @@ public class SortedDefaultSequence<E> {
         insertAtLocation(index, element);
     }
 
+    /**
+     * Adds all terms to the collection
+     * @param collection The collection to add from
+     */
+    public void addAll(ModernCollections<E> collection) {
+        Iterator<E> it = collection.iterator();
+        while (it.hasNext()) {
+            add(it.next());
+        }
+    }
+
+    /**
+     * Adds all terms to the collection
+     * @param collection The collection to add from
+     */
+    public void addAll(Collection<E> collection) {
+        Iterator<E> it = collection.iterator();
+        while (it.hasNext()) {
+            add(it.next());
+        }
+    }
+
+    /**
+     * Replaces the element at the index with the value (Unsupported for this strategy)
+     * @param index
+     * @param value
+     */
+    public void replace(int index, E value) {
+
+        throw new UnsupportedOperationException("Replace not supported for this strategy");
+
+    }
+
+    public void sort() {
+
+        // We are already sorted do nothing here. If we provide a new comparator we will sort differently
+
+    }
+
+    /**
+     * Will change the default comparator and sort the array another way
+     * @param comparator The comparator to sort by
+     */
+    public void sort(Comparator<E> comparator) {
+        defaultComparator = comparator;
+
+        int newEp = endPointer - startPointer;
+
+        Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, true);
+        Arrays.fill(array, null); // Null out original to maintain terms
+        System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
+
+        startPointer = 0;
+        endPointer = newEp;
+    }
+
+    /**
+     * Get the item held at the given index
+     * @param index The index to get from
+     * @return The item at the index
+     */
     public E get(int index) {
         index = index+startPointer; // Convert into the subArray index
 
@@ -162,7 +239,7 @@ public class SortedDefaultSequence<E> {
     }
 
     public String rawString() {
-        return Arrays.toString(array) + " StartPointer: " + startPointer + " EndPointer: " + (endPointer-nullsInserted);
+        return Arrays.toString(array) + " Start: " + startPointer + " End: " + endPointer;
     }
 
     /*
