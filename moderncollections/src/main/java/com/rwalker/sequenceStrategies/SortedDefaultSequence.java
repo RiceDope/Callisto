@@ -6,7 +6,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.rwalker.BinarySearch;
+import com.rwalker.HowToFunction;
 import com.rwalker.ModernCollections;
+import com.rwalker.Sequence;
 import com.rwalker.UserNull;
 import com.rwalker.UserNullSort;
 
@@ -148,6 +150,126 @@ public class SortedDefaultSequence<E> {
         startPointer = 0;
         endPointer = newEp;
     }
+
+
+    public void sortOnwards() {
+
+        // We are already sorted do nothing here. If we provide a new comparator we will sort differently
+
+    }
+
+    /**
+     * Will change the default comparator and sort the array another way
+     * @param comparator The comparator to sort by
+     */
+    public void sortOnwards(Comparator<E> comparator) {
+        sort(comparator);
+    }
+
+    public Sequence<E> sortCopy() {
+        throw new UnsupportedOperationException("Sort copy not implemented yet. Will be once sorted strategies finalised");
+    }
+
+    public Sequence<E> sortCopy(Comparator<E> comparator) {
+        throw new UnsupportedOperationException("Sort copy not implemented yet. Will be once sorted strategies finalised");
+    }
+
+    public void stopSorting() {
+        throw new UnsupportedOperationException("Stop sorting not implemented yet. Will be once sorted strategies finalised");
+    }
+
+    public void setComparator(Comparator<E> comparator) {
+        sort(comparator); // Sort deals with comparator setting
+    }
+
+    public void setEnforceSort(boolean enforceSort) {
+        throw new UnsupportedOperationException("Enforce sort not implemented yet. Will be once sorted strategies finalised");
+    }
+
+    public boolean isEmpty() {
+        if (length() == 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public E dequeue() {
+
+        if (length() > 0) {
+            E element = get(0);
+            remove(0);
+
+            if (element instanceof UserNull) {
+                nullsInserted--;
+                element = null;
+            }
+
+            return element;
+        } else {
+            throw new NullPointerException("No items to dequeue");
+        }
+    }
+
+    public void enqueue(E item) {
+        add(item);
+    }
+
+    public void push (E item) {
+        add(item);
+    }
+
+    public E pop() {
+        if (length() > 0) {
+            E element = get(length()-1);
+            remove(length()-1);
+
+            if (element instanceof UserNull) {
+                nullsInserted--;
+                element = null;
+            }
+
+            return element;
+        } else {
+            throw new NullPointerException("No items to pop");
+        }
+    }
+
+    public E peek(HowToFunction acting) {
+        if (length() > 0){
+            switch (acting){
+                case STACK:
+                    return (E) array[endPointer-1];
+                case QUEUE: 
+                    return (E) array[startPointer];
+                default:
+                    throw new IllegalArgumentException("Not an enum allowed with peek. Choose STACK/QUEUE");
+            } 
+        }
+        else {
+            throw new NullPointerException("No item to peek");
+        }
+    }
+
+    public int size() {
+        return length();
+    }
+
+    public int length() {
+        return endPointer-startPointer;
+    }
+
+    public void clear() {
+        array = new Object[initialSize];
+        startPointer = 0;
+        endPointer = 0;
+    }
+
+    public void empty() {
+        clear();
+    }
+
+    //TODO: equals, contains, firstIndexOf, allIndexesOf, rawLength, setGrowthRate, getGrowthRate, getSubArray, setSubArray, exportArray, importArray, exportContext, importContext, Iterator
 
     /**
      * Get the item held at the given index

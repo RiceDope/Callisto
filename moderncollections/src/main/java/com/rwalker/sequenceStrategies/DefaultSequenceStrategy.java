@@ -540,8 +540,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * Clears the array. New arrays size is initialSize
      */
     public void clear(){
-        Object[] newArray =  new Object[initialSize];
-        array = newArray;
+        array =  new Object[initialSize];
         startPointer = 0;
         endPointer = 0;
     }
