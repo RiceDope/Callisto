@@ -17,16 +17,14 @@ Python programs being used in order to produce graphs and analyse the data from 
     - Encryption Year 2 (Security)
     - League table Year 2 (Algorithms)
     - Student grades management system (Especially after work with consumer (Calculate a new Map or Sequence based on students percentages))
-- Showcase how to use the Collections
 - Continue benchmarking
-- List out what needs to be completed by the deadline and the direction that I want to focus on for writeup.
-- Issue with RingBuffer where it expands with one slot remaining. Default does not do this (fails test)
 - Range of functions that take in standard java collections and turn them into my collection types.
 - Allow all data types to shrink if they end up underpopulated
 - Overload the sort function to be able to specify a comparator.
 - Need to think about determinism (Removing items while an iterator is in effect)
-- Spliterator + Consumers
 - Seperate strategies for sorting Sequence
+- Null support for Map
+- Correct null support for Set
 
 # Ideas
 

@@ -9,5 +9,6 @@ package com.rwalker.sequenceStrategies;
 
 public enum SequenceStrategies {
     DEFAULT, 
-    RINGBUFFER
+    RINGBUFFER,
+    SORTED_DEFAULT
 }
