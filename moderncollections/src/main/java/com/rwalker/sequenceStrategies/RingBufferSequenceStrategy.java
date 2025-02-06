@@ -862,11 +862,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
 
     class SequenceIterator implements Iterator<E> {
 
-        private int currentIndex;
-
-        public SequenceIterator() {
-            currentIndex = startPointer;
-        }
+        private int currentIndex = startPointer;
 
         @Override
         public boolean hasNext() {
@@ -875,12 +871,31 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
 
         @Override
         public E next() {
-            E element = (E) array[currentIndex];
-            currentIndex++;
             if (currentIndex == array.length) {
                 currentIndex = 0;
             }
+            E element = (E) array[currentIndex];
+            currentIndex++;
+            // if (currentIndex == array.length) {
+            //     currentIndex = 0;
+            // }
             return element;
+        }
+
+        @Override
+        public void remove() {
+
+            --currentIndex;
+            System.out.println("(" + currentIndex);
+            if (currentIndex < 0 && endPointer < startPointer) {
+                currentIndex = array.length-1;
+            }
+            System.out.println(currentIndex + ")");
+            int oldSp = startPointer;
+            RingBufferSequenceStrategy.this.remove(convertPureArrToBuffer(currentIndex));
+            if (currentIndex == oldSp) {
+                currentIndex = startPointer;
+            }
         }
 
     }

@@ -8,8 +8,14 @@ package com.rwalker;
 
 // Junit tings
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import java.util.Iterator;
+
 import org.junit.Test;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import com.rwalker.sequenceStrategies.SequenceStrategies;
 
 /**
  * Unit test for ArrayList functionality of Sequence
@@ -304,5 +310,86 @@ public class ArrayListTest {
         testing.add(30);
         testing.add(null);
         assertEquals(null, testing.get(3));
+    }
+
+    /**
+     * Test that we don't crash when Iterating on nothing
+     */
+    @Test
+    public void testIteratorNull() {
+        Sequence<Integer> testing = new Sequence<>();
+        for (Integer i : testing) {
+            assertNull(i);
+        }
+    }
+
+    /**
+     * Test that removing an item from the middle removes correctly (With a gap at the end)
+     */
+    @Test
+    public void testIteratorRemove() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.add(10);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
+        testing.dequeue();
+        
+        Iterator<Integer> it = testing.iterator();
+        while(it.hasNext()) {
+            int next = it.next();
+            if (next == 20) {
+                it.remove();
+            }
+        }
+        assertEquals("[10, 30]", testing.toString());
+    }
+
+    /**
+     * Test that removing all items from the list works
+     */
+    @Test
+    public void testIteratorRemoveAll() {
+        Sequence<Integer> testing = new Sequence<>();
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
+        
+        Iterator<Integer> it = testing.iterator();
+        while(it.hasNext()) {
+            it.next();
+            it.remove();
+        }
+        assertEquals("[]", testing.toString());
+    }
+
+    /**
+     * Test that we correctly can remove all terms from a Sequence while holding the subArray in an inversion
+     */
+    @Test
+    public void testIteratorRemoveAllInInversion() {
+        Sequence<Integer> testing = new Sequence<>(8, SequenceStrategies.RINGBUFFER);
+        testing.add(10);
+        testing.add(20);
+        testing.add(30);
+        testing.add(40);
+        testing.add(50);
+        testing.add(60);
+        testing.add(70);
+        testing.dequeue();
+        testing.dequeue();
+        testing.dequeue();
+        testing.add(80);
+        testing.add(90);
+        testing.add(100);
+
+        assertEquals("[40, 50, 60, 70, 80, 90, 100]", testing.toString());
+
+        Iterator<Integer> it = testing.iterator();
+        while(it.hasNext()) {
+            it.next();
+            it.remove();
+        }
+
     }
 }

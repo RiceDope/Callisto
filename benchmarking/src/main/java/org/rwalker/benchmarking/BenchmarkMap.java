@@ -50,16 +50,16 @@ public class BenchmarkMap {
         }
     }
 
-    @Benchmark
-    @Fork(value = 3, warmups = 1)
-    @Measurement(iterations = 2)
-    @Warmup(iterations = 1)
-    public void testPutAndGet() {
-        for (int i = 0; i < 1000; i++) {
-            map.put(i, i);
-        }
-        map.get(10);
-    }
+    // @Benchmark
+    // @Fork(value = 3, warmups = 1)
+    // @Measurement(iterations = 2)
+    // @Warmup(iterations = 1)
+    // public void testPutAndGet() {
+    //     for (int i = 0; i < 1000; i++) {
+    //         map.put(i, i);
+    //     }
+    //     map.get(10);
+    // }
 
     @Benchmark
     @Fork(value = 3, warmups = 1)

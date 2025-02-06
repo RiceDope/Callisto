@@ -82,14 +82,17 @@ public class BenchMarkArrayList {
     @Measurement(iterations = 5)
     @Warmup(iterations = 3)
     public void testArrayListSortedBinarySearch(Blackhole blackhole){
+
+
         for (int i = 0; i < appendIterations; i++) {
-            arrayList.add(i);
             int index = Collections.binarySearch(arrayList, i);
             if (index < 0) {
                 index = -index - 1;
             }
             arrayList.add(index, i);
         }
+
+        
         blackhole.consume(arrayList);
     }
 

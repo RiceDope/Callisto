@@ -206,7 +206,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         } else {
 
             array[indexToAdjust] = null;
-            closeGap(index);
+            closeGap(indexToAdjust);
         }
     }
 
@@ -999,6 +999,18 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         this.minumumExpansion = context.minimumExpansion;
     }
 
+    /**
+     * Convert the internal index to an external index.
+     * 
+     * external index = what user sees
+     * internal index = the index in the sub array
+     * @param internalIndex
+     * @return
+     */
+    private int convertToExternalIndex(int internalIndex){
+        return internalIndex - startPointer;
+    }
+
     /*
      * ================================================
      *          END OF EXPERT USER FUNCTIONS
@@ -1011,20 +1023,30 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
 
     class SequenceIterator implements Iterator<E> {
             
-            private int index = startPointer;
-    
-            @Override
-            public boolean hasNext() {
-                return index < endPointer;
+        private int index = startPointer;
+        private Integer prev;
+
+        @Override
+        public boolean hasNext() {
+            return index < endPointer;
+        }
+
+        @Override
+        public E next() {
+            if (!hasNext()) {
+                throw new IndexOutOfBoundsException("No more elements to iterate over");
             }
-    
-            @Override
-            public E next() {
-                if (!hasNext()) {
-                    throw new IndexOutOfBoundsException("No more elements to iterate over");
-                }
-                return (E) array[index++];
+            prev = index;
+            return (E) array[index++];
+        }
+
+        @Override
+        public void remove() {
+            if (prev == null) {
+                throw new IllegalStateException("Cannot remove element before calling next()");
             }
+            DefaultSequenceStrategy.this.remove(convertToExternalIndex(--index));
+        }
     }
 
 }

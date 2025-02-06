@@ -26,6 +26,7 @@ Python programs being used in order to produce graphs and analyse the data from 
 - Overload the sort function to be able to specify a comparator.
 - Need to think about determinism (Removing items while an iterator is in effect)
 - Spliterator + Consumers
+- Seperate strategies for sorting Sequence
 
 # Ideas
 

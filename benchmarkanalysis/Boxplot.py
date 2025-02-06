@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
-path = "c:/Users/Rhysw/Documents/Year Three/Dissertation/COMP6200-Modern-Collections-Library/benchmarking/040225-1040.json"
+path = "c:/Users/Rhysw/Documents/Year Three/Dissertation/COMP6200-Modern-Collections-Library/benchmarking/221224-2330.json"
 file = open(path, "r")
 data = json.loads(file.read())
 file.close()
@@ -18,12 +18,15 @@ for benchmark in data:
         benchmark += dt
     benchmarks.append(benchmark)
 
-names = list(["Sequence","Sorted Sequence", "Set"])
+del benchmarks[3]
+del benchmarks[1]
+
+names = list(["ArrayList","Sequence"])
 plt.boxplot(benchmarks, tick_labels=names)
 plt.xlabel("Benchmark")
 plt.ylabel("OPS/ms")
 plt.ylim(bottom=0)
-plt.title("Contains method performance")
+plt.title("Add operation performance")
 plt.grid()
-plt.savefig(f"SetSequenceContainsPerformance.png", bbox_inches="tight")
+plt.savefig(f"ArrayListAddSequenceAddTitle.png", bbox_inches="tight")
 plt.show()

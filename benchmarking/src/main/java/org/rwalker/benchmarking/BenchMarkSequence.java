@@ -65,10 +65,13 @@ public class BenchMarkSequence {
     @Measurement(iterations = 5)
     @Warmup(iterations = 3)
     public void testSequenceSorted(Blackhole blackhole) {
+
         sequence.sortOnwards();
         for (int i = 0; i < appendIterations; i++) {
             sequence.add(i);
         }
+
+
         blackhole.consume(sequence);
     }
 
