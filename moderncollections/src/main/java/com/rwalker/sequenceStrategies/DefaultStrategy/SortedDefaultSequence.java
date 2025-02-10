@@ -50,8 +50,14 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
         array = new Object[initialSize];
 
         if (this.defaultComparator == null) {
-            throw new IllegalArgumentException("Comparator cannot be null for sorted Strategy");
+            throw new IllegalStateException("Comparator cannot be null for sorted Strategy");
         }
+    }
+
+    public void post() {
+        Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
+        Arrays.fill(array, null); // Null out original to maintain terms
+        System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
     }
 
     public SequenceStrategies getname(){
@@ -414,6 +420,10 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
     }
 
     public boolean contains (E element) {
+
+        if (element == null && nullsInserted > 0) {
+            return true;
+        }
         
         // Search for its location using binary search
         int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer-nullsInserted, element, defaultComparator, endPointer-startPointer-nullsInserted);

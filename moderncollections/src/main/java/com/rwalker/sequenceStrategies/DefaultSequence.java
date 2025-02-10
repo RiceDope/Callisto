@@ -18,7 +18,7 @@ import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
  * Will maintain the two different strategies (Sorted Unsorted)
  */
 
-public class DefaultSequence<E> implements DefaultSequenceStrategy<E>{
+public class DefaultSequence<E> implements SequenceManipulatorInterface<E>{
 
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
     private DefaultSequenceStrategy<E> strat; // The specific strategy that is being ran at the time
@@ -106,6 +106,12 @@ public class DefaultSequence<E> implements DefaultSequenceStrategy<E>{
 
     private void swapToState(SequenceState state) {
         // Swap to the new state
+
+        // Ensure sorting has occured before becoming sorted
+        if (state == SequenceState.SORTED) {
+            strat.sort();
+        }
+
         try {
             SequenceContext<E> curCon = strat.exportContext();
             Object[] curArray = strat.exportArray();
@@ -113,6 +119,9 @@ public class DefaultSequence<E> implements DefaultSequenceStrategy<E>{
             strat.importArray(curArray);
             strat.importContext(curCon);
             currentState = state;
+        } catch (IllegalStateException e) {
+            System.out.println("THIS BIT RUNNING");
+            throw new IllegalStateException("Cannot swap to sorted when we have no comparator set");
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize strategy", e);
@@ -121,10 +130,17 @@ public class DefaultSequence<E> implements DefaultSequenceStrategy<E>{
 
     private void swapToState(SequenceState state, Comparator<E> comparator) {
         // Swap to the new state
+
+        // Ensure sorting has occured before becoming sorted
+        if (state == SequenceState.SORTED) {
+            strat.sort();
+        }
+        
         try {
             SequenceContext<E> curCon = strat.exportContext();
             curCon.comparator = comparator;
             Object[] curArray = strat.exportArray();
+
             strat = strategies.get(state).getDeclaredConstructor(SequenceContext.class).newInstance(strat.exportContext());
             strat.importArray(curArray);
             strat.importContext(curCon);

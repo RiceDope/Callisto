@@ -14,20 +14,17 @@ import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
 public class ManualTest {
     public static void main(String[] args){
 
-        SequenceContext<Integer> context = new SequenceContext<>();
-        context.comparator = (a, b) -> a - b;
-        context.initialSize = 4;
-        context.currentState = SequenceState.UNSORTED;
-        
-        DefaultSequence<Integer> seq = new DefaultSequence<>(context);
+        Sequence<Integer> seq = new Sequence<>();
 
+        seq.add(5);
+        seq.add(3);
         seq.add(10);
-        seq.replace(0, 1);
-        seq.contains(1);
+        seq.add(20);
+
+        seq.setComparator((a, b) -> a - b);
         seq.sortOnwards();
 
-        System.out.println(seq.getname());
-        System.out.println(seq.getstate());
+        System.out.println(seq);
 
 
         // Example Sequence Programs
