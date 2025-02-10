@@ -18,6 +18,8 @@ import com.rwalker.Sequence;
 public interface SequenceStrategy<E>{
     
     // General Sequence interaction methods
+    SequenceStrategies getname();
+    SequenceState getstate();
     void insert(int index, E element);
     void add(E item);
     void addAll(ModernCollections<E> toApp);

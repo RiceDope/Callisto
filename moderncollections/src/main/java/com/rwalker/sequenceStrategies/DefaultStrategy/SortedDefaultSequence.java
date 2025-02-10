@@ -54,17 +54,11 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
         }
     }
 
-    public void post() {
-        Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
-        Arrays.fill(array, null); // Null out original to maintain terms
-        System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
-    }
-
     public SequenceStrategies getname(){
         return name;
     }
 
-    public SequenceState getState(){
+    public SequenceState getstate(){
         return state;
     }
 

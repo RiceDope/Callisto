@@ -21,10 +21,14 @@ public class ManualTest {
         seq.add(10);
         seq.add(20);
 
+        System.out.println(seq.getname());
+        System.out.println(seq.getstate());
+
         seq.setComparator((a, b) -> a - b);
         seq.sortOnwards();
 
-        System.out.println(seq);
+        System.out.println(seq.getname());
+        System.out.println(seq.getstate());
 
 
         // Example Sequence Programs

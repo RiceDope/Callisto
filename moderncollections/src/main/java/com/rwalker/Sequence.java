@@ -20,6 +20,7 @@ import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceHeuristic;
 import com.rwalker.sequenceStrategies.SequenceManipulatorInterface;
+import com.rwalker.sequenceStrategies.SequenceState;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
 import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
@@ -360,6 +361,10 @@ public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
      */
     public SequenceStrategies getname(){
         return strat.getname();
+    }
+
+    public SequenceState getstate(){
+        return strat.getstate();
     }
 
     /**

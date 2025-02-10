@@ -31,6 +31,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceManip
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
     private com.rwalker.sequenceStrategies.SequenceStrategies name = SequenceStrategies.RINGBUFFER;
+    private SequenceState state = SequenceState.UNSORTED;
     
     public RingBufferSequenceStrategy(SequenceContext<E> context) {
         this.endPointer = context.endPointer;
@@ -50,6 +51,14 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceManip
 
     public SequenceStrategies getname() {
         return name;
+    }
+
+    public SequenceState getstate() {
+        if (enforceSort) {
+            return SequenceState.SORTED;
+        } else {
+            return SequenceState.UNSORTED;
+        }
     }
 
     /**
