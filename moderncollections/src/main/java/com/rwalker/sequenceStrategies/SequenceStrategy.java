@@ -16,15 +16,10 @@ import com.rwalker.Sequence;
  */
 
 public interface SequenceStrategy<E>{
-
-    // Used in order to change between strategies
-    Object[] exportArray();
-    void importArray(Object[] array);
-    SequenceContext<E> exportContext();
-    void importContext(SequenceContext<E> context);
-    SequenceStrategies getname();
     
     // General Sequence interaction methods
+    SequenceStrategies getname();
+    SequenceState getstate();
     void insert(int index, E element);
     void add(E item);
     void addAll(ModernCollections<E> toApp);
@@ -34,11 +29,8 @@ public interface SequenceStrategy<E>{
     E get (int index);
     void sort();
     void sort(Comparator<E> comparator);
-    void sortOnwards();
-    void sortOnwards(Comparator<E> comp);
     Sequence<E> sortCopy();
     Sequence<E> sortCopy(Comparator<E> comparator);
-    void stopSorting();
     void setComparator(Comparator<E> comparator);
     boolean isEmpty();
     E dequeue();
@@ -55,12 +47,12 @@ public interface SequenceStrategy<E>{
     boolean contains(E value);
     Integer firstIndexOf(E value);
     int[] allIndexesOf(E value);
-    int rawLength();
-    String rawString();
+    int rawLength(); //TODO: THINKING ABOUT REMOVE
+    String rawString();  //TODO: THINKING ABOUT REMOVE
     void setGrowthRate(double growthRate);
     double getGrowthRate();
-    Object[] getSubArray();
-    void setSubArray(int startPointer, int endPointer, Object[] array);
+    Object[] getSubArray(); // TODO: REMOVE
+    void setSubArray(int startPointer, int endPointer, Object[] array); // TODO: REMOVE
     Iterator<E> iterator();
 
 }

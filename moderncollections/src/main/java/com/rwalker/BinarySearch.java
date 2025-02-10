@@ -6,7 +6,7 @@ import java.util.Comparator;
 /**
  * A modified form of binary search for use with my custom Sequence data type
  * @author Rhys Walker
- * @version 21/01/2025
+ * @version 21/10/2024
  */
 
 public class BinarySearch {
@@ -45,7 +45,7 @@ public class BinarySearch {
             int midPoint = ((curTop - curBottom)/2)+curBottom; // Will calculate our midpoint
 
             // If the midpoint is 0 then it must be the same as that index or one on either side
-            if (midPoint == 0){
+            if (midPoint == startPointer){
                 if (comparator.compare(array[midPoint], term) == 0){ // if they are equal
                     return midPoint;
                 } else if(comparator.compare(term, array[midPoint]) < 0) {
@@ -60,7 +60,7 @@ public class BinarySearch {
             }
 
             // If the midpoint is the max then it must be the same as that inedex or greater
-            if (midPoint == maxSize-1){ // Minus one because curTop is the next free index
+            if (midPoint == endPointer-1){ // Minus one because curTop is the next free index
                 if (comparator.compare(array[midPoint], term) == 0){ // if they are equal
                     return midPoint;
                 } else if(comparator.compare(term, array[midPoint]) > 0) {

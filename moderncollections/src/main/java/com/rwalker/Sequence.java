@@ -15,20 +15,23 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
+import com.rwalker.sequenceStrategies.DefaultSequence;
 import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceHeuristic;
+import com.rwalker.sequenceStrategies.SequenceManipulatorInterface;
+import com.rwalker.sequenceStrategies.SequenceState;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
+import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
 
 @SuppressWarnings("unchecked")
 public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
-    private SequenceStrategy<E> strat; // The specific strategy that is being ran at the time
+    private SequenceManipulatorInterface<E> strat; // The specific strategy that is being ran at the time
     private SequenceStrategies currentStrat = SequenceStrategies.DEFAULT; // The "name" of the current strategy
-    private Map<SequenceStrategies, Class<? extends SequenceStrategy<E>>> strategies = new Map<>(); // A Map mapping the "names" to their respective classes
+    private Map<SequenceStrategies, Class<? extends SequenceManipulatorInterface<E>>> strategies = new Map<>(); // A Map mapping the "names" to their respective classes
     private SequenceHeuristic heuristic = new SequenceHeuristic(); // The heuristic for the sequence
 
     /**
@@ -299,12 +302,12 @@ public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
     private void setupStrategies(){
 
         // Put all of the strategies into the map
-        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<E>>) (Class<?>) DefaultSequenceStrategy.class);
-        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategy<E>>) (Class<?>) RingBufferSequenceStrategy.class);
+        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceManipulatorInterface<E>>) (Class<?>) DefaultSequence.class);
+        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceManipulatorInterface<E>>) (Class<?>) RingBufferSequenceStrategy.class);
 
         // Get the default strategy for now
         try {
-            strat = (SequenceStrategy<E>) strategies.get(currentStrat).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
+            strat = (SequenceManipulatorInterface<E>) strategies.get(currentStrat).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize strategy", e);
@@ -319,7 +322,7 @@ public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
         Object[] array = strat.exportArray();
         SequenceContext<E> context = strat.exportContext();
         try {
-            strat = (SequenceStrategy<E>) strategies.get(newStrat).getDeclaredConstructor(SequenceContext.class).newInstance(context);
+            strat = (SequenceManipulatorInterface<E>) strategies.get(newStrat).getDeclaredConstructor(SequenceContext.class).newInstance(context);
             strat.importArray(array);
             strat.importContext(context);
             currentStrat = newStrat;
@@ -358,6 +361,10 @@ public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
      */
     public SequenceStrategies getname(){
         return strat.getname();
+    }
+
+    public SequenceState getstate(){
+        return strat.getstate();
     }
 
     /**

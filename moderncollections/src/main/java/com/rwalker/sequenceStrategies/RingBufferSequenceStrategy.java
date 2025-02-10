@@ -20,7 +20,7 @@ import com.rwalker.UserNullSort;
 // TODO: when startPointer == array.length
 
 @SuppressWarnings({"unchecked"})
-public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrategy<E> {
+public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceManipulatorInterface<E> {
     
     private int endPointer;
     private int startPointer;
@@ -31,6 +31,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
     private com.rwalker.sequenceStrategies.SequenceStrategies name = SequenceStrategies.RINGBUFFER;
+    private SequenceState state = SequenceState.UNSORTED;
     
     public RingBufferSequenceStrategy(SequenceContext<E> context) {
         this.endPointer = context.endPointer;
@@ -41,11 +42,23 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
         this.defaultComparator = context.comparator;
         this.minumumExpansion = context.minimumExpansion;
 
+        if (context.currentState == SequenceState.SORTED) {
+            enforceSort = true;
+        }
+
         array = new Object[initialSize];
     }
 
     public SequenceStrategies getname() {
         return name;
+    }
+
+    public SequenceState getstate() {
+        if (enforceSort) {
+            return SequenceState.SORTED;
+        } else {
+            return SequenceState.UNSORTED;
+        }
     }
 
     /**
@@ -663,7 +676,11 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrat
         // Adjusts the pointers to be in the correct positions
         int returnableEndPointer = size();
         int startPointer = 0;
-        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion);
+        SequenceState state = SequenceState.UNSORTED;
+        if (enforceSort) {
+            state = SequenceState.SORTED;
+        }
+        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion, state);
     }
 
     /**

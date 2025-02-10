@@ -13,7 +13,7 @@ import java.util.Iterator;
  //TODO: Specialisation for small sets
 
 @SuppressWarnings("unchecked")
-public class Set<E> implements Iterable<E>, ModernCollections<E> {
+public class Set<E> implements Iterable<E>, LinearCollection<E> {
     
     private SetEntry<E>[] items;
     private SetEntry<E> firstInserted; // Beginning of the doubly linked list

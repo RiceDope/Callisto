@@ -19,12 +19,13 @@ public class SequenceContext <E> {
     public boolean enforceSort = false;
     public Comparator<E> comparator;
     public int minimumExpansion = 1;
+    public SequenceState currentState = SequenceState.UNSORTED;
 
     public SequenceContext(){
         // Default values are used
     }
 
-    public SequenceContext(int startPointer, int endPointer, int initialSize, double growthRate, boolean enforceSort, Comparator<E> comparator, int minimumExpansion){
+    public SequenceContext(int startPointer, int endPointer, int initialSize, double growthRate, boolean enforceSort, Comparator<E> comparator, int minimumExpansion, SequenceState currentState){
         this.startPointer = startPointer;
         this.endPointer = endPointer;
         this.initialSize = initialSize;
@@ -32,7 +33,7 @@ public class SequenceContext <E> {
         this.enforceSort = enforceSort;
         this.comparator = comparator;
         this.minimumExpansion = minimumExpansion;
-        
+        this.currentState = currentState;
     }
 
 }

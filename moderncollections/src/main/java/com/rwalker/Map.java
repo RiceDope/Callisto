@@ -196,6 +196,13 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
      * @param entry The value to replace current value
      */
     public void replace(K key, E entry) {
+
+        if (key == null) {
+            throw new IllegalArgumentException("Key cannot be null");
+        }
+        
+        // TODO: Null support needs to be added
+
         if (keyExists(key)){
             put (key, entry);
         }
