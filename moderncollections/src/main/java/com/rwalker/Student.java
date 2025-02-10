@@ -21,7 +21,7 @@ public class Student {
     private Comparator<Student> ageComp = (a, b) -> a.getAge() - b.getAge();
     private Comparator<Student> nameComp = (a, b) -> a.getName().compareTo(b.getName());
     
-    public Student(int age, String name){
+    public Student(String name, int age){
         this.age = age;
         this.name = name;
     }

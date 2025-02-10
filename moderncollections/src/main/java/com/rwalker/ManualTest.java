@@ -1,5 +1,6 @@
 package com.rwalker;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.rwalker.sequenceStrategies.SequenceContext;
@@ -29,7 +30,7 @@ public class ManualTest {
         sortedDefaultSequence.add(null);
         sortedDefaultSequence.add(8);
         sortedDefaultSequence.add(9);
-        sortedDefaultSequence.add(10);
+        sortedDefaultSequence.add(20);
 
         System.out.println(sortedDefaultSequence.rawString());
         System.out.println(sortedDefaultSequence);
@@ -47,14 +48,44 @@ public class ManualTest {
         System.out.println(sortedDefaultSequence.rawString());
         System.out.println(sortedDefaultSequence);
 
-        sortedDefaultSequence.add(1);
+        sortedDefaultSequence.insert(2, 12);
 
         System.out.println(sortedDefaultSequence.rawString());
         System.out.println(sortedDefaultSequence);
 
-        sortedDefaultSequence.sort((a, b) -> b - a);
+        sortedDefaultSequence.insert(0, 6);
+
+        System.out.println(sortedDefaultSequence.rawString());
         System.out.println(sortedDefaultSequence);
 
+        sortedDefaultSequence.replace(4, 24);
+        sortedDefaultSequence.insert(5, 26);
+        sortedDefaultSequence.insert(6, null);
+        sortedDefaultSequence.add(9);
+
+        System.out.println(sortedDefaultSequence.rawString());
+        System.out.println(sortedDefaultSequence);
+
+        Iterator<Integer> it = sortedDefaultSequence.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+            it.remove();
+        }
+
+        // Example Sequence Programs
+        
+        // Sequence<Student> students = new Sequence<>();
+        // students.setComparator((a, b) -> a.getAge() - b.getAge());
+        // students.sortOnwards();
+        // students.add(new Student("Bob", 20));
+        // students.add(new Student("Alice", 21));
+        // students.add(new Student("Charlie", 19));
+        // students.add(new Student("David", 22));
+        // students.add(new Student("Eve", 18));
+        // System.out.println(students);
+        // Sequence<Student> descStudents;
+        // descStudents = students.sortCopy((a, b) -> b.getAge() - a.getAge());
+        // System.out.println(descStudents);
 
     }
 }   

@@ -21,7 +21,7 @@ import com.rwalker.UserNullSort;
  */
 
  @SuppressWarnings("unchecked")
-public class SortedDefaultSequence<E> {
+public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
     
     private int endPointer;
     private int startPointer;
@@ -55,13 +55,82 @@ public class SortedDefaultSequence<E> {
     }
 
     /**
-     * Method to insert an element into the array (Unsupported when sorting)
+     * Method to insert an element into the array
      * @param index The index to insert into
      * @param value The value to insert
      */
     public void insert(int index, E value) {
 
-        throw new UnsupportedOperationException("Insert not supported for this strategy");
+        manipulateArray();
+
+        int subIndex = index+startPointer;
+
+        // First are we inside the array bounds
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+
+        if (value == null) {
+            // Are we within the null section of the array
+            if (subIndex > endPointer-nullsInserted) {
+                // We are in the right location
+                nullsInserted++;
+                makeGap(subIndex);
+                array[subIndex] = (E) new UserNull<E>();
+                return;
+            } else if (subIndex == endPointer-nullsInserted) { // Last not null point
+                // We are in the right location
+                nullsInserted++;
+                makeGap(subIndex);
+                array[subIndex] = (E) new UserNull<E>();
+                return;
+            } else {
+                // We are in the wrong location
+                throw new IllegalArgumentException("Cannot insert null in the middle of the array");
+            }
+        }
+
+        // We can insert here as its the end but we must check if we are correct
+        if (subIndex == endPointer-nullsInserted) {
+            if (defaultComparator.compare((E)array[subIndex-1], value) < 0) {
+                insertAtLocation(subIndex, value);
+                return;
+            } else {
+                throw new IllegalArgumentException("Attempting to insert at end but not in the correct order");
+            }
+        }
+
+        // We are not null and are inside of array bounds
+        if (subIndex < endPointer - nullsInserted) {
+            // We are not in the null section
+
+            // If we are at position 0 just check that index
+            if (subIndex == startPointer) {
+
+                // If we are less than or equal to
+                if (defaultComparator.compare((E) array[subIndex], value) > 0 || defaultComparator.compare((E) array[subIndex], value) == 0) {
+                    // We are in the right location
+                    insertAtLocation(subIndex, value);
+                    return;
+                } else {
+                    // We are in the wrong location
+                    throw new IllegalArgumentException("Inserting at the beginning of array not consistent with Compartor");
+                }
+            }
+
+            // If we are greater than lower smaller than index or equal to the index then insert
+            if (defaultComparator.compare((E) array[subIndex] , value) > 0 && defaultComparator.compare((E) array[subIndex-1], value) < 0 || defaultComparator.compare((E) array[subIndex], value) == 0) {
+                // We are in the right location
+                insertAtLocation(subIndex, value);
+                return;
+            } else {
+                // We are in the wrong location
+                throw new IllegalArgumentException("Insertion index not consistent with sorting requirement");
+
+            }
+        }
+
+        throw new IllegalArgumentException("Index not allowed");
 
     }
 
@@ -119,12 +188,51 @@ public class SortedDefaultSequence<E> {
 
     /**
      * Replaces the element at the index with the value (Unsupported for this strategy)
+     * The value cannot be null
+     * The index must be within the non null section anything that is within the null section will throw an error
      * @param index
      * @param value
      */
     public void replace(int index, E value) {
 
-        throw new UnsupportedOperationException("Replace not supported for this strategy");
+        int subIndex = index+startPointer;
+
+        // If we are replacing a value with a null then we should throw an error
+        if (value == null) {
+            throw new IllegalArgumentException("Cannot replace a value with a null while sorting");
+        }
+
+        // Are we in the right bounds
+        if (subIndex < startPointer || subIndex >= endPointer-nullsInserted) {
+            throw new IndexOutOfBoundsException("Index out of bounds (May be within null section)");
+        }
+
+        // If replacing top end or low end then we need an exception (We must be smaller than the first)
+        if (subIndex == startPointer) {
+            if (defaultComparator.compare((E) array[subIndex+1], value) > 0) {
+                array[subIndex] = value;
+                return;
+            } else {
+                throw new IllegalArgumentException("Replacement index not consistent with sorting requirement");
+            }
+        }
+
+        // Same as above but for endPointer-1
+        if (subIndex == endPointer-1-nullsInserted) {
+            if (defaultComparator.compare((E) array[subIndex-1], value) < 0) {
+                array[subIndex] = value;
+                return;
+            } else {
+                throw new IllegalArgumentException("Replacement index not consistent with sorting requirement");
+            }
+        }
+
+        // If we are replacing we need to check it is in the right location
+        if (defaultComparator.compare((E) array[subIndex-1], value) < 0 && defaultComparator.compare((E) array[subIndex+1], value) > 0) {
+            array[subIndex] = value;
+        } else {
+            throw new IllegalArgumentException("Replacement index not consistent with sorting requirement");
+        }
 
     }
 
@@ -166,11 +274,17 @@ public class SortedDefaultSequence<E> {
         sort(comparator);
     }
 
+    /**
+     * Returns a copy of the current array
+     * @return
+     */
     public Sequence<E> sortCopy() {
+        // TODO: IMPLEMENT THSI METHOD ONCE SEQUENCE DONE
         throw new UnsupportedOperationException("Sort copy not implemented yet. Will be once sorted strategies finalised");
     }
 
     public Sequence<E> sortCopy(Comparator<E> comparator) {
+        // TODO: IMPLEMENT THSI METHOD ONCE SEQUENCE DONE
         throw new UnsupportedOperationException("Sort copy not implemented yet. Will be once sorted strategies finalised");
     }
 
@@ -269,7 +383,134 @@ public class SortedDefaultSequence<E> {
         clear();
     }
 
-    //TODO: equals, contains, firstIndexOf, allIndexesOf, rawLength, setGrowthRate, getGrowthRate, getSubArray, setSubArray, exportArray, importArray, exportContext, importContext, Iterator
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Sequence) {
+            Sequence<E> seq = (Sequence<E>) obj;
+            if (seq.length() != length()) {
+                return false;
+            }
+
+            for (int i = 0; i < length(); i++) {
+                if (!seq.get(i).equals(get(i))) {
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean contains (E element) {
+        
+        // Search for its location using binary search
+        int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer-nullsInserted, element, defaultComparator, endPointer-startPointer-nullsInserted);
+
+        if (array[index].equals(element)){
+            return true;
+        }
+
+        return false;
+    }
+
+    public Integer firstIndexOf(E element) {
+        int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer-nullsInserted, element, defaultComparator, endPointer-startPointer-nullsInserted);
+
+        // We may have multiple elements of the same value check that below is different
+
+        if (index != startPointer) {
+
+            if (!array[index].equals(element)){
+                return null;
+            }
+
+            while(array[index-1].equals(element)) {
+                index--;
+                if (index == startPointer) {
+                    break;
+                }
+            }
+
+            return index-startPointer;
+        } else {
+            if (array[index].equals(element)) {
+                return index-startPointer;
+            }
+        }
+
+        return null;
+    }
+
+    public int[] allIndexesOf(E element) {
+
+        // Locate the first Index of the element
+        Integer firstIndex = firstIndexOf(element);
+
+        if (firstIndex != null) {
+            int[] indexes = new int[length()];
+
+            indexes[0] = firstIndex;
+
+            int count = 1;
+
+            for (int i = firstIndex+1; i < length(); i++) {
+                if (array[i].equals(element)) {
+                    indexes[count] = i;
+                    count++;
+                }
+            }
+
+            return Arrays.copyOf(indexes, count);
+        }
+
+        return null;
+    }
+
+    public int rawLength() {
+        return array.length;
+    }
+
+    public void setGrowthRate(double growthRate) {
+        this.growthRate = growthRate;
+    }
+
+    public double getGrowthRate() {
+        return growthRate;
+    }
+
+    public E[] getSubArray() {
+        return (E[]) array;
+    }
+
+
+    public void setSubArray(int startPointer, int endPointer, Object[] array) {
+        this.array = array;
+        this.startPointer = startPointer;
+        this.endPointer = endPointer;
+    }
+
+    public E[] exportArray() {
+        return (E[]) array;
+    }
+
+    public void importArray(Object[] array) {
+        this.array = array;
+    }
+
+    public SequenceContext<E> exportContext() {
+        return new SequenceContext<>(startPointer, endPointer, initialSize, growthRate, true, defaultComparator, minumumExpansion);
+    }
+
+    public void importContext(SequenceContext<E> context) {
+        this.startPointer = context.startPointer;
+        this.endPointer = context.endPointer;
+        this.initialSize = context.initialSize;
+        this.growthRate = context.growthRate;
+        this.defaultComparator = context.comparator;
+        this.minumumExpansion = context.minimumExpansion;
+    }
 
     /**
      * Get the item held at the given index
@@ -293,7 +534,6 @@ public class SortedDefaultSequence<E> {
     public void remove(int index) {
 
         // If we are removing the first then just increase the start
-        System.out.println(index);
         if (index == 0) {
 
             if (array[startPointer] instanceof UserNull) {
@@ -491,5 +731,38 @@ public class SortedDefaultSequence<E> {
 
         startPointer = 0;
         endPointer = newEp;
+    }
+
+    public Iterator<E> iterator() {
+        return new SortedSequenceIterator();
+    }
+
+    class SortedSequenceIterator implements Iterator<E> {
+            
+        private int index = startPointer;
+        private Integer prev;
+
+        @Override
+        public boolean hasNext() {
+            return index < endPointer;
+        }
+
+        @Override
+        public E next() {
+            if (!hasNext()) {
+                throw new IndexOutOfBoundsException("No more elements to iterate over");
+            }
+            prev = index;
+            return (E) array[index++];
+        }
+
+        @Override
+        public void remove() {
+            if (prev == null) {
+                throw new IllegalStateException("Cannot remove element before calling next()");
+            }
+            int removeIndex = index-startPointer;
+            SortedDefaultSequence.this.remove(--removeIndex);
+        }
     }
 }
