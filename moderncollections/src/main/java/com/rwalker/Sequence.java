@@ -15,15 +15,16 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.rwalker.sequenceStrategies.DefaultSequenceStrategy;
 import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceHeuristic;
+import com.rwalker.sequenceStrategies.SequenceManipulatorInterface;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
+import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
 
 @SuppressWarnings("unchecked")
-public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
+public class Sequence<E> implements Iterable<E>, LinearCollection<E>, SequenceStrategy<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
     private SequenceStrategy<E> strat; // The specific strategy that is being ran at the time
@@ -299,7 +300,7 @@ public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
     private void setupStrategies(){
 
         // Put all of the strategies into the map
-        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<E>>) (Class<?>) DefaultSequenceStrategy.class);
+        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategy<E>>) (Class<?>) UnsortedDefaultSequence.class);
         strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategy<E>>) (Class<?>) RingBufferSequenceStrategy.class);
 
         // Get the default strategy for now

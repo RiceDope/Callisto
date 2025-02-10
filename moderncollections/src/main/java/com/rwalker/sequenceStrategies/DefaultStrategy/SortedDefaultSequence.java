@@ -1,4 +1,4 @@
-package com.rwalker.sequenceStrategies;
+package com.rwalker.sequenceStrategies.DefaultStrategy;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,6 +11,9 @@ import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
 import com.rwalker.UserNull;
 import com.rwalker.UserNullSort;
+import com.rwalker.sequenceStrategies.SequenceContext;
+import com.rwalker.sequenceStrategies.SequenceState;
+import com.rwalker.sequenceStrategies.SequenceStrategies;
 
 /**
  * The same as the default strategy but exclusively for sorted Sequence.
@@ -21,7 +24,7 @@ import com.rwalker.UserNullSort;
  */
 
  @SuppressWarnings("unchecked")
-public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
+public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
     
     private int endPointer;
     private int startPointer;
@@ -30,7 +33,8 @@ public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
     private double growthRate;
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
-    private SequenceStrategies name = SequenceStrategies.SORTED_DEFAULT;
+    private SequenceStrategies name = SequenceStrategies.DEFAULT;
+    private SequenceState state = SequenceState.SORTED;
 
     private int expansionAdjustmentValue = 1;
     private int nullsInserted = 0;
@@ -52,6 +56,10 @@ public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
 
     public SequenceStrategies getname(){
         return name;
+    }
+
+    public SequenceState getState(){
+        return state;
     }
 
     /**
@@ -209,6 +217,12 @@ public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
 
         // If replacing top end or low end then we need an exception (We must be smaller than the first)
         if (subIndex == startPointer) {
+
+            if (size() == 1) {
+                array[subIndex] = value;
+                return;
+            }
+
             if (defaultComparator.compare((E) array[subIndex+1], value) > 0) {
                 array[subIndex] = value;
                 return;
@@ -294,10 +308,6 @@ public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
 
     public void setComparator(Comparator<E> comparator) {
         sort(comparator); // Sort deals with comparator setting
-    }
-
-    public void setEnforceSort(boolean enforceSort) {
-        throw new UnsupportedOperationException("Enforce sort not implemented yet. Will be once sorted strategies finalised");
     }
 
     public boolean isEmpty() {
@@ -480,8 +490,8 @@ public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
         return growthRate;
     }
 
-    public E[] getSubArray() {
-        return (E[]) array;
+    public Object[] getSubArray() {
+        return array;
     }
 
 
@@ -491,8 +501,8 @@ public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
         this.endPointer = endPointer;
     }
 
-    public E[] exportArray() {
-        return (E[]) array;
+    public Object[] exportArray() {
+        return array;
     }
 
     public void importArray(Object[] array) {
@@ -500,7 +510,7 @@ public class SortedDefaultSequence<E> implements SequenceStrategy<E>{
     }
 
     public SequenceContext<E> exportContext() {
-        return new SequenceContext<>(startPointer, endPointer, initialSize, growthRate, true, defaultComparator, minumumExpansion);
+        return new SequenceContext<>(startPointer, endPointer, initialSize, growthRate, true, defaultComparator, minumumExpansion, SequenceState.SORTED);
     }
 
     public void importContext(SequenceContext<E> context) {

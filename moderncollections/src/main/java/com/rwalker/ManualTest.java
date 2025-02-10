@@ -3,9 +3,13 @@ package com.rwalker;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import com.rwalker.sequenceStrategies.DefaultSequence;
 import com.rwalker.sequenceStrategies.SequenceContext;
+import com.rwalker.sequenceStrategies.SequenceState;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
-import com.rwalker.sequenceStrategies.SortedDefaultSequence;
+import com.rwalker.sequenceStrategies.DefaultStrategy.DefaultSequenceStrategy;
+import com.rwalker.sequenceStrategies.DefaultStrategy.SortedDefaultSequence;
+import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
 
 public class ManualTest {
     public static void main(String[] args){
@@ -13,64 +17,18 @@ public class ManualTest {
         SequenceContext<Integer> context = new SequenceContext<>();
         context.comparator = (a, b) -> a - b;
         context.initialSize = 4;
+        context.currentState = SequenceState.UNSORTED;
         
-        SortedDefaultSequence<Integer> sortedDefaultSequence = new SortedDefaultSequence<>(context);
+        DefaultSequence<Integer> seq = new DefaultSequence<>(context);
 
-        sortedDefaultSequence.add(1);
-        sortedDefaultSequence.add(2);
-        sortedDefaultSequence.add(6);
-        sortedDefaultSequence.add(0);
-        sortedDefaultSequence.add(7);
-        sortedDefaultSequence.add(3);
-        sortedDefaultSequence.add(null);
-        sortedDefaultSequence.add(null);
-        sortedDefaultSequence.add(4);
-        sortedDefaultSequence.add(5);
-        sortedDefaultSequence.add(6);
-        sortedDefaultSequence.add(null);
-        sortedDefaultSequence.add(8);
-        sortedDefaultSequence.add(9);
-        sortedDefaultSequence.add(20);
+        seq.add(10);
+        seq.replace(0, 1);
+        seq.contains(1);
+        seq.sortOnwards();
 
-        System.out.println(sortedDefaultSequence.rawString());
-        System.out.println(sortedDefaultSequence);
+        System.out.println(seq.getname());
+        System.out.println(seq.getstate());
 
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-        sortedDefaultSequence.remove(0);
-
-        System.out.println(sortedDefaultSequence.rawString());
-        System.out.println(sortedDefaultSequence);
-
-        sortedDefaultSequence.insert(2, 12);
-
-        System.out.println(sortedDefaultSequence.rawString());
-        System.out.println(sortedDefaultSequence);
-
-        sortedDefaultSequence.insert(0, 6);
-
-        System.out.println(sortedDefaultSequence.rawString());
-        System.out.println(sortedDefaultSequence);
-
-        sortedDefaultSequence.replace(4, 24);
-        sortedDefaultSequence.insert(5, 26);
-        sortedDefaultSequence.insert(6, null);
-        sortedDefaultSequence.add(9);
-
-        System.out.println(sortedDefaultSequence.rawString());
-        System.out.println(sortedDefaultSequence);
-
-        Iterator<Integer> it = sortedDefaultSequence.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-            it.remove();
-        }
 
         // Example Sequence Programs
         

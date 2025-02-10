@@ -1,4 +1,4 @@
-package com.rwalker.sequenceStrategies;
+package com.rwalker.sequenceStrategies.DefaultStrategy;
 
 /**
  * The default strategy for the Sequence class.
@@ -22,9 +22,12 @@ import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
 import com.rwalker.UserNull;
 import com.rwalker.UserNullSort;
+import com.rwalker.sequenceStrategies.SequenceContext;
+import com.rwalker.sequenceStrategies.SequenceState;
+import com.rwalker.sequenceStrategies.SequenceStrategies;
 
 @SuppressWarnings("unchecked")
-public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
+public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
     
     private int endPointer;
     private int startPointer;
@@ -35,10 +38,11 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
     private SequenceStrategies name = SequenceStrategies.DEFAULT;
+    private SequenceState state = SequenceState.UNSORTED;
 
     private int expansionAdjustmentValue = 1; // Adjustment for when to expand. Number of indexes before .length to expand (Brings in line with RingBuffer at 1)
 
-    public DefaultSequenceStrategy(SequenceContext<E> context){
+    public UnsortedDefaultSequence(SequenceContext<E> context){
         this.endPointer = context.endPointer;
         this.startPointer = context.startPointer;
         this.initialSize = context.initialSize;
@@ -52,6 +56,10 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
 
     public SequenceStrategies getname(){
         return name;
+    }
+
+    public SequenceState getstate() {
+        return state;
     }
 
     /**
@@ -107,40 +115,11 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      */
     public void add(E item){
 
-        if (!enforceSort){
-            // Just regular append operation when enforcing
-            if (item != null){
-                addToEnd(item);
-            } else {
-                addToEnd((E) new UserNull<E>());
-            }
-        } else if (enforceSort){
-            // Sorted append operation
-            if (item != null){
-                if (length() == 0){ // No point sorting on the first insert
-                    addToEnd(item);
-                } else {
-                    /*
-                    * First calculate the index for the term to be inserted into (Binary search)
-                    * Then use the insert operation to do this
-                    */
-
-                    int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, item, defaultComparator, size());
-                    int appendIndex = index-startPointer; // Convert from subarray index
-                    insert(appendIndex, item);
-
-                    // addToEnd(item);
-                    // sort();
-                }
-            } else {
-                if (length() == 0){ // No point sorting on the first insert
-                    addToEnd((E) new UserNull<E>());
-                } else {
-                    if (item == null){
-                        addToEnd((E) new UserNull<E>());
-                    }
-                }
-            }
+        // Just regular append operation when enforcing
+        if (item != null){
+            addToEnd(item);
+        } else {
+            addToEnd((E) new UserNull<E>());
         }
     }
 
@@ -278,25 +257,6 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         }
     }
 
-    /**
-     * Sort the array and then enforce sort from then onwards
-     */
-    public void sortOnwards() {
-        if (!(length() < 0) && !(length() == 1)){ // Only sort when we have something to not nothing or 1 item
-            sort();
-        }
-        setEnforceSort(true);
-    }
-
-    /**
-     * Sort the array and then enforce sort using the given comparator
-     * @param comp A comparator that will then become the default comparator used
-     */
-    public void sortOnwards(Comparator<E> comp) {
-        this.defaultComparator = comp;
-        sortOnwards();
-    }
-
     public Sequence<E> sortCopy(){
 
         if (defaultComparator != null) {
@@ -335,13 +295,6 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
         }
     }
 
-    /**
-     * Stop sorting the array automatically
-     */
-    public void stopSorting() {
-        setEnforceSort(false);
-    }
-
     /*
      * END OF OVERLOADED SORT() FUNCTION
      */
@@ -352,20 +305,6 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
       */
     public void setComparator (Comparator<E> comparator){
         defaultComparator = comparator;
-    }
-
-    /**
-     * Set the boolean flag enforceSort
-     * @param value Boolean value to set the field
-     */
-    private void setEnforceSort (boolean value){
-
-        // If no comparator is set we cannot enforce a sort
-        if (defaultComparator == null){
-            throw new IllegalStateException("Cannot enforce sort without a comparator set");
-        }
-
-        enforceSort = value;
     }
 
     /*
@@ -650,34 +589,13 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
             value = (E) new UserNull<E>();
         }
 
-        if (!enforceSort){ // If the array is not sorted
-            for (int i = startPointer; i < endPointer; i++){
-                if (value.equals(array[i])){ // If same value then return true
-                    return true;
-                } else {
-                    continue;
-                }
-            }
-        } else if (enforceSort){ // If sorted then we can search quicker
-
-            if (!(value instanceof UserNull)){
-                int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, value, defaultComparator, size());
-
-                // Now check if the term at that position is what we are expecting (This is due to the way findInsertionIndex works)
-                if (array[index].equals(value)){
-                    return true;
-                } else {
-                    return false;
-                }
+        for (int i = startPointer; i < endPointer; i++){
+            if (value.equals(array[i])){ // If same value then return true
+                return true;
             } else {
-                if (array[endPointer-1] instanceof UserNull){
-                    return true;
-                } else {
-                    return false;
-                }
+                continue;
             }
         }
-        
 
         // If get here then value not contained
         return false;
@@ -982,7 +900,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
      * @return
      */
     public SequenceContext<E> exportContext() {
-        return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion);
+        return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion, SequenceState.UNSORTED);
     }
 
     /**
@@ -1045,7 +963,7 @@ public class DefaultSequenceStrategy<E> implements SequenceStrategy<E> {
             if (prev == null) {
                 throw new IllegalStateException("Cannot remove element before calling next()");
             }
-            DefaultSequenceStrategy.this.remove(convertToExternalIndex(--index));
+            UnsortedDefaultSequence.this.remove(convertToExternalIndex(--index));
         }
     }
 
