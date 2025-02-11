@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.rwalker.HowToFunction;
+import com.rwalker.LinearCollection;
 import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
 
@@ -15,15 +16,15 @@ import com.rwalker.Sequence;
  * @version 13/01/2025
  */
 
-public interface SequenceStrategy<E>{
+public interface SequenceStrategy<E> extends LinearCollection<E>{
     
     // General Sequence interaction methods
     SequenceStrategies getname();
     SequenceState getstate();
     void insert(int index, E element);
-    void add(E item);
-    void addAll(ModernCollections<E> toApp);
-    void addAll(Collection<E> toApp);
+    boolean add(E item);
+    boolean addAll(ModernCollections<E> toApp);
+    boolean addAll(Collection<E> toApp);
     void replace(int index, E element);
     void remove(int index);
     E get (int index);

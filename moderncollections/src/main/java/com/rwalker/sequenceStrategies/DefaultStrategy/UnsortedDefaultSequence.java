@@ -113,7 +113,7 @@ public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
      * Add an item to the array. Automatically deals with expansion of the array
      * @param item The item to add
      */
-    public void add(E item){
+    public boolean add(E item){
 
         // Just regular append operation when enforcing
         if (item != null){
@@ -121,32 +121,36 @@ public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
         } else {
             addToEnd((E) new UserNull<E>());
         }
+
+        return true;
     }
 
     /**
      * Add all terms from the given Sequence to this Sequence
      * @param toApp The Sequence to add from
      */
-    public void addAll(ModernCollections<E> toApp) {
+    public boolean addAll(ModernCollections<E> toApp) {
 
         Iterator<E> it = toApp.iterator();
         while (it.hasNext()){
             add(it.next());
         }
 
+        return true;
     }
 
     /**
      * Add all terms from the given Collection to this Sequence
      * @param toApp The Collection to add from
      */
-    public void addAll(Collection<E> toApp) {
+    public boolean addAll(Collection<E> toApp) {
 
         Iterator<E> it = toApp.iterator();
         while (it.hasNext()){
             add(it.next());
         }
 
+        return true;
     }
 
     /**

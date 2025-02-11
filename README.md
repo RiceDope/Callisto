@@ -25,6 +25,7 @@ Python programs being used in order to produce graphs and analyse the data from 
 - Seperate strategies for sorting Sequence
 - Null support for Map
 - Correct null support for Set
+- Add more functionality to Queue and Dequeue Operations
 
 # Ideas
 

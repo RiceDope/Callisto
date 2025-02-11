@@ -18,7 +18,7 @@ import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
  * Will maintain the two different strategies (Sorted Unsorted)
  */
 
-public class DefaultSequence<E> implements SequenceManipulatorInterface<E>{
+public class DefaultSequence<E> implements SortControl<E>, SequenceStrategyControl<E>{
 
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
     private DefaultSequenceStrategy<E> strat; // The specific strategy that is being ran at the time
@@ -68,16 +68,19 @@ public class DefaultSequence<E> implements SequenceManipulatorInterface<E>{
         strat.insert(index, value);
     }
 
-    public void add(E value) {
+    public boolean add(E value) {
         strat.add(value);
+        return true;
     }
 
-    public void addAll(ModernCollections<E> collection) {
+    public boolean addAll(ModernCollections<E> collection) {
         strat.addAll(collection);
+        return true;
     }
 
-    public void addAll(Collection<E> collection) {
+    public boolean addAll(Collection<E> collection) {
         strat.addAll(collection);
+        return true;
     }
 
     public void replace(int index, E value) {

@@ -146,7 +146,7 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
      * Adds an element into the array
      * @param element
      */
-    public void add(E element) {
+    public boolean add(E element) {
 
         manipulateArray();
 
@@ -155,43 +155,46 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
             nullsInserted++;
             element = (E) new UserNull<E>();
             insertAtLocation(endPointer, element);
-            return;
+            return true;
         }
 
         if (endPointer == startPointer) {
             insertAtLocation(endPointer, element);
-            return;
+            return true;
         }
 
         // Adjusted so that we don't search the null space pointlessly
         int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer-nullsInserted, element, defaultComparator, endPointer-startPointer-nullsInserted);
-        System.out.println(index);
-        // int appendIndex = index-startPointer; // Convert from subarray index
-        System.out.println(index);
 
         insertAtLocation(index, element);
+
+        return true;
     }
 
     /**
      * Adds all terms to the collection
      * @param collection The collection to add from
      */
-    public void addAll(ModernCollections<E> collection) {
+    public boolean addAll(ModernCollections<E> collection) {
         Iterator<E> it = collection.iterator();
         while (it.hasNext()) {
             add(it.next());
         }
+
+        return true;
     }
 
     /**
      * Adds all terms to the collection
      * @param collection The collection to add from
      */
-    public void addAll(Collection<E> collection) {
+    public boolean addAll(Collection<E> collection) {
         Iterator<E> it = collection.iterator();
         while (it.hasNext()) {
             add(it.next());
         }
+
+        return true;
     }
 
     /**
@@ -293,13 +296,16 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
      * @return
      */
     public Sequence<E> sortCopy() {
-        // TODO: IMPLEMENT THSI METHOD ONCE SEQUENCE DONE
-        throw new UnsupportedOperationException("Sort copy not implemented yet. Will be once sorted strategies finalised");
+        Sequence<E> copy = new Sequence<>(array.length, growthRate, SequenceStrategies.DEFAULT, defaultComparator, SequenceState.SORTED);
+        copy.setSubArray(startPointer, endPointer, array);
+        return copy;
     }
 
     public Sequence<E> sortCopy(Comparator<E> comparator) {
-        // TODO: IMPLEMENT THSI METHOD ONCE SEQUENCE DONE
-        throw new UnsupportedOperationException("Sort copy not implemented yet. Will be once sorted strategies finalised");
+        Sequence<E> copy = new Sequence<>(array.length, growthRate, SequenceStrategies.DEFAULT, defaultComparator, SequenceState.SORTED);
+        copy.setSubArray(startPointer, endPointer, array);
+        copy.sort(comparator);
+        return copy;
     }
 
     public void stopSorting() {

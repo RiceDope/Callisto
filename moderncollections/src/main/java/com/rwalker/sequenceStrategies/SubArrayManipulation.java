@@ -1,6 +1,6 @@
 package com.rwalker.sequenceStrategies;
 
-public interface SubArrayMovementInterface<E> extends SequenceStrategy<E> {
+public interface SubArrayManipulation<E> extends SequenceStrategy<E> {
 
     // Used in order to change between strategies
     Object[] exportArray();

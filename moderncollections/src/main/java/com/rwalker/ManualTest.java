@@ -7,6 +7,7 @@ import com.rwalker.sequenceStrategies.DefaultSequence;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceState;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
+import com.rwalker.sequenceStrategies.SequenceStrategy;
 import com.rwalker.sequenceStrategies.DefaultStrategy.DefaultSequenceStrategy;
 import com.rwalker.sequenceStrategies.DefaultStrategy.SortedDefaultSequence;
 import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
@@ -14,21 +15,20 @@ import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
 public class ManualTest {
     public static void main(String[] args){
 
-        Sequence<Integer> seq = new Sequence<>();
-
-        seq.add(5);
-        seq.add(3);
+        Sequence<Integer> seq = new Sequence<>((a, b) -> a - b, SequenceStrategies.RINGBUFFER);
         seq.add(10);
+        seq.add(5);
+        seq.add(15);
+
+        Sequence<Integer> seq2 = seq.sortCopy((a, b) -> b - a);
+
+        System.out.println(seq.rawString());
+        System.out.println(seq2.rawString());
+
         seq.add(20);
 
-        System.out.println(seq.getname());
-        System.out.println(seq.getstate());
-
-        seq.setComparator((a, b) -> a - b);
-        seq.sortOnwards();
-
-        System.out.println(seq.getname());
-        System.out.println(seq.getstate());
+        System.out.println(seq.rawString());
+        System.out.println(seq2.rawString());
 
 
         // Example Sequence Programs

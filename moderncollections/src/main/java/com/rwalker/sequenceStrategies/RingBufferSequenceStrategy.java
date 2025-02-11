@@ -20,7 +20,7 @@ import com.rwalker.UserNullSort;
 // TODO: when startPointer == array.length
 
 @SuppressWarnings({"unchecked"})
-public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceManipulatorInterface<E> {
+public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrategyControl<E> {
     
     private int endPointer;
     private int startPointer;
@@ -85,7 +85,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceManip
      * Adds an element to the array
      * @param element
      */
-    public void add(E element) {
+    public boolean add(E element) {
         if (!enforceSort) {
             addToEnd(element);
         } else if (element != null) {
@@ -103,6 +103,8 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceManip
             element = (E) new UserNull<E>();
             addToEnd(element);
         }
+
+        return true;
     }
 
     public int rawLength() {
@@ -233,21 +235,23 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceManip
      */
     // TODO: Potential speed increase by finding the size of toApp and if expansion is necessary do it once
     // Or can avoid regular append each time by pre allocating the space
-    public void addAll(ModernCollections<E> toApp) {
+    public boolean addAll(ModernCollections<E> toApp) {
         Iterator<E> iter = toApp.iterator();
         while (iter.hasNext()) {
             add(iter.next());
         }
+        return true;
     }
 
     /**
      * Appends all elements from the given collection to the array
      * @param toApp The collection to append
      */
-    public void addAll(Collection<E> toApp) {
+    public boolean addAll(Collection<E> toApp) {
         for (E element : toApp) {
             add(element);
         }
+        return true;
     }
 
     /**
