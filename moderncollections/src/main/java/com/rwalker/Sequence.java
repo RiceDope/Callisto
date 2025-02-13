@@ -305,6 +305,7 @@ public class Sequence<E> implements Iterable<E>, SequenceStrategy<E> {
         }
 
         seqCon.currentState = state;
+        seqCon.comparator = comparator;
 
         setupStrategies();
     }
