@@ -27,11 +27,5 @@ Python programs being used in order to produce graphs and analyse the data from 
 - Correct null support for Set
 - Add more functionality to Queue and Dequeue Operations
 
-# Ideas
-
-Should I add a sorted section to my Set
-
-Should my Map just use set access rather than a sorted Sequence
-
 # Sample project Ideas
 - Student grades system (Will demonstrate usefulness of consumers) Side by side with JCF
