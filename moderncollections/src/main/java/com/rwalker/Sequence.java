@@ -19,21 +19,18 @@ import com.rwalker.sequenceStrategies.DefaultSequence;
 import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceHeuristic;
-import com.rwalker.sequenceStrategies.SortControl;
-import com.rwalker.sequenceStrategies.SubArrayManipulation;
 import com.rwalker.sequenceStrategies.SequenceState;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
-import com.rwalker.sequenceStrategies.SequenceStrategyControl;
-import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
+import com.rwalker.sequenceStrategies.StrategyControl;
 
 @SuppressWarnings("unchecked")
 public class Sequence<E> implements Iterable<E>, SequenceStrategy<E> {
     
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
-    private SequenceStrategyControl<E> strat; // The specific strategy that is being ran at the time
+    private StrategyControl<E> strat; // The specific strategy that is being ran at the time
     private SequenceStrategies currentStrat = SequenceStrategies.DEFAULT; // The "name" of the current strategy
-    private Map<SequenceStrategies, Class<? extends SequenceStrategyControl<E>>> strategies = new Map<>(); // A Map mapping the "names" to their respective classes
+    private Map<SequenceStrategies, Class<? extends StrategyControl<E>>> strategies = new Map<>(); // A Map mapping the "names" to their respective classes
     private SequenceHeuristic heuristic = new SequenceHeuristic(); // The heuristic for the sequence
 
     /**
@@ -495,12 +492,12 @@ public class Sequence<E> implements Iterable<E>, SequenceStrategy<E> {
     private void setupStrategies(){
 
         // Put all of the strategies into the map
-        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends SequenceStrategyControl<E>>) (Class<?>) DefaultSequence.class);
-        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends SequenceStrategyControl<E>>) (Class<?>) RingBufferSequenceStrategy.class);
+        strategies.put(SequenceStrategies.DEFAULT, (Class<? extends StrategyControl<E>>) (Class<?>) DefaultSequence.class);
+        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends StrategyControl<E>>) (Class<?>) RingBufferSequenceStrategy.class);
 
         // Get the default strategy for now
         try {
-            strat = (SequenceStrategyControl<E>) strategies.get(currentStrat).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
+            strat = (StrategyControl<E>) strategies.get(currentStrat).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize strategy", e);
@@ -515,7 +512,7 @@ public class Sequence<E> implements Iterable<E>, SequenceStrategy<E> {
         Object[] array = strat.exportArray();
         SequenceContext<E> context = strat.exportContext();
         try {
-            strat = (SequenceStrategyControl<E>) strategies.get(newStrat).getDeclaredConstructor(SequenceContext.class).newInstance(context);
+            strat = (StrategyControl<E>) strategies.get(newStrat).getDeclaredConstructor(SequenceContext.class).newInstance(context);
             strat.importArray(array);
             strat.importContext(context);
             currentStrat = newStrat;

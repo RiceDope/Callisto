@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.rwalker.BinarySearch;
 import com.rwalker.HowToFunction;
 import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
@@ -297,6 +296,18 @@ public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
             System.err.println(e);
             throw new UnknownError("Comparator either not valid or cannot be compared");
         }
+    }
+
+    public void sortOnwards() {
+        throw new IllegalStateException("Cannot sort from this concrete implementation. Method should not be called directly on UnsortedSequence");
+    }
+
+    public void sortOnwards(Comparator<E> comparator) {
+        throw new IllegalStateException("Cannot sort from this concrete implementation. Method should not be called directly on UnsortedSequence");
+    }
+
+    public void stopSorting() {
+        throw new IllegalStateException("Cannot stop sorting from this concrete implementation. Method should not be called directly on UnsortedSequence");
     }
 
     /*

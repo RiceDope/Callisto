@@ -1,7 +1,7 @@
 package com.rwalker.sequenceStrategies;
 
-public interface SubArrayManipulation<E> extends SequenceStrategy<E> {
-
+public interface StrategyControl<E> extends SortControl<E> {
+    
     // Used in order to change between strategies
     Object[] exportArray();
     void importArray(Object[] array);

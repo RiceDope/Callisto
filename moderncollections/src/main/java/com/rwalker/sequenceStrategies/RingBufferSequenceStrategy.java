@@ -20,7 +20,7 @@ import com.rwalker.UserNullSort;
 // TODO: when startPointer == array.length
 
 @SuppressWarnings({"unchecked"})
-public class RingBufferSequenceStrategy<E> implements Iterable<E>, SequenceStrategyControl<E> {
+public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyControl<E> {
     
     private int endPointer;
     private int startPointer;

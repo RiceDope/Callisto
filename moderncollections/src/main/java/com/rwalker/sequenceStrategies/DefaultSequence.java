@@ -18,7 +18,7 @@ import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
  * Will maintain the two different strategies (Sorted Unsorted)
  */
 
-public class DefaultSequence<E> implements SortControl<E>, SequenceStrategyControl<E>{
+public class DefaultSequence<E> implements SortControl<E>, StrategyControl<E>{
 
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
     private DefaultSequenceStrategy<E> strat; // The specific strategy that is being ran at the time
@@ -102,7 +102,19 @@ public class DefaultSequence<E> implements SortControl<E>, SequenceStrategyContr
                 // Must now swap over to sorted
                 swapToState(SequenceState.SORTED);
             case SORTED:
-                // Already sorted do nothing
+                strat.sortOnwards();
+        }
+
+    }
+
+    public void sortOnwards(Comparator<E> comparator) {
+
+        switch(currentState) {
+            case UNSORTED:
+                // Must now swap over to sorted
+                swapToState(SequenceState.SORTED, comparator);
+            case SORTED:
+                strat.sortOnwards(comparator);
         }
 
     }
@@ -152,18 +164,6 @@ public class DefaultSequence<E> implements SortControl<E>, SequenceStrategyContr
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize strategy", e);
         }
-    }
-
-    public void sortOnwards(Comparator<E> comparator) {
-
-        switch(currentState) {
-            case UNSORTED:
-                // Must now swap over to sorted
-                swapToState(SequenceState.SORTED, comparator);
-            case SORTED:
-                // Already sorted do nothing
-        }
-
     }
 
     public Sequence<E> sortCopy() {
