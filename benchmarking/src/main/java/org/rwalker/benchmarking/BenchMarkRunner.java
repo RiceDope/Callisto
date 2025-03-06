@@ -17,11 +17,9 @@ public class BenchMarkRunner {
      */
     public static void main(String[] args) throws Exception {
         Options opt = new OptionsBuilder()
-                .include("SetSequenceComparison.benchmarkSequence")
-                .include("SetSequenceComparison.benchmarkSet")
-                .include("SetSequenceComparison.benchmarkSequenceComparator")
+                .include("BenchMarkSequence.testSequenceAppend1000Size")
                 .resultFormat(ResultFormatType.JSON)
-                .result("040225-1040.json")
+                .result("130225-1530.json")
                 .build();
 
         new Runner(opt).run();

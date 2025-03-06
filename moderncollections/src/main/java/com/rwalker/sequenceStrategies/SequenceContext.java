@@ -14,12 +14,12 @@ public class SequenceContext <E> {
     // Default values are left public for ease
     public int endPointer = 0;
     public int startPointer = 0;
-    public int initialSize = 100; // Average declared array is TODO: INSERT (Little difference in benchmarks between 100, 500 only benefit was at perfect information)
+    public int initialSize = 10; // Average declared array is not larger than 10 elements (76.8%)
     public double growthRate = 1.5; // Because same as ArrayList
     public boolean enforceSort = false;
     public Comparator<E> comparator;
-    public int minimumExpansion = 1;
-    public SequenceState currentState = SequenceState.UNSORTED;
+    public int minimumExpansion = 1; // This must never be set below 1
+    public SequenceState currentState = SequenceState.UNSORTED; // Default state will be unsorted
 
     public SequenceContext(){
         // Default values are used

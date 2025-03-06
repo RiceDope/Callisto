@@ -63,3 +63,6 @@ LATER ADDITION:
 ### 040225-1040 (carried out 3 benchmark)
 - Same as above with 1 extra
 - Sequence was sorted initially when the contains method was run 1000 times
+
+### 130225-1530 (Carried out 1 benchmark 3 parameters)
+- Ran appending 1000 items to the Sequence with smaller starting values (10, 100, 500)

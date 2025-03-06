@@ -18,7 +18,7 @@ import java.util.Iterator;
 import com.rwalker.sequenceStrategies.DefaultSequence;
 import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
 import com.rwalker.sequenceStrategies.SequenceContext;
-import com.rwalker.sequenceStrategies.SequenceHeuristic;
+import com.rwalker.sequenceStrategies.DefaultSequenceHeuristic;
 import com.rwalker.sequenceStrategies.SequenceState;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 import com.rwalker.sequenceStrategies.SequenceStrategy;
@@ -31,7 +31,7 @@ public class Sequence<E> implements Iterable<E>, SequenceStrategy<E> {
     private StrategyControl<E> strat; // The specific strategy that is being ran at the time
     private SequenceStrategies currentStrat = SequenceStrategies.DEFAULT; // The "name" of the current strategy
     private Map<SequenceStrategies, Class<? extends StrategyControl<E>>> strategies = new Map<>(); // A Map mapping the "names" to their respective classes
-    private SequenceHeuristic heuristic = new SequenceHeuristic(); // The heuristic for the sequence
+    private SequenceHeuristic heuristic = new DefaultSequenceHeuristic(); // The heuristic for the sequence
 
     /**
      * Default constructor using default growth rate and size values
@@ -479,6 +479,469 @@ public class Sequence<E> implements Iterable<E>, SequenceStrategy<E> {
         seqCon.comparator = comparator;
         seqCon.currentState = state;
         currentStrat = strategy;
+        setupStrategies();
+    }
+
+    // From here
+
+    /**
+     * Default constructor using default growth rate and size values
+     */
+    public Sequence(SequenceHeuristic newHeuristic){
+        
+        // Default values are used
+        heuristic = newHeuristic;
+        setupStrategies();
+
+    }
+
+    /**
+     * Allows for specification of just the initial size of the array
+     * @param size Int initial size of the array
+     */
+    public Sequence(int size, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for the specification of a comparator
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(Comparator<E> comparator, SequenceHeuristic newHeuristic){
+        seqCon.comparator = comparator;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of initial array size and a comparator
+     * @param size Int initial size of the array
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(int size, Comparator<E> comparator, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        seqCon.comparator = comparator;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of just the growth rate
+     * @param growthRate Double initial growth rate of the array
+     */
+    public Sequence(double customGrowthRate, SequenceHeuristic newHeuristic){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of growth rate and default comparator
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(double customGrowthRate, Comparator<E> comparator, SequenceHeuristic newHeuristic){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of both starting size and growth rate
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     */
+    public Sequence(int size, double customGrowthRate, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of starting size, growth rate and a comparator
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(int size, double customGrowthRate, Comparator<E> comparator, SequenceHeuristic newHeuristic){
+
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Constructor that allows specification of the strategy being used
+     * @param strategy The strategy to use from SequenceStrategies.STRAT
+     */
+    public Sequence(SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+        
+        // Default values are used
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+
+    }
+
+    /**
+     * Allows for specification of the initial size and the strategy to start with
+     * @param size Int initial size of the array
+     * @param strategy The strategy to use from SequenceStrategies.STRAT
+     */
+    public Sequence(int size, SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for the specification of a comparator and the strategy to use
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(Comparator<E> comparator, SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of initial array size, Comparator and the strategy to use
+     * @param size Int initial size of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, Comparator<E> comparator, SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of the growth rate and the strategy to use
+     * @param growthRate Double initial growth rate of the array
+     * @param strategy The strategy to use
+     */
+    public Sequence(double customGrowthRate, SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of growth rate, default comparator and the strategy to use
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(double customGrowthRate, Comparator<E> comparator, SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of starting size, growth rate and the strategy to use
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, double customGrowthRate, SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of starting size, growth rate, default comparator and the strategy to use
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, double customGrowthRate, Comparator<E> comparator, SequenceStrategies strategy, SequenceHeuristic newHeuristic){
+
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+     /**
+     * Allows for specification of just the initial size of the array
+     * @param size Int initial size of the array
+     */
+    public Sequence(int size, Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+
+        seqCon.currentState = state;
+        seqCon.comparator = comparator;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for the specification of a comparator
+     * @param comparator Default comparator to be used in sort
+     */
+    public Sequence(Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        seqCon.comparator = comparator;
+
+        seqCon.currentState = state;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of just the growth rate
+     * @param growthRate Double initial growth rate of the array
+     */
+    public Sequence(double customGrowthRate, Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of both starting size and growth rate
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     */
+    public Sequence(int size, double customGrowthRate, Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Constructor that allows specification of the strategy being used
+     * @param strategy The strategy to use from SequenceStrategies.STRAT
+     */
+    public Sequence(SequenceStrategies strategy, Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        
+        // Default values are used
+        currentStrat = strategy;
+
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        heuristic = newHeuristic;
+        setupStrategies();
+
+    }
+
+    /**
+     * Allows for specification of the initial size and the strategy to start with
+     * @param size Int initial size of the array
+     * @param strategy The strategy to use from SequenceStrategies.STRAT
+     */
+    public Sequence(int size, SequenceStrategies strategy, Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        currentStrat = strategy;
+
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for the specification of a comparator and the strategy to use
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(Comparator<E> comparator, SequenceStrategies strategy, SequenceState state, SequenceHeuristic newHeuristic){
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of initial array size, Comparator and the strategy to use
+     * @param size Int initial size of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, Comparator<E> comparator, SequenceStrategies strategy, SequenceState state, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of the growth rate and the strategy to use
+     * @param growthRate Double initial growth rate of the array
+     * @param strategy The strategy to use
+     */
+    public Sequence(double customGrowthRate, SequenceStrategies strategy, Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        currentStrat = strategy;
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of growth rate, default comparator and the strategy to use
+     * @param growthRate Double initial growth rate of the array
+     * @param comparator Default comparator to be used in sort
+     * @param strategy The strategy to use
+     */
+    public Sequence(double customGrowthRate, Comparator<E> comparator, SequenceStrategies strategy, SequenceState state, SequenceHeuristic newHeuristic){
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
+        setupStrategies();
+    }
+
+    /**
+     * Allows for specification of starting size, growth rate and the strategy to use
+     * @param size Int starting size of the array
+     * @param growthRate Double initial growth rate of the array
+     * @param strategy The strategy to use
+     */
+    public Sequence(int size, double customGrowthRate, SequenceStrategies strategy, Comparator<E> comparator, SequenceState state, SequenceHeuristic newHeuristic){
+        if (size  > 0){
+            seqCon.initialSize = size;
+        } else {
+            throw new NegativeArraySizeException("Cannot use size of 0 or less");
+        }
+        if (customGrowthRate >  1.0){
+            seqCon.growthRate = customGrowthRate;
+        } else {
+            throw new IllegalArgumentException("Cannot have a growth rate of 1 or less than 1");
+        }
+        seqCon.comparator = comparator;
+        seqCon.currentState = state;
+        currentStrat = strategy;
+        heuristic = newHeuristic;
         setupStrategies();
     }
 

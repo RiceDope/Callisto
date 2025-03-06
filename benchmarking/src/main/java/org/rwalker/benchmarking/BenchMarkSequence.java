@@ -23,7 +23,7 @@ public class BenchMarkSequence {
      * using arrayListAppend is just an instantited array ready to go
      */
     private int appendIterations = 1000;
-    @Param({"100", "500", "1000"})
+    @Param({"10", "100", "500"})
     private int initialSize;
 
     /*
@@ -90,4 +90,5 @@ public class BenchMarkSequence {
         }
         blackhole.consume(sequenceSize);
     }
+
 }
