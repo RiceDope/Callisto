@@ -18,7 +18,7 @@ import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
  * Will maintain the two different strategies (Sorted Unsorted)
  */
 
-public class DefaultSequence<E> implements SortControl<E>, StrategyControl<E>{
+public class DefaultSequence<E> implements StrategyControl<E>{
 
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
     private DefaultSequenceStrategy<E> strat; // The specific strategy that is being ran at the time

@@ -296,13 +296,13 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
      * @return
      */
     public Sequence<E> sortCopy() {
-        Sequence<E> copy = new Sequence<>(array.length, growthRate, SequenceStrategies.DEFAULT, defaultComparator, SequenceState.SORTED);
+        Sequence<E> copy = new Sequence<>(array.length, growthRate, defaultComparator, SequenceStrategies.DEFAULT, SequenceState.SORTED);
         copy.setSubArray(startPointer, endPointer, array);
         return copy;
     }
 
     public Sequence<E> sortCopy(Comparator<E> comparator) {
-        Sequence<E> copy = new Sequence<>(array.length, growthRate, SequenceStrategies.DEFAULT, defaultComparator, SequenceState.SORTED);
+        Sequence<E> copy = new Sequence<>(array.length, growthRate, defaultComparator, SequenceStrategies.DEFAULT, SequenceState.SORTED);
         copy.setSubArray(startPointer, endPointer, array);
         copy.sort(comparator);
         return copy;

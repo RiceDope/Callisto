@@ -1,6 +1,6 @@
 package com.rwalker.sequenceStrategies;
 
-public interface StrategyControl<E> extends SortControl<E> {
+public interface StrategyControl<E> extends SequenceStrategy<E> {
     
     // Used in order to change between strategies
     Object[] exportArray();

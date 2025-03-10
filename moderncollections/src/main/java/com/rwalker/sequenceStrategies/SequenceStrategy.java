@@ -55,5 +55,8 @@ public interface SequenceStrategy<E> extends LinearCollection<E>{
     Object[] getSubArray(); // TODO: REMOVE
     void setSubArray(int startPointer, int endPointer, Object[] array); // TODO: REMOVE
     Iterator<E> iterator();
+    void sortOnwards();
+    void sortOnwards(Comparator<E> comp);
+    void stopSorting();
 
 }
