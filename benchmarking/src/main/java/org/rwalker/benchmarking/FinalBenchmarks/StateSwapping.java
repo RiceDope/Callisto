@@ -8,21 +8,23 @@ import com.rwalker.Sequence;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 
 /**
- * Test swapping strategies under load and empty
+ * Test swapping states under load and empty and in both strategies and once when specifiying comparator
  */
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class StrategySwap {
+public class StateSwapping {
 
+    @Param({"RINGBUFFER", "DEFAULT"})
+    private SequenceStrategies strategyName;
     private Sequence<Integer> sequence;
     private Sequence<Integer> sequenceLoad;
 
     @Setup(Level.Invocation)
     public void setup() {
-        sequence = new Sequence<>(SequenceStrategies.DEFAULT);
-        sequenceLoad = new Sequence<>(SequenceStrategies.DEFAULT);
+        sequence = new Sequence<>((a, b)-> a - b, strategyName);
+        sequenceLoad = new Sequence<>((a, b)-> a - b, strategyName);
 
         for (int i = 0; i < 1000; i++) {
             sequenceLoad.add(i);
@@ -36,7 +38,7 @@ public class StrategySwap {
     @Warmup(iterations = 3)
     public void testSwapEmpty(Blackhole blackhole) {
 
-        sequence.swapStrategies(SequenceStrategies.RINGBUFFER);
+        sequence.sortOnwards();
 
         blackhole.consume(sequence);
     }
@@ -47,8 +49,32 @@ public class StrategySwap {
     @Warmup(iterations = 3)
     public void testSwapLoad(Blackhole blackhole) {
 
-        sequenceLoad.swapStrategies(SequenceStrategies.RINGBUFFER);
+        sequenceLoad.sortOnwards();
 
         blackhole.consume(sequenceLoad);
     }
+
+    @Benchmark
+    @Fork(value = 2, warmups = 2)
+    @Measurement(iterations = 5)
+    @Warmup(iterations = 3)
+    public void testSwapEmptySpecify(Blackhole blackhole) {
+
+        sequence.sortOnwards((a, b)->b-a);
+
+        blackhole.consume(sequence);
+    }
+
+    @Benchmark
+    @Fork(value = 2, warmups = 2)
+    @Measurement(iterations = 5)
+    @Warmup(iterations = 3)
+    public void testSwapLoadSpecify(Blackhole blackhole) {
+
+        sequenceLoad.sortOnwards((a, b)->b-a);
+
+        blackhole.consume(sequenceLoad);
+    }
+
+
 }

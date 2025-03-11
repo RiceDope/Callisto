@@ -58,7 +58,43 @@ public class RunAllWriteupBenchmarks {
                     .build();
 
         new Runner(opt).run();
-        
 
+        // Swapping strategies
+        opt = new OptionsBuilder()
+                    .include("StrategySwap")
+                    .resultFormat(ResultFormatType.JSON)
+                    .result("StrategySwap.json")
+                    .build();
+        
+        new Runner(opt).run();
+
+        // Swapping states
+        opt = new OptionsBuilder()
+                    .include("StateSwapping")
+                    .resultFormat(ResultFormatType.JSON)
+                    .result("StateSwapping.json")
+                    .build();
+        
+        new Runner(opt).run();
+
+        // Map vs JCF Map
+        opt = new OptionsBuilder()
+                    .include("MapVJCF")
+                    .resultFormat(ResultFormatType.JSON)
+                    .result("MapVJCF.json")
+                    .build();
+
+        new Runner(opt).run();
+
+        // Map optimal values
+        opt = new OptionsBuilder()
+                    .include("MapOptimalValues")
+                    .resultFormat(ResultFormatType.JSON)
+                    .result("MapOptimalValues.json")
+                    .build();
+
+        new Runner(opt).run();
+
+        
     }
 }

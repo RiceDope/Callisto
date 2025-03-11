@@ -20,7 +20,7 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
     private SetEntry<E> lastInserted; // Most recently inserted item
     private int buckets = 16;
     private int totalItems = 0;
-    private double overloadFactor = 1.25;
+    private double overloadFactor = 0.75;
     private double expansionFactor = 1.5;
 
     public Set() {
@@ -28,7 +28,93 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
     }
 
     public Set(int buckets) {
+
+        if (buckets < 1){
+            throw new IllegalArgumentException("Buckets must be greater than 0");
+        }
+
         this.buckets = buckets;
+        items = new SetEntry[buckets];
+    }
+
+    public Set(double overloadFactor) {
+            
+            if (overloadFactor <= 0){
+                throw new IllegalArgumentException("Overload factor must be greater than 0");
+            }
+    
+            this.overloadFactor = overloadFactor;
+            items = new SetEntry[buckets];
+    }
+
+    public Set(int buckets, double overloadFactor) {
+
+        if (buckets < 1){
+            throw new IllegalArgumentException("Buckets must be greater than 0");
+        }
+
+        if (overloadFactor <= 0){
+            throw new IllegalArgumentException("Overload factor must be greater than 0");
+        }
+
+        this.buckets = buckets;
+        this.overloadFactor = overloadFactor;
+        items = new SetEntry[buckets];
+    }
+
+    public Set(Double expansionFactor) {
+        if (expansionFactor <= 1){
+            throw new IllegalArgumentException("Expansion factor must be greater than 1");
+        }
+
+        this.expansionFactor = expansionFactor;
+        items = new SetEntry[buckets];
+    }
+
+    public Set(int buckets, Double expansionFactor) {
+        if (buckets < 1){
+            throw new IllegalArgumentException("Buckets must be greater than 0");
+        }
+
+        if (expansionFactor <= 1){
+            throw new IllegalArgumentException("Expansion factor must be greater than 1");
+        }
+
+        this.buckets = buckets;
+        this.expansionFactor = expansionFactor;
+        items = new SetEntry[buckets];
+    }
+
+    public Set(double overloadFactor, Double expansionFactor) {
+        if (overloadFactor <= 0){
+            throw new IllegalArgumentException("Overload factor must be greater than 0");
+        }
+
+        if (expansionFactor <= 1){
+            throw new IllegalArgumentException("Expansion factor must be greater than 1");
+        }
+
+        this.overloadFactor = overloadFactor;
+        this.expansionFactor = expansionFactor;
+        items = new SetEntry[buckets];
+    }
+
+    public Set(int buckets, double overloadFactor, Double expansionFactor) {
+        if (buckets < 1){
+            throw new IllegalArgumentException("Buckets must be greater than 0");
+        }
+
+        if (overloadFactor <= 0){
+            throw new IllegalArgumentException("Overload factor must be greater than 0");
+        }
+
+        if (expansionFactor <= 1){
+            throw new IllegalArgumentException("Expansion factor must be greater than 1");
+        }
+
+        this.buckets = buckets;
+        this.overloadFactor = overloadFactor;
+        this.expansionFactor = expansionFactor;
         items = new SetEntry[buckets];
     }
 
