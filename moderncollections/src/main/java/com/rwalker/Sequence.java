@@ -866,7 +866,7 @@ public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
      * Correctly deals with swapping between strategies using a SequenceContext object and exporting the subArray into a common form
      * @param newStrat The strategy to swap over to
      */
-    private void swapStrategies(SequenceStrategies newStrat){
+    public void swapStrategies(SequenceStrategies newStrat){
         Object[] array = strat.exportArray();
         SequenceContext<E> context = strat.exportContext();
         try {

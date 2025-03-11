@@ -6,7 +6,8 @@
 
   <groupId>com.rwalker</groupId>
   <artifactId>moderncollections</artifactId>
-  <version>BETA-0.23</version>
+  <version>BETA-0.24</version>
+  <packaging>jar</packaging>
   <name>moderncollections</name>
   <!-- FIXME change it to the project's website -->
   <url>https://github.com/RiceDope/COMP6200-Modern-Collections-Library</url>
@@ -42,7 +43,7 @@
   <distributionManagement>
     <repository>
         <id>github</id>
-        <url>https://maven.pkg.github.com/RiceDope/COMP6200-Modern-Collections-Library</url>
+        <url>https://maven.pkg.github.com/RiceDope/Callisto</url>
     </repository>
 </distributionManagement>
 

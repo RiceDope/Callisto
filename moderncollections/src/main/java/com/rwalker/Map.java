@@ -183,7 +183,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
     }
 
     public void clear() {
-        bucketList = new MapEntry[16]; // Initial amount of buckets is reset on clear
+        bucketList = new MapEntry[256]; // Initial amount of buckets is reset on clear
         keys = new Set<>();
         if (sortedKeys != null) {
             sortedKeys = new Sequence<>(keyComp);
@@ -641,6 +641,11 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
      * @return A string representation of the bucket
      */
     public String getBucket(int index){
+
+        if (index > bucketList.length || index < bucketList.length) {
+            throw new IllegalArgumentException("Index out of bounds");
+        }
+
         StringBuilder sb = new StringBuilder();
         MapEntry<K, E> bucket = bucketList[index];
         
@@ -679,19 +684,19 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         return new MapIterator();
     }
 
-        private class MapIterator implements Iterator<MapEntry<K, E>> {
-            private Iterator<K> keyIterator = keys.iterator();
+    private class MapIterator implements Iterator<MapEntry<K, E>> {
+        private Iterator<K> keyIterator = keys.iterator();
 
-            @Override
-            public boolean hasNext() {
-                return keyIterator.hasNext();
-            }
-
-            @Override
-            public MapEntry<K, E> next() {
-                K key = keyIterator.next();
-                return getMapEntry(key);
-            }
+        @Override
+        public boolean hasNext() {
+            return keyIterator.hasNext();
         }
+
+        @Override
+        public MapEntry<K, E> next() {
+            K key = keyIterator.next();
+            return getMapEntry(key);
+        }
+    }
     
 }
