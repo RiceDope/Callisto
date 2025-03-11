@@ -7,6 +7,10 @@ import org.openjdk.jmh.runner.Runner;
 
 /**
  * A comprehensive class that features all benchmarks that should be run for the final writeup
+ *      Last Run Time: 
+ * 
+ * @author Rhys Walker
+ * @since 11/03/2025
  */
 
 
@@ -95,6 +99,22 @@ public class RunAllWriteupBenchmarks {
 
         new Runner(opt).run();
 
-        
+        // Set optimal values
+        opt = new OptionsBuilder()
+                    .include("SetOptimalValues")
+                    .resultFormat(ResultFormatType.JSON)
+                    .result("SetOptimalValues.json")
+                    .build();
+
+        new Runner(opt).run();
+
+        // Set v JCF
+        opt = new OptionsBuilder()
+                    .include("SetVJCF")
+                    .resultFormat(ResultFormatType.JSON)
+                    .result("SetVJCF.json")
+                    .build();
+
+        new Runner(opt).run();
     }
 }

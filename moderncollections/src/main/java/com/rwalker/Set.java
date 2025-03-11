@@ -18,7 +18,8 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
     private SetEntry<E>[] items;
     private SetEntry<E> firstInserted; // Beginning of the doubly linked list
     private SetEntry<E> lastInserted; // Most recently inserted item
-    private int buckets = 16;
+    private int buckets;
+    private int startingBuckets = 16;
     private int totalItems = 0;
     private double overloadFactor = 0.75;
     private double expansionFactor = 1.5;
@@ -33,6 +34,7 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
             throw new IllegalArgumentException("Buckets must be greater than 0");
         }
 
+        startingBuckets = buckets;
         this.buckets = buckets;
         items = new SetEntry[buckets];
     }
@@ -44,6 +46,7 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
             }
     
             this.overloadFactor = overloadFactor;
+            startingBuckets = buckets;
             items = new SetEntry[buckets];
     }
 
@@ -59,6 +62,7 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
 
         this.buckets = buckets;
         this.overloadFactor = overloadFactor;
+        startingBuckets = buckets;
         items = new SetEntry[buckets];
     }
 
@@ -68,6 +72,7 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
         }
 
         this.expansionFactor = expansionFactor;
+        startingBuckets = buckets;
         items = new SetEntry[buckets];
     }
 
@@ -81,7 +86,8 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
         }
 
         this.buckets = buckets;
-        this.expansionFactor = expansionFactor;
+        this.expansionFactor = expansionFactor;        
+        startingBuckets = buckets;
         items = new SetEntry[buckets];
     }
 
@@ -96,6 +102,7 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
 
         this.overloadFactor = overloadFactor;
         this.expansionFactor = expansionFactor;
+        startingBuckets = buckets;
         items = new SetEntry[buckets];
     }
 
@@ -115,6 +122,7 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
         this.buckets = buckets;
         this.overloadFactor = overloadFactor;
         this.expansionFactor = expansionFactor;
+        startingBuckets = buckets;
         items = new SetEntry[buckets];
     }
 
@@ -347,13 +355,9 @@ public class Set<E> implements Iterable<E>, LinearCollection<E> {
      * Remove all items from the set
      */
     public void clear() {
-        items = new SetEntry[buckets];
+        items = new SetEntry[startingBuckets];
         totalItems = 0;
     }
-
-    // TODO: ContainsAll
-    // TODO: RemoveAll
-    // TODO: RetainAll
 
     public boolean isEmpty() {
         return totalItems == 0;
