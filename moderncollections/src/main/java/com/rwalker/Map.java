@@ -393,7 +393,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         // It will also be throws if the key does not exist
         while (true){
 
-            if (temp.getKey() == key){
+            if (temp.getKey().equals(key)){
                 return temp.getEntry();
             } else {
                 temp = temp.getNext();
