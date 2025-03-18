@@ -4,22 +4,19 @@ import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import com.rwalker.HowToFunction;
 import com.rwalker.Sequence;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
 
 /**
- * Find out the optimal values for the Sequence data structure
+ * Consecutive enqueue dequeue operations to see if RingBuffer improvement
  */
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class SequenceOptimalValues {
+public class QueueConsecutive {
 
-    @Param({"10", "50", "100", "1000"})
-    private int initialSize;
-    @Param({"1.5", "2.0", "2.5", "3.0"})
-    private float growthRate;
     @Param({"RINGBUFFER", "DEFAULT"})
     private SequenceStrategies strategyName;
 
@@ -27,20 +24,23 @@ public class SequenceOptimalValues {
 
     @Setup(Level.Invocation)
     public void setup() {
-        sequence = new Sequence<>(initialSize, growthRate, strategyName);
+        sequence = new Sequence<>(130, strategyName);
+
+        for (int i = 0; i < 100; i++) {
+            sequence.enqueue(i);
+        }
     }
 
     @Benchmark
     @Fork(value = 2, warmups = 2)
     @Measurement(iterations = 5)
     @Warmup(iterations = 3)
-    public void testSequenceOptimalValues(Blackhole blackhole) {
+    public void testQueue(Blackhole blackhole) {
 
         for (int i = 0; i < 1000; i++) {
-            sequence.add(i);
+            sequence.enqueue(i);
+            sequence.dequeue();
         }
-
-        sequence.get(initialSize/2);
 
         blackhole.consume(sequence);
     }

@@ -68,7 +68,7 @@ public class BinarySearch {
                     return midPoint+1;
                 } else if (comparator.compare(term, array[midPoint]) < 0) {
                     // If we are strictly one below our point then insert there
-                    return --midPoint;
+                    return midPoint; // Fix added if we are 1 below then return that location so it bumps terms up
                 } else {
                     throw new ArrayIndexOutOfBoundsException();
                 }

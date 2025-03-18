@@ -273,9 +273,9 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
     public boolean keyExists(K key){
 
         // More efficient lookup
-        if (sortedKeys != null){
-            return sortedKeys.contains(key);
-        }
+        // if (sortedKeys != null){
+        //     return sortedKeys.contains(key);
+        // }
         //TODO: Now we are using a set do we need to use sorted. Is it acctually faster.
         return keys.contains(key);
     }
@@ -642,7 +642,7 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
      */
     public String getBucket(int index){
 
-        if (index > bucketList.length || index < bucketList.length) {
+        if (index > bucketList.length || index < 0) {
             throw new IllegalArgumentException("Index out of bounds");
         }
 
@@ -678,6 +678,10 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
      */
     public int getBucketForKey(K key) {
         return generateHashIndex(key);
+    }
+
+    public Object[] getBucketsList() {
+        return bucketList;
     }
 
     public Iterator<MapEntry<K, E>> iterator() {

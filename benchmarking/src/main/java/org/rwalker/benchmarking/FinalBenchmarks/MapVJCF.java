@@ -33,10 +33,10 @@ public class MapVJCF {
 
     @Setup(Level.Invocation)
     public void setup() {
-        map = new Map<>();
-        hashMap = new HashMap<>();
-        treeMap = new TreeMap<>();
-        linkedHashMap = new LinkedHashMap<>();
+        map = new Map<String, Integer>();
+        hashMap = new HashMap<String, Integer>();
+        treeMap = new TreeMap<String, Integer>();
+        linkedHashMap = new LinkedHashMap<String, Integer>();
     }
 
     @Benchmark

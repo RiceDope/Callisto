@@ -3,25 +3,31 @@ package com.rwalker;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.rwalker.sequenceStrategies.SequenceState;
+import com.rwalker.Sequence;
 import com.rwalker.Set;
+import com.rwalker.sequenceStrategies.SequenceState;
+import com.rwalker.sequenceStrategies.SequenceStrategies;
 
 public class ManualTest {
 
-    private static final int appendIterations = 1000;
-    private static final String key1 = "key10";
-    private static final String key2 = "key500";
-    private static final String key3 = "key100";
     public static void main(String[] args){
 
-        Map<String, Integer> map = new Map<>();
+        // Sequence<String> seq = new Sequence<>((a, b) -> a.compareTo(b), SequenceState.SORTED);
+        // seq.add("a");
+        // seq.add("x");
+        // seq.add("h");
+        // seq.add("p");
+        // System.out.println(seq);
 
-        for (int i = 0; i < appendIterations; i++) {
-            map.put("key" + i, i);
+        Map<String, Integer> map = new Map<>((a, b) -> a.compareTo(b));
+        map.put("a", 1);
+        map.put("x", 2);
+        map.put("h", 3);
+        map.put("p", 4);
+        for (String key : map.sortedKeySet()){
+            System.out.println(key + " " + map.get(key));
         }
 
-        System.out.println(map.get(key1));
-        map.get(key2);
-        map.get(key3);
+
     }
 }   
