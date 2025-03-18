@@ -5,29 +5,23 @@ import java.util.Arrays;
 
 import com.rwalker.Sequence;
 import com.rwalker.Set;
+import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.SequenceState;
 import com.rwalker.sequenceStrategies.SequenceStrategies;
+import com.rwalker.sequenceStrategies.RingBufferStrategy.RingBufferSequenceStrategy;
+import com.rwalker.sequenceStrategies.RingBufferStrategy.UnsortedRingBufferSequence;
 
 public class ManualTest {
 
     public static void main(String[] args){
 
-        // Sequence<String> seq = new Sequence<>((a, b) -> a.compareTo(b), SequenceState.SORTED);
-        // seq.add("a");
-        // seq.add("x");
-        // seq.add("h");
-        // seq.add("p");
-        // System.out.println(seq);
-
-        Map<String, Integer> map = new Map<>((a, b) -> a.compareTo(b));
-        map.put("a", 1);
-        map.put("x", 2);
-        map.put("h", 3);
-        map.put("p", 4);
-        for (String key : map.sortedKeySet()){
-            System.out.println(key + " " + map.get(key));
-        }
-
-
+        Sequence<Integer> seq = new Sequence<>(SequenceStrategies.RINGBUFFER);
+        seq.add(1);
+        seq.add(2);
+        seq.add(3);
+        seq.add(4);
+        seq.add(5);
+        seq.sortOnwards((a, b) -> a - b);
+        System.out.println(seq.getstate());
     }
 }   

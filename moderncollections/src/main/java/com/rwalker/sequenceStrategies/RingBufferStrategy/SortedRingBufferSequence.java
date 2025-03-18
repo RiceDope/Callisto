@@ -1,4 +1,4 @@
-package com.rwalker.sequenceStrategies;
+package com.rwalker.sequenceStrategies.RingBufferStrategy;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,42 +11,39 @@ import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
 import com.rwalker.UserNull;
 import com.rwalker.UserNullSort;
-/**
- * This is a ring buffer like strategy the difference from the default strategy
- * is that the endPointer can be smaller than the startPointer. This is optimal for
- * a queue/stack.
- */
+import com.rwalker.sequenceStrategies.RingBufferSequence;
+import com.rwalker.sequenceStrategies.SequenceContext;
+import com.rwalker.sequenceStrategies.SequenceState;
+import com.rwalker.sequenceStrategies.SequenceStrategies;
 
-// TODO: when startPointer == array.length
-
-@SuppressWarnings({"unchecked"})
-public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyControl<E> {
+public class SortedRingBufferSequence<E> implements RingBufferSequenceStrategy<E>{
     
     private int endPointer;
     private int startPointer;
     private int initialSize;
     private Object[] array;
     private double growthRate;
-    private boolean enforceSort;
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
-    private com.rwalker.sequenceStrategies.SequenceStrategies name = SequenceStrategies.RINGBUFFER;
-    private SequenceState state = SequenceState.UNSORTED;
-    
-    public RingBufferSequenceStrategy(SequenceContext<E> context) {
+    private SequenceStrategies name = SequenceStrategies.RINGBUFFER;
+    private SequenceState state = SequenceState.SORTED;
+
+    private int expansionAdjustmentValue = 1;
+    private int nullsInserted = 0;
+
+    public SortedRingBufferSequence(SequenceContext<E> context) {
         this.endPointer = context.endPointer;
         this.startPointer = context.startPointer;
         this.initialSize = context.initialSize;
         this.growthRate = context.growthRate;
-        this.enforceSort = context.enforceSort;
         this.defaultComparator = context.comparator;
         this.minumumExpansion = context.minimumExpansion;
 
-        if (context.currentState == SequenceState.SORTED) {
-            enforceSort = true;
-        }
-
         array = new Object[initialSize];
+
+        if (this.defaultComparator == null) {
+            throw new IllegalStateException("Comparator cannot be null for sorted Strategy");
+        }
     }
 
     public SequenceStrategies getname() {
@@ -54,11 +51,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
     }
 
     public SequenceState getstate() {
-        if (enforceSort) {
-            return SequenceState.SORTED;
-        } else {
-            return SequenceState.UNSORTED;
-        }
+        return SequenceState.SORTED;
     }
 
     /**
@@ -86,9 +79,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
      * @param element
      */
     public boolean add(E element) {
-        if (!enforceSort) {
-            addToEnd(element);
-        } else if (element != null) {
+        if (element != null) {
             if (endPointer > startPointer) { // We are just a regular array
                 int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
                 int appendIndex = index-startPointer; // Convert from subarray index
@@ -146,7 +137,6 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
     public void empty() {
         clear();
     }
-
 
 
     /**
@@ -259,7 +249,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
      * @param index The index to replace
      * @param element The element to replace with
      */
-    public void replace(int index, E element){
+    public void replace(int index, E element){ //TODO: Add check for replacing wrong term when sorting
         if (element == null) {
             element = (E) new UserNull<E>();
         }
@@ -373,20 +363,8 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
      */
     public void sort(){
 
-        if (defaultComparator != null){
-            try {
-                // Sort the array
-                Object[] sortedArr = UserNullSort.sort(array, defaultComparator, startPointer, endPointer, false);
-                Arrays.fill(array, null); // Null out original to maintain terms
-                System.arraycopy(sortedArr, 0, array, 0, endPointer-startPointer); // Copy over
+        // Already sorted nothing to do
 
-            } catch (Exception e){ // Throw error for either not implementing Comparable or smth else
-                System.err.println(e);
-                throw new UnknownError("Comparator incorrect or not set");
-            }
-        } else {
-            throw new IllegalStateException("Default comparator must be set to use this sort");
-        }
     }
 
     public void sort(Comparator<E> comparator) {
@@ -407,10 +385,9 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
      * Sort the array acording to the given comparator
      */
     public void sortOnwards() { //TODO: Add check for defaultComp being set
-        if (!(length() < 0) && !(length() == 1)){ // Only sort when we have something to not nothing or 1 item
-            sort();
-        }
-        setEnforceSort(true);
+        
+        // Already sorted nothing to do
+
     }
 
     /**
@@ -418,8 +395,8 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
      * @param comp A comparator that will then become the default comparator used
      */
     public void sortOnwards(Comparator<E> comp) {
-        this.defaultComparator = comp;
-        sortOnwards();
+
+        sort(comp);
     }
 
     /**
@@ -470,7 +447,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
      * Stop sorting the array automatically
      */
     public void stopSorting() {
-        setEnforceSort(false);
+        throw new UnsupportedOperationException("Stop sorting not implemented yet. Will be once sorted strategies finalised");
     }
 
     /**
@@ -491,16 +468,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
             element = (E) new UserNull<E>();
         }
 
-        if (!enforceSort) { // Normal search
-            for (int i = startPointer; i != endPointer; i++) {
-                if (i == array.length) {
-                    i = 0;
-                }
-                if (array[i].equals(element)) {
-                    return true;
-                }
-            }
-        } else if (enforceSort && !(element instanceof UserNull)){ // Binary search as long as not null
+        if (!(element instanceof UserNull)){ // Binary search as long as not null
             int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
             if (index < endPointer && array[index].equals(element)) {
                 return true;
@@ -522,20 +490,11 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
      * @return
      */
     public Integer firstIndexOf(E element) {
-        if (!enforceSort) { // Normal search
-            for (int i = startPointer; i != endPointer; i++) {
-                if (i == array.length) {
-                    i = 0;
-                }
-                if (array[i].equals(element)) {
-                    return i;
-                }
-            }
-        } else { // Binary search
-            int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
-            if (index < endPointer && array[index].equals(element)) {
-                return index;
-            }
+
+        // TODO: Does not necessarily find the first but maybe the second if in order
+        int index = BinarySearch.findInsertionIndex((E[]) array, startPointer, endPointer, element, defaultComparator, size());
+        if (index < endPointer && array[index].equals(element)) {
+            return index;
         }
 
         return null;
@@ -680,11 +639,8 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
         // Adjusts the pointers to be in the correct positions
         int returnableEndPointer = size();
         int startPointer = 0;
-        SequenceState state = SequenceState.UNSORTED;
-        if (enforceSort) {
-            state = SequenceState.SORTED;
-        }
-        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion, state);
+        SequenceState state = SequenceState.SORTED;
+        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, true, defaultComparator, minumumExpansion, state);
     }
 
     /**
@@ -696,7 +652,6 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
         this.endPointer = context.endPointer;
         this.initialSize = context.initialSize;
         this.growthRate = context.growthRate;
-        this.enforceSort = context.enforceSort;
         this.defaultComparator = context.comparator;
         this.minumumExpansion = context.minimumExpansion;
     }
@@ -851,10 +806,6 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
         return sb.toString();
     }
 
-    private void setEnforceSort(boolean enforceSort) {
-        this.enforceSort = enforceSort;
-    }
-
     @Override
     public boolean equals(Object seq) {
 
@@ -913,7 +864,7 @@ public class RingBufferSequenceStrategy<E> implements Iterable<E>, StrategyContr
             }
             System.out.println(currentIndex + ")");
             int oldSp = startPointer;
-            RingBufferSequenceStrategy.this.remove(convertPureArrToBuffer(currentIndex));
+            SortedRingBufferSequence.this.remove(convertPureArrToBuffer(currentIndex));
             if (currentIndex == oldSp) {
                 currentIndex = startPointer;
             }

@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.rwalker.sequenceStrategies.DefaultSequence;
-import com.rwalker.sequenceStrategies.RingBufferSequenceStrategy;
+import com.rwalker.sequenceStrategies.RingBufferSequence;
 import com.rwalker.sequenceStrategies.SequenceContext;
 import com.rwalker.sequenceStrategies.DefaultSequenceHeuristic;
 import com.rwalker.sequenceStrategies.SequenceState;
@@ -851,7 +851,7 @@ public class Sequence<E> implements Iterable<E>, LinearCollection<E> {
 
         // Put all of the strategies into the map
         strategies.put(SequenceStrategies.DEFAULT, (Class<? extends StrategyControl<E>>) (Class<?>) DefaultSequence.class);
-        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends StrategyControl<E>>) (Class<?>) RingBufferSequenceStrategy.class);
+        strategies.put(SequenceStrategies.RINGBUFFER, (Class<? extends StrategyControl<E>>) (Class<?>) RingBufferSequence.class);
 
         // Get the default strategy for now
         try {
