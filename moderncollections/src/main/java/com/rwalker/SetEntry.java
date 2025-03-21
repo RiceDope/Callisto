@@ -48,6 +48,13 @@ public class SetEntry<E> {
         return previousInsertion;
     }
 
+    public void clear() {
+        next = null;
+        nextInsertion = null;
+        previousInsertion = null;
+        value = null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

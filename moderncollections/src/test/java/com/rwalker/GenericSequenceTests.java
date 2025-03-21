@@ -338,7 +338,7 @@ public class GenericSequenceTests {
     @Test
     public void testGetGrowthRate() {
         Sequence<Integer> test = new Sequence<>();
-        assertEquals(1.5, test.getGrowthRate(), 0.001);
+        assertEquals(3.0, test.getGrowthRate(), 0.001);
     }
 
     /**

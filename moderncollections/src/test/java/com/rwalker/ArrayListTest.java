@@ -120,7 +120,7 @@ public class ArrayListTest {
      */
     @Test
     public void testArrayExpansionWithInsert() throws NoSuchMethodException {
-        Sequence<Integer> testing = new Sequence<Integer>(4);
+        Sequence<Integer> testing = new Sequence<Integer>(4, 1.5);
         assertEquals(4, testing.rawLength());
         testing.add(5);
         testing.add(10);

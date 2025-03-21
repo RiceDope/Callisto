@@ -643,7 +643,7 @@ public class SortedRingBufferSequence<E> implements RingBufferSequenceStrategy<E
         int returnableEndPointer = size();
         int startPointer = 0;
         SequenceState state = SequenceState.SORTED;
-        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, true, defaultComparator, minumumExpansion, state);
+        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, defaultComparator, minumumExpansion, state);
     }
 
     /**

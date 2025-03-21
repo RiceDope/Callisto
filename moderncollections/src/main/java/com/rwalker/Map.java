@@ -1,5 +1,6 @@
 package com.rwalker;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -20,10 +21,10 @@ import com.rwalker.sequenceStrategies.SequenceStrategies;
 public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<MapEntry<K, E>>{
 
     // Default values benchmarked simply in results 030225-1430
-    private int buckets = 256;
+    private int buckets = 16;
     private MapEntry<K, E>[] bucketList;
-    private float loadFactor = 1.0f; 
-    private float expansionFactor = 2.0f;
+    private float loadFactor = 0.5f; 
+    private float expansionFactor = 3.0f;
     private Set<K> keys = new Set<>();
     private Sequence<K> sortedKeys;
     private Comparator<K> keyComp; // Comparator for sorted keys
@@ -581,12 +582,12 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         }
 
         buckets = newAmountOfBuckets;
-        keys = keysToAdd;
+        // keys = keysToAdd;
         
         // Adds all of the specified keys to the sorted list if it is set
-        if (sortedKeys != null) {
-            sortedKeys.addAll(keysToAdd);
-        }
+        // if (sortedKeys != null) {
+        //     sortedKeys.addAll(keysToAdd);
+        // }
 
     }
 
@@ -609,6 +610,10 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
      */
     @Override
     public String toString() {
+
+        if (size() == 0) {
+            return "[]";
+        }
 
         StringBuilder sb = new StringBuilder();
 
@@ -669,6 +674,10 @@ public class Map <K, E> implements ModernCollections<MapEntry<K, E>>, Iterable<M
         sb.append("}]");
 
         return sb.toString();
+    }
+
+    public String rawString() {
+        return Arrays.toString(bucketList);
     }
 
     /**

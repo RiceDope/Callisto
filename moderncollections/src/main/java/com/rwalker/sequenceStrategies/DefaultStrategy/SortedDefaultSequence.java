@@ -520,7 +520,7 @@ public class SortedDefaultSequence<E> implements DefaultSequenceStrategy<E>{
     }
 
     public SequenceContext<E> exportContext() {
-        return new SequenceContext<>(startPointer, endPointer, initialSize, growthRate, true, defaultComparator, minumumExpansion, SequenceState.SORTED);
+        return new SequenceContext<>(startPointer, endPointer, initialSize, growthRate, defaultComparator, minumumExpansion, SequenceState.SORTED);
     }
 
     public void importContext(SequenceContext<E> context) {

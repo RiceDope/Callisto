@@ -50,7 +50,7 @@ public class TestUtils {
      */
     public static Sequence<Integer> generateFullSmallSequence(){
 
-        Sequence<Integer> testing = new Sequence<Integer>(4);
+        Sequence<Integer> testing = new Sequence<Integer>(4, 1.5);
 
         testing.add(1);
         testing.add(2);

@@ -33,7 +33,7 @@ public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
     private int initialSize;
     private Object[] array;
     private double growthRate;
-    private boolean enforceSort;
+    // private boolean enforceSort;
     private Comparator<E> defaultComparator;
     private int minumumExpansion;
     private SequenceStrategies name = SequenceStrategies.DEFAULT;
@@ -46,7 +46,7 @@ public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
         this.startPointer = context.startPointer;
         this.initialSize = context.initialSize;
         this.growthRate = context.growthRate;
-        this.enforceSort = context.enforceSort;
+        // this.enforceSort = context.enforceSort;
         this.defaultComparator = context.comparator;
         this.minumumExpansion = context.minimumExpansion;
 
@@ -915,7 +915,7 @@ public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
      * @return
      */
     public SequenceContext<E> exportContext() {
-        return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion, SequenceState.UNSORTED);
+        return new SequenceContext<E>(startPointer, endPointer, initialSize, growthRate, defaultComparator, minumumExpansion, SequenceState.UNSORTED);
     }
 
     /**
@@ -927,7 +927,7 @@ public class UnsortedDefaultSequence<E> implements DefaultSequenceStrategy<E> {
         this.endPointer = context.endPointer;
         this.initialSize = context.initialSize;
         this.growthRate = context.growthRate;
-        this.enforceSort = context.enforceSort;
+        // this.enforceSort = context.enforceSort;
         this.defaultComparator = context.comparator;
         this.minumumExpansion = context.minimumExpansion;
     }

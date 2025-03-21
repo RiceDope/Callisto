@@ -35,7 +35,7 @@ public class UnsortedRingBufferSequence<E> implements RingBufferSequenceStrategy
         this.startPointer = context.startPointer;
         this.initialSize = context.initialSize;
         this.growthRate = context.growthRate;
-        this.enforceSort = context.enforceSort;
+        // this.enforceSort = context.enforceSort;
         this.defaultComparator = context.comparator;
         this.minumumExpansion = context.minimumExpansion;
 
@@ -641,7 +641,7 @@ public class UnsortedRingBufferSequence<E> implements RingBufferSequenceStrategy
         if (enforceSort) {
             state = SequenceState.SORTED;
         }
-        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, enforceSort, defaultComparator, minumumExpansion, state);
+        return new SequenceContext<E>(startPointer, returnableEndPointer, initialSize, growthRate, defaultComparator, minumumExpansion, state);
     }
 
     /**
@@ -653,7 +653,7 @@ public class UnsortedRingBufferSequence<E> implements RingBufferSequenceStrategy
         this.endPointer = context.endPointer;
         this.initialSize = context.initialSize;
         this.growthRate = context.growthRate;
-        this.enforceSort = context.enforceSort;
+        // this.enforceSort = context.enforceSort;
         this.defaultComparator = context.comparator;
         this.minumumExpansion = context.minimumExpansion;
     }
