@@ -45,15 +45,15 @@ public class MapVJCF {
     @Warmup(iterations = 3)
     public void testMap(Blackhole blackhole) {
             
-            for (int i = 0; i < appendIterations; i++) {
-                map.put("key" + i, i);
-            }
-    
-            map.get(key1);
-            map.get(key2);
-            map.get(key3);
-    
-            blackhole.consume(map);
+        for (int i = 0; i < appendIterations; i++) {
+            map.put("key" + i, i);
+        }
+
+        map.get(key1);
+        map.get(key2);
+        map.get(key3);
+
+        blackhole.consume(map);
     }
 
     @Benchmark

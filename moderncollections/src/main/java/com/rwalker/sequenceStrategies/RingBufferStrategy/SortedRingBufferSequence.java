@@ -613,13 +613,11 @@ public class SortedRingBufferSequence<E> implements RingBufferSequenceStrategy<E
     public Object[] exportArray() {
         Object[] arr = new Object[size()+1];
         int index = 0;
-        for (Object obj : array) {
-            if (obj != null) {
-                arr[index] = obj;
-                index++;
-            } 
+        Iterator<E> it = iterator();
+        while(it.hasNext()) {
+            arr[index] = it.next();
+            index++;
         }
-
         return arr;
     }
 
