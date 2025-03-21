@@ -1,41 +1,51 @@
 package com.rwalker.sequenceStrategies;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.rwalker.BinarySearch;
 import com.rwalker.HowToFunction;
 import com.rwalker.Map;
 import com.rwalker.ModernCollections;
 import com.rwalker.Sequence;
+import com.rwalker.UserNull;
+import com.rwalker.UserNullSort;
 import com.rwalker.sequenceStrategies.DefaultStrategy.DefaultSequenceStrategy;
 import com.rwalker.sequenceStrategies.DefaultStrategy.SortedDefaultSequence;
 import com.rwalker.sequenceStrategies.DefaultStrategy.UnsortedDefaultSequence;
-
+import com.rwalker.sequenceStrategies.RingBufferStrategy.RingBufferSequenceStrategy;
+import com.rwalker.sequenceStrategies.RingBufferStrategy.SortedRingBufferSequence;
+import com.rwalker.sequenceStrategies.RingBufferStrategy.UnsortedRingBufferSequence;
 /**
- * This class is the entry point for the DefaultSequence strategy
- * Will maintain the two different strategies (Sorted Unsorted)
+ * This is a ring buffer like strategy the difference from the default strategy
+ * is that the endPointer can be smaller than the startPointer. This is optimal for
+ * a queue/stack.
  */
 
-public class DefaultSequence<E> implements StrategyControl<E>{
+// TODO: when startPointer == array.length
+
+@SuppressWarnings({"unchecked"})
+public class RingBufferSequence<E> implements StrategyControl<E> {
 
     private SequenceContext<E> seqCon = new SequenceContext<E>(); // Current context of the sequence
-    private DefaultSequenceStrategy<E> strat; // The specific strategy that is being ran at the time
+    private RingBufferSequenceStrategy<E> strat; // The specific strategy that is being ran at the time
     private SequenceState currentState = SequenceState.UNSORTED; // The "name" of the current strategy
     private SequenceStrategies name = SequenceStrategies.DEFAULT; // The "name" of the strategy
-    private Map<SequenceState, Class<? extends DefaultSequenceStrategy<E>>> strategies = new Map<>(); // A Map mapping the "names" to their respective classes
+    private Map<SequenceState, Class<? extends RingBufferSequenceStrategy<E>>> strategies = new Map<>(); // A Map mapping the "names" to their respective classes
     
     /**
      * Use default values
      */
-    public DefaultSequence() {
+    public RingBufferSequence() {
 
         postConstructor();
 
     }
 
-    public DefaultSequence(SequenceContext<E> seqCon) {
+    public RingBufferSequence(SequenceContext<E> seqCon) {
         this.seqCon = seqCon;
 
         currentState = seqCon.currentState;
@@ -44,12 +54,12 @@ public class DefaultSequence<E> implements StrategyControl<E>{
     }
 
     public void postConstructor() {
-        strategies.put(SequenceState.UNSORTED, (Class<? extends DefaultSequenceStrategy<E>>) (Class<?>) UnsortedDefaultSequence.class);
-        strategies.put(SequenceState.SORTED, (Class<? extends DefaultSequenceStrategy<E>>) (Class<?>) SortedDefaultSequence.class);
+        strategies.put(SequenceState.UNSORTED, (Class<? extends RingBufferSequenceStrategy<E>>) (Class<?>) UnsortedRingBufferSequence.class);
+        strategies.put(SequenceState.SORTED, (Class<? extends RingBufferSequenceStrategy<E>>) (Class<?>) SortedRingBufferSequence.class);
 
         // Get the default strategy for now
         try {
-            strat = (DefaultSequenceStrategy<E>) strategies.get(currentState).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
+            strat = (RingBufferSequenceStrategy<E>) strategies.get(currentState).getDeclaredConstructor(SequenceContext.class).newInstance(seqCon);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize strategy", e);
@@ -303,4 +313,6 @@ public class DefaultSequence<E> implements StrategyControl<E>{
     public Iterator<E> iterator() {
         return strat.iterator();
     }
+
+    
 }
