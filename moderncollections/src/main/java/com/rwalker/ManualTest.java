@@ -18,16 +18,9 @@ public class ManualTest {
 
     public static void main(String[] args){
 
-        Sequence<Integer> sequence = new Sequence<>(130, SequenceStrategies.RINGBUFFER);
-
-        for (int i = 0; i < 100; i++) {
-            sequence.enqueue(i);
-        }
-
-        for (int i = 0; i < 1000; i++) {
-            sequence.enqueue(i);
-            sequence.dequeue();
-        }
+        Map<String, Integer> test = new Map<>();
+        test.put("Hello", 100);
+        System.out.println(test.toString());
 
 
     }
