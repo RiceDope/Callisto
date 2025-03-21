@@ -278,6 +278,11 @@ public class UnsortedRingBufferSequence<E> implements RingBufferSequenceStrategy
         }
         array[startPointer] = null;
         startPointer++;
+
+        // Lets SP wrap around
+        if (startPointer == array.length) {
+            startPointer = 0;
+        }
         return element;
     }
 

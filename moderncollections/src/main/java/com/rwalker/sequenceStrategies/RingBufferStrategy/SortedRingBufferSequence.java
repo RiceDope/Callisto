@@ -604,6 +604,11 @@ public class SortedRingBufferSequence<E> implements RingBufferSequenceStrategy<E
         } else {
             fillGap(realIndex);
         }
+
+        // Lets SP wrap around
+        if (startPointer == array.length) {
+            startPointer = 0;
+        }
     }
 
     /**
